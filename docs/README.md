@@ -31,7 +31,8 @@
 - [PROYECCIONES_FINANCIERAS.md](PROYECCIONES_FINANCIERAS.md) — escenarios de ingresos/costes.
 - [ANALISIS_COMPETENCIA.md](ANALISIS_COMPETENCIA.md) — competidores y fosos defensivos.
 - [RIESGOS_Y_MITIGACIONES.md](RIESGOS_Y_MITIGACIONES.md) — riesgos del proyecto y cómo mitigarlos.
-- *(en curso por los agentes: KPIS, MODELO_PRECIOS, GO_TO_MARKET, PRIVACIDAD_RGPD)*
+- [KPIS_NEGOCIO.md](KPIS_NEGOCIO.md) — métrica norte estrella + 17 KPIs con metas y alarmas.
+- *(en curso: MODELO_PRECIOS, GO_TO_MARKET, PRIVACIDAD_RGPD, microcopy de la app)*
 
 ## 🛠️ Técnico
 - [ARQUITECTURA.md](ARQUITECTURA.md) — stack, modelo de datos, cómo arrancar.

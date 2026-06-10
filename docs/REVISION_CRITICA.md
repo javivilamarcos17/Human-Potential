@@ -36,13 +36,13 @@
 **Bien:** 8 pantallas navegables, estética muy cuidada, interacciones reales (sliders,
 toggle de molestia → alerta), personalización ("Javi", empatía sin culpa). Buen trabajo.
 
-**A pulir (enviado a agente 1):**
-| # | Incoherencia | Acción |
+**Pulido (agente 1) — verificado por el organizador 2026-06-11:**
+| # | Incoherencia | Estado |
 |---|--------------|--------|
-| C3 | Racha 7 (dashboard) vs 8 (recompensa); al volver sigue 7. | Unificar la racha en todo el flujo. |
-| C4 | Nombres no canónicos (Dr. Rodríguez/MovePlus vs Dra. Demo/Clínica Demo; código AF-8823 vs HONOR-DEMO-001). | Usar la **persona canónica** de arriba en todo. |
-| C5 | Botones secundarios sin acción (Mi progreso, Tarjeta Épica, Compartir). | Conectarlos o marcarlos visualmente como "demo". |
-| C6 | XP/umbral de fase ilustrativos, no siguen la curva. | Calibración futura; dejar nota, no bloquea. |
+| C3 | Racha incoherente entre Dashboard y Recompensa. | ✅ Resuelto (JS 23→24 al volver). |
+| C4 | Nombres no canónicos. | ✅ Resuelto (Dra. Elena Ruiz · MovePlus · AF-8823 en todo). |
+| C5 | Botones secundarios sin acción. | ✅ Resuelto (overlay "Próximamente en el MVP"). |
+| C6 | XP/umbral de fase ilustrativos. | ⏳ Calibración futura con datos del piloto (comentado en código). |
 
 ---
 
