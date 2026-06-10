@@ -35,7 +35,9 @@
       "Edit(/.claude/skills/lessons-learned/**)",
       "Bash(git commit -m 'feat: Auditoria configurable por profesional \\(D7\\) + plantillas' -m 'Recoge que la Auditoria y los tests se especializan por profesional/clinica *)",
       "Bash(git commit -m 'feat: diseno del Core Loop diario \\(triaje-rutina-feedback + puntos + semaforos\\)' -m 'Define el ciclo que el paciente repite cada dia \\(MVP\\): *)",
-      "Bash(git commit -q -m 'feat: maqueta visual navegable \\(mockups/anti-fragil.html\\)' -m 'Boceto visual en HTML: pantallas clave + visor de evolucion del avatar. *)"
+      "Bash(git commit -q -m 'feat: maqueta visual navegable \\(mockups/anti-fragil.html\\)' -m 'Boceto visual en HTML: pantallas clave + visor de evolucion del avatar. *)",
+      "Bash(git pull *)",
+      "Bash(git commit *)"
     ]
   },
   "includeGitInstructions": true,

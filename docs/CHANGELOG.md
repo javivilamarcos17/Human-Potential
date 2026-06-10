@@ -10,6 +10,9 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Diseño de Rutinas y Packs (2026-06-10)
+- **`docs/diseño/rutinas-packs.md`**: cómo el profesional crea vídeos, los agrupa en Packs y los prescribe (A7·B5·B6); configurable por profesional (D7); límites MVP (sin visión artificial). Usa el modelo de datos ya existente.
+
 ### Añadido — Maqueta visual navegable (2026-06-10)
 - **`mockups/anti-fragil.html`**: boceto visual que se abre en el navegador (sin instalar nada) con las pantallas clave (Dashboard/avatar, Triaje, Feedback, Panel clínica con semáforos) y el visor de evolución del avatar (6 etapas mayores → 30 fases). Placeholders editables; arte final por ilustrador humano (D5).
 
