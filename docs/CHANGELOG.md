@@ -10,6 +10,11 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Diseño del Core Loop diario (2026-06-10)
+- **`docs/diseño/core-loop-diario.md`**: el ciclo diario paso a paso (triaje → dashboard → rutina → feedback RPE → recompensa), economía de Puntos de Vitalidad, reglas de racha "sin tiranía", semáforos de alerta a la clínica y reenganche amable del abandono.
+- **`app/lib/features/dashboard/economia_puntos.dart`**: lógica de XP por acción + bonus de racha + XP por re-Auditoría + actualización de racha (con descanso protegido).
+- **`app/lib/features/clinica/alertas_semaforo.dart`**: lógica de semáforo (rojo/ámbar/verde) como sistema de alerta temprana para el profesional.
+
 ### Cambiado — Auditoría configurable por profesional (D7) (2026-06-10)
 - **Decisión D7** en `SYSTEM_VISION.md`: la Auditoría y sus tests se especializan por clínica/profesional. Lo estable es el marco (4 bloques, 0-100); el contenido es configurable vía plantillas.
 - **`supabase/migrations/0003_plantillas_auditoria.sql`**: tablas `plantillas_auditoria`, `plantilla_items`, `auditoria_respuestas` + columna `plantilla_id` en `auditorias_vitalidad`.
