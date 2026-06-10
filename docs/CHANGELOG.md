@@ -10,6 +10,10 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Motor viral y económico (2026-06-10)
+- **`docs/diseño/motor-viral-economico.md`**: Descuento Sudado (saldo visual, D6), referidos con código único, Tarjetas Épicas para redes y upselling a la clínica (A9·A10·A11).
+- **`app/lib/features/monedero/descuento_sudado.dart`**: cálculo del descuento (constancia + referidos + hitos) con suelo que protege el margen de la clínica.
+
 ### Añadido — Diseño de Rutinas y Packs (2026-06-10)
 - **`docs/diseño/rutinas-packs.md`**: cómo el profesional crea vídeos, los agrupa en Packs y los prescribe (A7·B5·B6); configurable por profesional (D7); límites MVP (sin visión artificial). Usa el modelo de datos ya existente.
 

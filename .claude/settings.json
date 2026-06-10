@@ -37,7 +37,15 @@
       "Bash(git commit -m 'feat: diseno del Core Loop diario \\(triaje-rutina-feedback + puntos + semaforos\\)' -m 'Define el ciclo que el paciente repite cada dia \\(MVP\\): *)",
       "Bash(git commit -q -m 'feat: maqueta visual navegable \\(mockups/anti-fragil.html\\)' -m 'Boceto visual en HTML: pantallas clave + visor de evolucion del avatar. *)",
       "Bash(git pull *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "PowerShell(git pull --rebase)",
+      "PowerShell(git add docs/DOSSIER_DESARROLLO.md)",
+      "PowerShell(git push)",
+      "Bash(git ls-tree *)",
+      "PowerShell(\"---tracked?---\")",
+      "PowerShell(\"---diff settings---\")",
+      "PowerShell(\"---in HEAD?---\")",
+      "PowerShell(if \\($?\\) { \"SI esta en HEAD\" } else { \"NO esta en HEAD\" })"
     ]
   },
   "includeGitInstructions": true,
