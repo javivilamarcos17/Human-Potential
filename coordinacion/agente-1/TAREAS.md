@@ -27,9 +27,15 @@
   - Archivo standalone: NO toques `index.html`.
 
 ## ⬜ COLA (en orden; no empieces hasta que pase a EN CURSO)
-1. **`docs/diseño/moodboard-avatares.md`** — guía de estilo para el ilustrador: las 6 etapas
-   mayores × 3 arquetipos (Tierra/Agua/Viento) con paleta por arquetipo (de IDENTIDAD_VISUAL)
-   y referencias de sensación. Contexto: `avatar-evolucion.md`.
+1. **`docs/diseño/moodboard-avatares.md`** — guía de estilo para el ilustrador.
+   🎯 **DIRECCIÓN DE ARTE DEL DUEÑO:** estética tipo **"Pokémon moderno"** — NO Pokémon
+   literales, sino esa idea: criaturas adorables y coleccionables con evoluciones claras y
+   emocionantes, acabado moderno y limpio (no retro pixelado). Muchas fases (nuestras 30 en
+   6 etapas mayores) para que el usuario participe y mejore durante mucho tiempo.
+   Detalla: las 6 etapas mayores × 3 arquetipos (Tierra/Agua/Viento), paleta por arquetipo
+   (de IDENTIDAD_VISUAL), sensación de cada etapa, y qué cambia visualmente entre sub-fases
+   (brillo/grietas/accesorios — baratas de producir). Referencia de calidad: el SVG de Kael en
+   `board-premium.html`. Contexto: `avatar-evolucion.md`.
 2. **`mockups/prototipo/evolucion.html`** — galería visual de la evolución: las 6 etapas
    mayores del arquetipo Agua con sus sub-fases (placeholders), el "momento evolución"
    (celebración) y la pantalla de re-Auditoría "wow" (62→67, +5 vitalidad). Misma estética.

@@ -7,18 +7,16 @@
 > `docs/REVISION_CRITICA.md` (coherencia con `ESPECIFICACION_MVP.md` y con el resto).
 
 ## ▶ EN CURSO
-- **Crea `docs/PLAN_GO_TO_MARKET.md`** — cómo conseguir las primeras clínicas (canal B2B2C):
-  perfil de clínica objetivo, propuesta de entrada (piloto), argumentos de venta (apóyate en
-  `FAQ_CLINICAS.md` y `MODELO_PRECIOS.md`), proceso comercial paso a paso (contacto → demo con
-  el prototipo → piloto → contrato) y objeciones típicas. Crea SOLO ese archivo.
+- **Crea `docs/PRIVACIDAD_RGPD.md`** — borrador de privacidad/RGPD para datos sanitarios:
+  qué datos se recogen (dolor, triajes, vídeos de test), base legal, quién accede (aislamiento
+  por clínica/RLS), derechos del paciente, retención y anonimización futura (Instituto, Fase 3).
+  MARCA CLARO que es un borrador a validar por un abogado (no es asesoría legal). SOLO ese archivo.
 
 ## ⬜ COLA (en orden; no empieces hasta que pase a EN CURSO)
-1. **`docs/PRIVACIDAD_RGPD.md`** — borrador de privacidad/RGPD para datos sanitarios.
-   MARCA CLARO que es un borrador a validar por un abogado (no es asesoría legal).
-2. **`docs/CHECKLIST_LANZAMIENTO.md`** — lista de comprobación para lanzar el piloto: técnico
+1. **`docs/CHECKLIST_LANZAMIENTO.md`** — lista de comprobación para lanzar el piloto: técnico
    (RLS, builds, tiendas), clínico (plantillas, packs, vídeos), legal y comercial.
 
-## ✅ Hecho: PROYECCIONES · COMPETENCIA · RIESGOS · KPIS · MODELO_PRECIOS
+## ✅ Hecho: PROYECCIONES · COMPETENCIA · RIESGOS · KPIS · MODELO_PRECIOS · GO_TO_MARKET
 
 ## Reglas
 - Solo creas el archivo asignado + tu `ESTADO.md`. No toques CHANGELOG ni archivos de otros.
