@@ -4,4 +4,5 @@
 
 <!-- Formato: ✅ AAAA-MM-DD — <tarea> — <archivo creado> -->
 
-(esperando primera confirmación)
+✅ 2026-06-10 — DOSSIER_DESARROLLO (tarea previa a incorporarme al equipo coordinado) — docs/DOSSIER_DESARROLLO.md
+✅ 2026-06-10 — FAQ para clínicas B2B con objeciones y respuestas — docs/FAQ_CLINICAS.md
