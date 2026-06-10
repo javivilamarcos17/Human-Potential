@@ -10,6 +10,9 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Onboarding y registro (2026-06-10)
+- **`docs/diseño/onboarding-registro.md`**: embudo de entrada (Código de Honor → registro → anamnesis → Auditoría → Sombrero Seleccionador → avatar listo), principios anti-abandono y qué se inicializa al terminar (A1).
+
 ### Añadido — Motor viral y económico (2026-06-10)
 - **`docs/diseño/motor-viral-economico.md`**: Descuento Sudado (saldo visual, D6), referidos con código único, Tarjetas Épicas para redes y upselling a la clínica (A9·A10·A11).
 - **`app/lib/features/monedero/descuento_sudado.dart`**: cálculo del descuento (constancia + referidos + hitos) con suelo que protege el margen de la clínica.

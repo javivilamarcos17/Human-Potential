@@ -45,7 +45,8 @@
       "PowerShell(\"---tracked?---\")",
       "PowerShell(\"---diff settings---\")",
       "PowerShell(\"---in HEAD?---\")",
-      "PowerShell(if \\($?\\) { \"SI esta en HEAD\" } else { \"NO esta en HEAD\" })"
+      "PowerShell(if \\($?\\) { \"SI esta en HEAD\" } else { \"NO esta en HEAD\" })",
+      "PowerShell(if \\($?\\) { \"Dossier confirmado en origin/feat/boceto-mvp\" } else { \"NO esta en origin - hay que pushear\" })"
     ]
   },
   "includeGitInstructions": true,
