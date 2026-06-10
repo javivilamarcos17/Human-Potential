@@ -10,6 +10,10 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Revisión crítica + integración (2026-06-10)
+- **`docs/REVISION_CRITICA.md`** — control de calidad vivo. Detectadas y **corregidas** 2 incoherencias del avatar al pasar de 20 a 30 fases: maqueta ("Fase 10 = Guardián Pleno" → Fase 16) y datos de demo (nivel 47/fase 10 → nivel 50/fase 16, coherente con `fases_avatar`).
+- **`docs/PROYECCIONES_FINANCIERAS.md`** (agente 2) integrado en el índice; siguiente en su cola: ANALISIS_COMPETENCIA.
+
 ### Añadido — Índice de docs + datos de demo + personalización (2026-06-10)
 - **`docs/README.md`** — índice maestro de toda la documentación (mapa de navegación del proyecto).
 - **`supabase/migrations/0004_datos_demo.sql`** — datos de ejemplo (clínica + paciente + avatar a media evolución + rutina + triajes) para enseñar el MVP/prototipo con datos realistas.

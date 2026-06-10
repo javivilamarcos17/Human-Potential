@@ -54,7 +54,8 @@
       "PowerShell(git pull)",
       "PowerShell(git add docs/FAQ_CLINICAS.md coordinacion/agente-2/ESTADO.md)",
       "Bash(git rebase *)",
-      "PowerShell(git add docs/PROYECCIONES_FINANCIERAS.md coordinacion/agente-2/ESTADO.md)"
+      "PowerShell(git add docs/PROYECCIONES_FINANCIERAS.md coordinacion/agente-2/ESTADO.md)",
+      "PowerShell(git add docs/ANALISIS_COMPETENCIA.md coordinacion/agente-2/ESTADO.md)"
     ]
   },
   "includeGitInstructions": true,

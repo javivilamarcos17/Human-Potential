@@ -26,7 +26,8 @@
 - [DOSSIER_DESARROLLO.md](DOSSIER_DESARROLLO.md) — para pedir presupuesto a desarrolladores.
 - [PLAN_PILOTO.md](PLAN_PILOTO.md) — validación con la primera clínica.
 - [FAQ_CLINICAS.md](FAQ_CLINICAS.md) — objeciones y respuestas B2B.
-- *(en curso por los agentes: PROYECCIONES_FINANCIERAS, ANALISIS_COMPETENCIA, RIESGOS, KPIS)*
+- [PROYECCIONES_FINANCIERAS.md](PROYECCIONES_FINANCIERAS.md) — escenarios de ingresos/costes.
+- *(en curso por los agentes: ANALISIS_COMPETENCIA, RIESGOS, KPIS, PRIVACIDAD_RGPD)*
 
 ## 🛠️ Técnico
 - [ARQUITECTURA.md](ARQUITECTURA.md) — stack, modelo de datos, cómo arrancar.

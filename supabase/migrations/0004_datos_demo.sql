@@ -33,10 +33,11 @@ begin
   insert into auditorias_vitalidad (id, paciente_id, fuerza, aerobico, movilidad, constancia)
     values (gen_random_uuid(), v_paciente, 18, 16, 12, 12) returning id into v_audit;
 
-  -- Arquetipo Agua → avatar a media evolución (Guardián Pleno, fase 10, nivel 47)
+  -- Arquetipo Agua → avatar a media evolución (Guardián Pleno = fase 16, nivel 50; coherente
+  -- con fases_avatar: fase 16 tiene nivel_min 50). Ver docs/diseño/avatar-evolucion.md.
   select id into v_arq_agua from arquetipos where nombre = 'agua';
   insert into avatares (paciente_id, arquetipo_id, nivel, fase_visual, puntos_vitalidad, racha_dias)
-    values (v_paciente, v_arq_agua, 47, 10, 4620, 23);
+    values (v_paciente, v_arq_agua, 50, 16, 4620, 23);
 
   -- Monedero y referido
   insert into monederos (paciente_id, saldo_descuento) values (v_paciente, 10);

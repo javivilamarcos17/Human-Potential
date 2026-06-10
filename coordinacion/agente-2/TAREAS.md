@@ -6,18 +6,19 @@
 > PRIORIDAD DEL DUEÑO: todo muy bien pensado, MVP medido al milímetro.
 
 ## ▶ EN CURSO
-- **Crea `docs/PROYECCIONES_FINANCIERAS.md`** — modelo de negocio orientativo: vías de ingreso
-  (clínicas B2B2C, cross-selling, suscripción Descuento Sudado), costes principales y 2-3
-  escenarios (conservador / base / optimista). Marca claramente que son estimaciones a validar.
-  Contexto: `docs/PROPUESTA_DE_VALOR.md` §5. Crea SOLO ese archivo.
+- **Crea `docs/ANALISIS_COMPETENCIA.md`** — competidores (apps fitness, fisio digital, salud) y
+  por qué Anti Frágil es distinto (los fosos defensivos: datos clínicos, canal de clínicas,
+  vínculo emocional con el avatar). Contexto: `docs/PROPUESTA_DE_VALOR.md` §3. Crea SOLO ese archivo.
 
 ## ⬜ COLA (en orden; no empieces hasta que pase a EN CURSO)
-1. **`docs/ANALISIS_COMPETENCIA.md`** — competidores (apps fitness, fisio digital) y por qué
-   Anti Frágil es distinto (los fosos defensivos). Contexto: `docs/PROPUESTA_DE_VALOR.md` §3.
-2. **`docs/RIESGOS_Y_MITIGACIONES.md`** — riesgos del proyecto (producto, mercado, ejecución,
+1. **`docs/RIESGOS_Y_MITIGACIONES.md`** — riesgos del proyecto (producto, mercado, ejecución,
    legal/datos sanitarios) y cómo mitigar cada uno.
-3. **`docs/KPIS_NEGOCIO.md`** — métricas clave: métrica "norte estrella", adherencia, retención,
+2. **`docs/KPIS_NEGOCIO.md`** — métricas clave: métrica "norte estrella", adherencia, retención,
    referidos, y cómo se medirán.
+3. **`docs/PRIVACIDAD_RGPD.md`** — borrador de privacidad/RGPD para datos sanitarios (a validar
+   por un abogado). Marca claramente que es un borrador no legal.
+
+## ✅ Hecho: PROYECCIONES_FINANCIERAS.md
 
 ## Reglas
 - Solo creas el archivo asignado + tu `ESTADO.md`. No toques CHANGELOG ni archivos de otros.
