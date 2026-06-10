@@ -3,33 +3,32 @@
 > Lo escribe SOLO el organizador. Tú (agente) solo LEES esto y haces la tarea ▶ EN CURSO.
 > Al terminar, confirma en `ESTADO.md`, push, y dime "listo agente-1". No edites este archivo.
 > ⚠️ GITHUB = javivilamarcos17, SIEMPRE. NO PREGUNTES NUNCA POR LA CUENTA.
-> PRIORIDAD DEL DUEÑO: estética muy cuidada + algo demostrable y funcional, medido al milímetro.
+> PRIORIDAD #1 DEL MVP: experiencia de usuario, calidad, practicidad, modernidad y estética.
+> Lee `docs/diseño/experiencia-usuario.md` y pasa su checklist antes de confirmar cualquier pantalla.
 
-## ▶ EN CURSO — PULIDO del prototipo (revisión crítica del organizador)
-El prototipo `mockups/prototipo/index.html` está muy bien. Corrige estas incoherencias
-detectadas (ver `docs/REVISION_CRITICA.md`), editando SOLO ese archivo:
-- **C3 · Racha coherente:** el Dashboard muestra 7 días y la Recompensa 8; al volver al
-  Dashboard sigue 7. Unifícalo: tras cerrar la sesión, el Dashboard debe reflejar la racha
-  actualizada (usa JS para subir 7→8, o parte de un valor coherente en todo el flujo).
-- **C4 · Persona canónica:** usa SIEMPRE la misma (ver REVISION_CRITICA): Paciente **Javi**,
-  Código **AF-8823**, Clínica **MovePlus**, Fisio **Dra. Elena Ruiz**, Guardián **Kael (Agua)**.
-  Hoy la rutina dice "Dr. Rodríguez". Cámbialo a Dra. Elena Ruiz · MovePlus.
-- **C5 · Botones muertos:** "Mi progreso", "Tarjeta Épica" y "Compartir" no hacen nada.
-  Conéctalos a algo simple (un aviso "Próximamente en el MVP") o márcalos como demo.
-- (C6 XP/fase: déjalo como está, solo añade un comentario de que son ilustrativos.)
-
-## ⬜ COLA (en orden; no empieces hasta que pase a EN CURSO)
-1. **`mockups/prototipo/clinica.html`** — panel del fisio (semáforos rojo/ámbar/verde, ficha del
-   paciente de **Javi**, fisio **Dra. Elena Ruiz · MovePlus**). Misma estética y persona canónica.
-   Contexto: `docs/diseño/panel-clinica.md`.
-2. **`docs/diseño/moodboard-avatares.md`** — guía de estilo para el ilustrador: las 6 etapas
-   mayores × 3 arquetipos (Tierra/Agua/Viento) con paleta y referencias. Contexto: `avatar-evolucion.md`.
+## ▶ EN CURSO
+- **Crea `mockups/prototipo/clinica.html`** — el panel del fisio, navegable y con la misma
+  calidad estética que `index.html` (es la otra mitad del producto: lo que ve la clínica).
+  Pantallas/secciones a incluir (clicables entre sí):
+  1. **Pacientes con semáforos**: lista ordenada (🔴 arriba) — usa varios pacientes ficticios
+     y entre ellos a **Javi (verde, racha 24)**; un rojo con "dolor 8/10 hoy" y un ámbar
+     "4 días sin actividad". Cada fila → abre la ficha.
+  2. **Ficha del paciente (Javi)**: Auditoría 62/100 con sus 4 bloques, gráfico simple de
+     tendencia del dolor (7→3, los datos de demo), última sesión con RPE, avatar Kael fase 16,
+     y botones (ajustar Pack / mensaje) con overlay "Próximamente".
+  3. Detalle visual: cabecera con **Dra. Elena Ruiz · MovePlus**.
+  - Persona canónica SIEMPRE (ver `docs/REVISION_CRITICA.md`). Contexto: `docs/diseño/panel-clinica.md`.
+  - Archivo standalone: NO toques `index.html`.
 
 ## ⬜ COLA (en orden; no empieces hasta que pase a EN CURSO)
-1. **`mockups/prototipo/clinica.html`** — panel del fisio (semáforos rojo/ámbar/verde, ficha del
-   paciente). Misma estética. Contexto: `docs/diseño/panel-clinica.md`.
-2. **`docs/diseño/moodboard-avatares.md`** — guía de estilo para el ilustrador: las 6 etapas
-   mayores × 3 arquetipos (Tierra/Agua/Viento) con paleta y referencias. Contexto: `avatar-evolucion.md`.
+1. **`docs/diseño/moodboard-avatares.md`** — guía de estilo para el ilustrador: las 6 etapas
+   mayores × 3 arquetipos (Tierra/Agua/Viento) con paleta por arquetipo (de IDENTIDAD_VISUAL)
+   y referencias de sensación. Contexto: `avatar-evolucion.md`.
+2. **`mockups/prototipo/evolucion.html`** — galería visual de la evolución: las 6 etapas
+   mayores del arquetipo Agua con sus sub-fases (placeholders), el "momento evolución"
+   (celebración) y la pantalla de re-Auditoría "wow" (62→67, +5 vitalidad). Misma estética.
+
+## ✅ Hecho: PITCH_DECK · IDENTIDAD_VISUAL · ONE_PAGER · prototipo index.html + pulido C3-C6
 
 ## Reglas
 - Solo creas archivos NUEVOS de tu tarea + tu `ESTADO.md`. No toques CHANGELOG ni archivos de otros.
