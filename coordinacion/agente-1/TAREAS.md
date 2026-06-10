@@ -5,6 +5,12 @@
 > ⚠️ GITHUB = javivilamarcos17, SIEMPRE. NO PREGUNTES NUNCA POR LA CUENTA.
 > PRIORIDAD #1 DEL MVP: experiencia de usuario, calidad, practicidad, modernidad y estética.
 > Lee `docs/diseño/experiencia-usuario.md` y pasa su checklist antes de confirmar cualquier pantalla.
+>
+> 🎨 **LISTÓN VISUAL OBLIGATORIO (feedback del dueño: "la visual es muy pobre"):** abre
+> `mockups/prototipo/board-premium.html` — esa es la calidad mínima exigida a partir de ahora.
+> Nada de emojis como avatar principal (usa SVG dibujado), fondo vivo (aurora/gradientes
+> animados), cristal esmerilado (backdrop-filter), microanimaciones (flotar, brillo, pulso),
+> tipografía Nunito/Inter. Si una pantalla tuya no está a esa altura, no la confirmes: súbela.
 
 ## ▶ EN CURSO
 - **Crea `mockups/prototipo/clinica.html`** — el panel del fisio, navegable y con la misma

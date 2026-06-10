@@ -63,7 +63,8 @@
       "PowerShell(git add docs/MODELO_PRECIOS.md coordinacion/agente-2/ESTADO.md)",
       "Bash(py --version)",
       "Bash(python -m http.server 8080)",
-      "Bash(git commit -m 'feat\\(copy\\): biblioteca de microcopy por pantalla del Core Loop *)"
+      "Bash(git commit -m 'feat\\(copy\\): biblioteca de microcopy por pantalla del Core Loop *)",
+      "PowerShell(git add docs/PLAN_GO_TO_MARKET.md coordinacion/agente-2/ESTADO.md)"
     ]
   },
   "includeGitInstructions": true,
