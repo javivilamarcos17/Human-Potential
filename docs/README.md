@@ -27,7 +27,8 @@
 - [PLAN_PILOTO.md](PLAN_PILOTO.md) — validación con la primera clínica.
 - [FAQ_CLINICAS.md](FAQ_CLINICAS.md) — objeciones y respuestas B2B.
 - [PROYECCIONES_FINANCIERAS.md](PROYECCIONES_FINANCIERAS.md) — escenarios de ingresos/costes.
-- *(en curso por los agentes: ANALISIS_COMPETENCIA, RIESGOS, KPIS, PRIVACIDAD_RGPD)*
+- [ANALISIS_COMPETENCIA.md](ANALISIS_COMPETENCIA.md) — competidores y fosos defensivos.
+- *(en curso por los agentes: RIESGOS, KPIS, MODELO_PRECIOS, GO_TO_MARKET, PRIVACIDAD_RGPD)*
 
 ## 🛠️ Técnico
 - [ARQUITECTURA.md](ARQUITECTURA.md) — stack, modelo de datos, cómo arrancar.
