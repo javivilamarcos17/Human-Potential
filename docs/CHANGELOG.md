@@ -10,6 +10,9 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Especificación del MVP al milímetro (2026-06-10)
+- **`docs/ESPECIFICACION_MVP.md`** — plano preciso pantalla por pantalla (app paciente A1-A12, panel clínica B1-B6b, backend) con campos, validaciones y la "definición de terminado" del MVP. Manda sobre los diseños si algo choca.
+
 ### Añadido — Documentos de negocio (trabajo en paralelo de agentes) (2026-06-10)
 - **`docs/PITCH_DECK.md`** — guion de Pitch Deck para inversores (13 diapositivas).
 - **`docs/DOSSIER_DESARROLLO.md`** — dossier para pedir presupuesto a equipos de desarrollo (alcance, sprints, criterios, preguntas).
