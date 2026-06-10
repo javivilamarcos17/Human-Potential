@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Anti Frágil — Prototipo Navegable</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde:       #2ECC8F;
+      --verde-dark:  #1aa870;
+      --azul:        #1A2E4A;
+      --calido:      #F5F3EE;
+      --gris:        #8A9BB0;
+      --rojo:        #E53935;
+      --ambar:       #FFA726;
+      --indigo:      #5C6BC0;
+      --dorado:      #F4C430;
+      --agua-l:      #80DEEA;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0B1829;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      gap: 20px;
+    }
+
+    /* ── proto label ── */
+    .proto-bar {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 8px 20px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.3px;
+    }
+    .proto-bar strong { color: var(--verde); font-weight: 600; }
+
+    /* ── phone frame ── */
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: var(--azul);
+      border-radius: 50px;
+      overflow: hidden;
+      position: relative;
+      box-shadow:
+        0 60px 120px rgba(0,0,0,0.7),
+        0 0 0 1px rgba(255,255,255,0.07),
+        inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    /* ── status bar ── */
+    .sbar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 46px;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      pointer-events: none;
+    }
+    .sbar-time { font-weight: 700; font-size: 15px; color: white; }
+    .sbar-icons { font-size: 12px; color: rgba(255,255,255,0.8); letter-spacing: 2px; }
+
+    /* ── screens ── */
+    .screens { position: absolute; inset: 0; }
+    .screen {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transform: translateX(32px);
+      transition: opacity .32s ease, transform .32s ease;
+      pointer-events: none;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .screen::-webkit-scrollbar { display: none; }
+    .screen.active {
+      opacity: 1; transform: none; pointer-events: all;
+    }
+    .screen.exit {
+      opacity: 0; transform: translateX(-32px);
+    }
+
+    /* ════════════════════════════════
+       SHARED COMPONENTS
+    ════════════════════════════════ */
+    .back-btn {
+      width: 36px; height: 36px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(0,0,0,0.07);
+      cursor: pointer;
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+      transition: background .15s;
+      color: inherit;
+    }
+    .back-btn:active { background: rgba(0,0,0,0.15); }
+    .back-btn.light { background: rgba(255,255,255,0.08); color: white; }
+
+    .screen-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 24px;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .screen-sub {
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--gris);
+      margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--verde);
+      color: var(--azul);
+      border: none;
+      border-radius: 16px;
+      padding: 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(46,204,143,0.28);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-primary:active { transform: scale(0.97); box-shadow: none; }
+
+    .btn-ghost {
+      width: 100%;
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      color: var(--gris);
+      border-radius: 16px;
+      padding: 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: border-color .2s;
+    }
+    .btn-ghost:active { border-color: rgba(255,255,255,0.25); }
+
+    /* sliders */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%; height: 6px;
+      border-radius: 3px;
+      background: rgba(0,0,0,0.08);
+      outline: none; cursor: pointer;
+    }
+    input[type=range].light { background: rgba(255,255,255,0.1); }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--verde);
+      box-shadow: 0 2px 10px rgba(46,204,143,0.45);
+      cursor: pointer;
+    }
+
+    /* ════════════════════════════════
+       SCREEN 1 · ONBOARDING
+    ════════════════════════════════ */
+    #s1 {
+      background: var(--azul);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 80px 28px 44px;
+    }
+    .logo {
+      width: 84px; height: 84px;
+      background: linear-gradient(135deg, var(--verde), var(--verde-dark));
+      border-radius: 26px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 42px;
+      box-shadow: 0 12px 40px rgba(46,204,143,0.4);
+      margin-bottom: 22px;
+    }
+    #s1 h1 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 34px;
+      color: white;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    #s1 .tagline {
+      font-size: 15px;
+      color: var(--gris);
+      text-align: center;
+      line-height: 1.55;
+      margin-bottom: 40px;
+    }
+    .info-card {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .info-card .chip {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--verde);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .info-card p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.6;
+    }
+    .code-input {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1.5px solid rgba(255,255,255,0.14);
+      border-radius: 14px;
+      padding: 18px;
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 8px;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      margin-bottom: 22px;
+      transition: border-color .2s;
+    }
+    .code-input:focus { border-color: var(--verde); }
+    .code-input::placeholder { color: rgba(255,255,255,0.2); letter-spacing: 3px; font-size: 16px; }
+
+    /* ════════════════════════════════
+       SCREEN 2 · AUDITORÍA
+    ════════════════════════════════ */
+    #s2 {
+      background: var(--calido);
+      display: flex; flex-direction: column;
+      padding-top: 54px;
+    }
+    #s2 .hdr { padding: 22px 28px 0; }
+    #s2 .screen-title { color: var(--azul); }
+    #s2 .screen-sub { margin-bottom: 6px; }
+
+    .score-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--azul);
+      color: white;
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 22px;
+    }
+    .score-pill .num {
+      font-family: 'Nunito', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--verde);
+    }
+
+    .audit-list { padding: 0 28px; display: flex; flex-direction: column; gap: 14px; }
+
+    .audit-block {
+      background: white;
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .ab-top {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px;
+    }
+    .ab-name { font-size: 14px; font-weight: 600; color: var(--azul); }
+    .ab-weight { font-size: 12px; color: var(--gris); }
+    .ab-score {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 22px; color: var(--verde);
+    }
+
+    #s2 .footer { padding: 20px 28px 44px; }
+
+    /* ════════════════════════════════
+       SCREEN 3 · SOMBRERO SELECCIONADOR
+    ════════════════════════════════ */
+    #s3 {
+      background: var(--azul);
+      display: flex; flex-direction: column;
+      padding-top: 54px;
+    }
+    #s3 .hdr { padding: 22px 28px 0; }
+    #s3 .screen-title { color: white; }
+
+    .assign-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(46,204,143,0.12);
+      border: 1px solid rgba(46,204,143,0.28);
+      color: var(--verde);
+      font-size: 13px; font-weight: 600;
+      padding: 7px 14px; border-radius: 20px;
+      margin-bottom: 22px;
+    }
+
+    .guardian-list { padding: 0 22px; display: flex; flex-direction: column; gap: 12px; }
+
+    .gc {
+      border-radius: 20px;
+      padding: 18px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform .18s, border-color .18s;
+    }
+    .gc:active { transform: scale(0.97); }
+    .gc.agua { background: linear-gradient(140deg,#0A2A3D,#0D4A6B); border-color: rgba(128,222,234,0.25); }
+
+    .gc-inner { display: flex; align-items: center; gap: 14px; }
+    .gc-icon {
+      width: 68px; height: 68px; border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px; flex-shrink: 0;
+    }
+    .gc-info { flex: 1; }
+    .gc-name {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 18px; color: white; margin-bottom: 4px;
+    }
+    .gc-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.4; }
+    .gc-tag {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 11px; font-weight: 700;
+      background: rgba(128,222,234,0.15); color: var(--agua-l);
+      padding: 3px 10px; border-radius: 8px;
+    }
+    .gc-arrow { font-size: 22px; color: rgba(255,255,255,0.25); }
+
+    .choose-note {
+      text-align: center;
+      font-size: 13px; color: var(--gris);
+      padding: 16px 28px 36px;
+      line-height: 1.5;
+    }
+
+    /* ════════════════════════════════
+       SCREEN 4 · DASHBOARD
+    ════════════════════════════════ */
+    #s4 {
+      background: var(--azul);
+      display: flex; flex-direction: column;
+      padding-top: 46px;
+    }
+
+    .dash-topbar {
+      display: flex;
+      align-items: center; justify-content: space-between;
+      padding: 14px 28px;
+    }
+    .greeting { font-size: 14px; color: var(--gris); margin-bottom: 2px; }
+    .dash-name {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 22px; color: white;
+    }
+    .streak-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(244,196,48,0.12);
+      border: 1px solid rgba(244,196,48,0.28);
+      padding: 8px 14px; border-radius: 20px;
+    }
+    .streak-num {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 20px; color: var(--dorado);
+    }
+    .streak-lbl { font-size: 11px; color: rgba(244,196,48,0.65); }
+
+    .avatar-stage {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 16px 28px 0;
+    }
+
+    .avatar-glow {
+      position: relative;
+      margin-bottom: 28px;
+    }
+    .avatar-glow::before {
+      content: '';
+      position: absolute; inset: -28px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,204,143,0.18) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .avatar-box {
+      width: 144px; height: 144px;
+      border-radius: 36px;
+      background: linear-gradient(140deg, #0A2A3D, #0D4A6B);
+      border: 2px solid rgba(128,222,234,0.28);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 74px;
+      box-shadow: 0 0 48px rgba(46,204,143,0.18);
+      position: relative;
+    }
+    .phase-badge {
+      position: absolute;
+      bottom: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--azul);
+      border: 1.5px solid rgba(128,222,234,0.4);
+      color: var(--agua-l);
+      font-size: 11px; font-weight: 600;
+      padding: 4px 12px; border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    .avatar-meta {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .avatar-arch { font-size: 13px; font-weight: 600; color: var(--agua-l); margin-bottom: 4px; }
+    .avatar-phase {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 22px; color: white;
+      margin-bottom: 16px;
+    }
+
+    .xp-wrap { width: 100%; }
+    .xp-top { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .xp-lbl { font-size: 12px; font-weight: 600; color: var(--gris); text-transform: uppercase; letter-spacing: .5px; }
+    .xp-val { font-size: 13px; font-weight: 700; color: var(--verde); }
+    .xp-bar { height: 8px; background: rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; }
+    .xp-fill {
+      height: 100%; width: 35%;
+      background: linear-gradient(90deg, var(--verde), var(--verde-dark));
+      border-radius: 4px;
+    }
+    .xp-next { font-size: 12px; color: var(--gris); margin-top: 6px; text-align: right; }
+
+    .dash-actions { padding: 16px 28px 44px; display: flex; flex-direction: column; gap: 11px; }
+
+    .action-btn {
+      border-radius: 20px; padding: 18px 20px;
+      display: flex; align-items: center; gap: 14px;
+      cursor: pointer; border: none; text-align: left;
+      transition: transform .15s;
+      width: 100%;
+    }
+    .action-btn:active { transform: scale(0.97); }
+    .action-btn.main { background: var(--verde); }
+    .action-btn.sec {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+    .action-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+    .action-btn.main .action-icon { background: rgba(0,0,0,0.12); }
+    .action-btn.sec  .action-icon { background: rgba(255,255,255,0.08); }
+    .action-text { flex: 1; }
+    .action-title { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+    .action-btn.main .action-title { color: var(--azul); }
+    .action-btn.sec  .action-title { color: white; }
+    .action-desc { font-size: 13px; }
+    .action-btn.main .action-desc { color: rgba(26,46,74,.65); }
+    .action-btn.sec  .action-desc { color: var(--gris); }
+    .action-chev { font-size: 20px; opacity: .35; color: white; }
+    .action-btn.main .action-chev { color: var(--azul); }
+
+    /* ════════════════════════════════
+       SCREEN 5 · TRIAJE
+    ════════════════════════════════ */
+    #s5 {
+      background: var(--calido);
+      display: flex; flex-direction: column;
+      padding-top: 54px;
+    }
+    #s5 .hdr { padding: 22px 28px 0; }
+    #s5 .screen-title { color: var(--azul); }
+
+    .triaje-body { padding: 0 28px; display: flex; flex-direction: column; gap: 18px; flex: 1; }
+
+    .t-card {
+      background: white;
+      border-radius: 20px; padding: 22px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .t-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .t-name { font-size: 15px; font-weight: 600; color: var(--azul); margin-bottom: 3px; }
+    .t-desc { font-size: 13px; color: var(--gris); }
+    .t-big {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 44px; line-height: 1;
+    }
+    .t-big.pain { color: var(--ambar); }
+    .t-big.energy { color: var(--verde); }
+    .scale-row { display: flex; justify-content: space-between; margin-top: 8px; }
+    .scale-end { font-size: 11px; color: var(--gris); }
+
+    .empathy-card {
+      background: rgba(46,204,143,0.07);
+      border: 1px solid rgba(46,204,143,0.2);
+      border-radius: 14px; padding: 14px 16px;
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .empathy-card span { font-size: 18px; }
+    .empathy-card p { font-size: 13px; color: #1E6B4B; line-height: 1.55; }
+
+    #s5 .footer { padding: 20px 28px 44px; }
+
+    /* ════════════════════════════════
+       SCREEN 6 · RUTINA
+    ════════════════════════════════ */
+    #s6 {
+      background: var(--calido);
+      display: flex; flex-direction: column;
+      padding-top: 54px;
+    }
+    #s6 .hdr { padding: 22px 28px 0; }
+    #s6 .screen-title { color: var(--azul); }
+
+    .pack-card {
+      background: var(--azul);
+      margin: 0 28px 20px;
+      border-radius: 18px; padding: 18px;
+      display: flex; gap: 14px; align-items: center;
+    }
+    .pack-icon-box {
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; flex-shrink: 0;
+    }
+    .pack-name { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px; color: white; margin-bottom: 3px; }
+    .pack-meta { font-size: 12px; color: var(--gris); }
+
+    .ex-list { padding: 0 28px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .ex-item {
+      background: white;
+      border-radius: 16px; padding: 14px 18px;
+      display: flex; align-items: center; gap: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .ex-item:active { opacity: .8; }
+
+    .ex-check {
+      width: 28px; height: 28px; border-radius: 8px;
+      border: 2px solid #DDD9D1;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+      transition: all .2s;
+    }
+    .ex-item.done .ex-check {
+      background: var(--verde); border-color: var(--verde); color: white;
+    }
+    .ex-item.done { opacity: .55; }
+
+    .ex-thumb {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg,#EBE8E2,#D9D5CC);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; flex-shrink: 0;
+    }
+    .ex-name { font-size: 15px; font-weight: 600; color: var(--azul); margin-bottom: 2px; }
+    .ex-detail { font-size: 13px; color: var(--gris); }
+
+    .ex-progress { text-align: center; font-size: 13px; color: var(--gris); padding: 8px; }
+    #s6 .footer { padding: 12px 28px 44px; }
+
+    /* ════════════════════════════════
+       SCREEN 7 · FEEDBACK RPE
+    ════════════════════════════════ */
+    #s7 {
+      background: var(--calido);
+      display: flex; flex-direction: column;
+      padding-top: 54px;
+    }
+    #s7 .hdr { padding: 22px 28px 0; }
+    #s7 .screen-title { color: var(--azul); }
+
+    .rpe-body { padding: 0 28px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+    .rpe-card {
+      background: white;
+      border-radius: 20px; padding: 22px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .rpe-card .t-name { margin-bottom: 4px; }
+
+    .rpe-grid {
+      display: grid; grid-template-columns: repeat(5,1fr);
+      gap: 8px; margin-top: 14px;
+    }
+    .rpe-btn {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      border: 2px solid #E2DED7;
+      background: white;
+      font-size: 14px; font-weight: 700; color: var(--gris);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .rpe-btn:active, .rpe-btn.sel {
+      background: var(--verde); border-color: var(--verde); color: white;
+    }
+
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .tgl-text { flex: 1; }
+    .tgl-lbl { font-size: 15px; font-weight: 600; color: var(--azul); margin-bottom: 3px; }
+    .tgl-sub { font-size: 13px; color: var(--gris); }
+
+    .toggle {
+      width: 52px; height: 30px;
+      border-radius: 15px; background: #DDD9D1;
+      position: relative; cursor: pointer; flex-shrink: 0;
+      transition: background .2s;
+    }
+    .toggle.on { background: var(--rojo); }
+    .knob {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: white;
+      position: absolute; top: 3px; left: 3px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: transform .2s;
+    }
+    .toggle.on .knob { transform: translateX(22px); }
+
+    .alert-card {
+      background: rgba(229,57,53,0.07);
+      border: 1px solid rgba(229,57,53,0.22);
+      border-radius: 14px; padding: 14px 16px;
+      display: flex; gap: 10px; align-items: flex-start;
+      display: none;
+    }
+    .alert-card.show { display: flex; }
+    .alert-card p { font-size: 13px; color: #9B1C1C; line-height: 1.55; }
+
+    #s7 .footer { padding: 12px 28px 44px; }
+
+    /* ════════════════════════════════
+       SCREEN 8 · RECOMPENSA
+    ════════════════════════════════ */
+    #s8 {
+      background: var(--azul);
+      display: flex; flex-direction: column; align-items: center;
+      padding: 80px 28px 44px;
+      text-align: center;
+    }
+
+    .cel-ring {
+      width: 168px; height: 168px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,204,143,0.2) 0%, transparent 70%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; margin-bottom: 28px;
+    }
+    .cel-ring::before {
+      content: '';
+      position: absolute; inset: 10px; border-radius: 50%;
+      border: 2px solid rgba(46,204,143,0.25);
+      animation: pring 2s ease-in-out infinite;
+    }
+    @keyframes pring {
+      0%, 100% { transform: scale(1); opacity: .8; }
+      50%       { transform: scale(1.07); opacity: .3; }
+    }
+    .cel-ava { font-size: 76px; }
+
+    .rew-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 28px; color: white;
+      margin-bottom: 10px;
+    }
+    .rew-sub {
+      font-size: 15px; color: var(--gris);
+      line-height: 1.6; margin-bottom: 28px;
+    }
+
+    .xp-chips { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+    .xp-chip {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 10px 16px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .xp-chip-v {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 16px; color: var(--verde);
+    }
+    .xp-chip-t { font-size: 13px; color: rgba(255,255,255,0.7); }
+
+    .streak-cel {
+      width: 100%;
+      background: rgba(244,196,48,0.1);
+      border: 1px solid rgba(244,196,48,0.28);
+      border-radius: 16px; padding: 16px 22px;
+      display: flex; gap: 12px; align-items: center;
+      margin-bottom: 28px; text-align: left;
+    }
+    .streak-cel-icon { font-size: 30px; }
+    .streak-cel-num {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 22px; color: var(--dorado);
+    }
+    .streak-cel-lbl { font-size: 13px; color: rgba(244,196,48,0.65); }
+
+    /* ── nav dots ── */
+    .nav-dots {
+      display: flex; gap: 6px; align-items: center;
+    }
+    .nd {
+      width: 6px; height: 6px; border-radius: 3px;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer; transition: all .3s;
+    }
+    .nd.on { width: 22px; background: var(--verde); }
+  </style>
+</head>
+<body>
+
+<div class="proto-bar">
+  <strong>Anti Frágil</strong> &nbsp;·&nbsp; Prototipo Navegable v0.1 &nbsp;·&nbsp; Haz clic para avanzar
+</div>
+
+<div class="phone">
+
+  <!-- Status bar -->
+  <div class="sbar">
+    <span class="sbar-time">9:41</span>
+    <span class="sbar-icons">••• WiFi 🔋</span>
+  </div>
+
+  <div class="screens">
+
+    <!-- ══════════════════════════════════════════
+         S1 · ONBOARDING — Código de Honor
+    ══════════════════════════════════════════ -->
+    <div class="screen active" id="s1">
+
+      <div class="logo">🛡️</div>
+      <h1>Anti Frágil</h1>
+      <p class="tagline">Tu equipo de salud, en el bolsillo.<br>Tu progreso, hecho un juego que engancha.</p>
+
+      <div class="info-card">
+        <div class="chip">¿Cómo funciona?</div>
+        <p>Tu clínica te ha dado un <strong style="color:white">Código de Honor</strong>.
+           Introdúcelo para vincular tu cuenta y comenzar el viaje con tu Guardián.</p>
+      </div>
+
+      <input class="code-input" type="text" placeholder="AF-XXXX" value="AF-8823" maxlength="7">
+
+      <button class="btn-primary" onclick="go(2)">Comenzar mi viaje →</button>
+      <button class="btn-ghost" onclick="go(2)">Ya tengo cuenta</button>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         S2 · AUDITORÍA DE VITALIDAD
+    ══════════════════════════════════════════ -->
+    <div class="screen" id="s2">
+
+      <div class="hdr">
+        <button class="back-btn" onclick="go(1)">←</button>
+        <h2 class="screen-title">Auditoría de Vitalidad</h2>
+        <p class="screen-sub">Tu fisio ya registró tu punto de partida. Revísalo y confirma.</p>
+        <div class="score-pill">
+          Puntuación inicial &nbsp;<span class="num" id="audit-total">62</span>&nbsp;/ 100
+        </div>
+      </div>
+
+      <div class="audit-list">
+
+        <div class="audit-block">
+          <div class="ab-top">
+            <div>
+              <div class="ab-name">💪 Fuerza Base</div>
+              <div class="ab-weight">30 pts máx.</div>
+            </div>
+            <div class="ab-score" id="av1">18</div>
+          </div>
+          <input type="range" min="0" max="30" value="18" oninput="auditChange(this,'av1',0)">
+        </div>
+
+        <div class="audit-block">
+          <div class="ab-top">
+            <div>
+              <div class="ab-name">🏃 Capacidad Aeróbica</div>
+              <div class="ab-weight">30 pts máx.</div>
+            </div>
+            <div class="ab-score" id="av2">16</div>
+          </div>
+          <input type="range" min="0" max="30" value="16" oninput="auditChange(this,'av2',1)">
+        </div>
+
+        <div class="audit-block">
+          <div class="ab-top">
+            <div>
+              <div class="ab-name">🧘 Movilidad / Dolor</div>
+              <div class="ab-weight">20 pts máx.</div>
+            </div>
+            <div class="ab-score" id="av3">14</div>
+          </div>
+          <input type="range" min="0" max="20" value="14" oninput="auditChange(this,'av3',2)">
+        </div>
+
+        <div class="audit-block">
+          <div class="ab-top">
+            <div>
+              <div class="ab-name">📅 Constancia / Hábitos</div>
+              <div class="ab-weight">20 pts máx.</div>
+            </div>
+            <div class="ab-score" id="av4">14</div>
+          </div>
+          <input type="range" min="0" max="20" value="14" oninput="auditChange(this,'av4',3)">
+        </div>
+
+      </div>
+
+      <div class="footer">
+        <button class="btn-primary" onclick="go(3)">Ver mi Guardián →</button>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         S3 · SOMBRERO SELECCIONADOR
+    ══════════════════════════════════════════ -->
+    <div class="screen" id="s3">
+
+      <div class="hdr">
+        <button class="back-btn light" onclick="go(2)">←</button>
+        <h2 class="screen-title">Tu Guardián te espera</h2>
+        <p class="screen-sub" style="color:var(--gris)">
+          Tu perfil apunta a un guerrero de&nbsp;
+          <strong style="color:var(--agua-l)">tipo Agua</strong>.
+          Elige uno de estos tres compañeros.
+        </p>
+        <div class="assign-chip">✨ Asignado por tu Auditoría de Vitalidad</div>
+      </div>
+
+      <div class="guardian-list">
+
+        <div class="gc agua" onclick="go(4)">
+          <div class="gc-inner">
+            <div class="gc-icon">💧</div>
+            <div class="gc-info">
+              <div class="gc-name">Kael, el Fluido</div>
+              <div class="gc-desc">Se adapta. Abraza el movimiento. Nunca se rompe.</div>
+              <span class="gc-tag">Agua · Movilidad</span>
+            </div>
+            <span class="gc-arrow">›</span>
+          </div>
+        </div>
+
+        <div class="gc agua" onclick="go(4)">
+          <div class="gc-inner">
+            <div class="gc-icon">🌊</div>
+            <div class="gc-info">
+              <div class="gc-name">Nara, la Corriente</div>
+              <div class="gc-desc">Persiste donde otros ceden. La fuerza del agua es tiempo.</div>
+              <span class="gc-tag">Agua · Constancia</span>
+            </div>
+            <span class="gc-arrow">›</span>
+          </div>
+        </div>
+
+        <div class="gc agua" onclick="go(4)">
+          <div class="gc-inner">
+            <div class="gc-icon">🧊</div>
+            <div class="gc-info">
+              <div class="gc-name">Seryn, la Templada</div>
+              <div class="gc-desc">Calma exterior, núcleo inquebrantable. La serenidad es su armadura.</div>
+              <span class="gc-tag">Agua · Resiliencia</span>
+            </div>
+            <span class="gc-arrow">›</span>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="choose-note">Toca el que sientas más tuyo.<br>Esta elección te acompañará en todo tu viaje.</p>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         S4 · DASHBOARD
+    ══════════════════════════════════════════ -->
+    <div class="screen" id="s4">
+
+      <div class="dash-topbar">
+        <div>
+          <div class="greeting">Hola de nuevo,</div>
+          <div class="dash-name">Javi</div>
+        </div>
+        <div class="streak-pill">
+          <span style="font-size:20px">🔥</span>
+          <div>
+            <div class="streak-num">7</div>
+            <div class="streak-lbl">días</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="avatar-stage">
+        <div class="avatar-glow">
+          <div class="avatar-box">
+            🥚
+            <div class="phase-badge">Fase 1 · Huevo Latente</div>
+          </div>
+        </div>
+
+        <div style="height:30px"></div>
+
+        <div class="avatar-meta">
+          <div class="avatar-arch">💧 Kael, el Fluido · Agua</div>
+          <div class="avatar-phase">La Semilla</div>
+        </div>
+
+        <div class="xp-wrap">
+          <div class="xp-top">
+            <span class="xp-lbl">Vitalidad</span>
+            <span class="xp-val">350 XP</span>
+          </div>
+          <div class="xp-bar"><div class="xp-fill"></div></div>
+          <div class="xp-next">Fase 2 en 50 XP más</div>
+        </div>
+      </div>
+
+      <div class="dash-actions">
+
+        <button class="action-btn main" onclick="go(5)">
+          <div class="action-icon">⚡</div>
+          <div class="action-text">
+            <div class="action-title">Empezar el triaje de hoy</div>
+            <div class="action-desc">¿Cómo está tu cuerpo?</div>
+          </div>
+          <span class="action-chev">›</span>
+        </button>
+
+        <button class="action-btn sec">
+          <div class="action-icon">📊</div>
+          <div class="action-text">
+            <div class="action-title">Mi progreso</div>
+            <div class="action-desc">Historial y evolución</div>
+          </div>
+          <span class="action-chev">›</span>
+        </button>
+
+        <button class="action-btn sec">
+          <div class="action-icon">🎴</div>
+          <div class="action-text">
+            <div class="action-title">Tarjeta Épica</div>
+            <div class="action-desc">Compartir en Instagram / TikTok</div>
+          </div>
+          <span class="action-chev">›</span>
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         S5 · TRIAJE DIARIO
+    ══════════════════════════════════════════ -->
+    <div class="screen" id="s5">
+
+      <div class="hdr">
+        <button class="back-btn" onclick="go(4)">←</button>
+        <h2 class="screen-title">Triaje de hoy</h2>
+        <p class="screen-sub">Antes de empezar, cuéntanos cómo está tu cuerpo. Sin juicios.</p>
+      </div>
+
+      <div class="triaje-body">
+
+        <div class="t-card">
+          <div class="t-top">
+            <div>
+              <div class="t-name">Nivel de dolor</div>
+              <div class="t-desc">¿Cómo está tu zona de trabajo hoy?</div>
+            </div>
+            <div class="t-big pain" id="tv-dolor">3</div>
+          </div>
+          <input type="range" min="1" max="10" value="3" oninput="tSet(this,'tv-dolor')">
+          <div class="scale-row">
+            <span class="scale-end">Sin dolor</span>
+            <span class="scale-end">Dolor intenso</span>
+          </div>
+        </div>
+
+        <div class="t-card">
+          <div class="t-top">
+            <div>
+              <div class="t-name">Nivel de energía</div>
+              <div class="t-desc">¿Cómo te sientes hoy en general?</div>
+            </div>
+            <div class="t-big energy" id="tv-energia">7</div>
+          </div>
+          <input type="range" min="1" max="10" value="7" oninput="tSet(this,'tv-energia')">
+          <div class="scale-row">
+            <span class="scale-end">Agotado</span>
+            <span class="scale-end">Con energía</span>
+          </div>
+        </div>
+
+        <div class="empathy-card">
+          <span>💚</span>
+          <p>Con ese nivel de energía, hoy vas bien. He preparado tu rutina habitual.
+             Si en algún momento necesitas parar, aquí estamos.</p>
+        </div>
+
+      </div>
+
+      <div class="footer">
+        <button class="btn-primary" style="background:var(--azul);box-shadow:0 8px 24px rgba(26,46,74,.3)" onclick="go(6)">Ir a mi rutina de hoy →</button>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         S6 · RUTINA (PACK DE EJERCICIOS)
+    ══════════════════════════════════════════ -->
+    <div class="screen" id="s6">
+
+      <div class="hdr">
+        <button class="back-btn" onclick="go(5)">←</button>
+        <h2 class="screen-title">Tu rutina de hoy</h2>
+        <p class="screen-sub">Prescrita por tu clínica · 3 ejercicios · ~18 min</p>
+      </div>
+
+      <div class="pack-card">
+        <div class="pack-icon-box">🎯</div>
+        <div>
+          <div class="pack-name">Pack Espalda Lumbar — Semana 3</div>
+          <div class="pack-meta">Fisio: Dr. Rodríguez · Clínica MovePlus</div>
+        </div>
+      </div>
+
+      <div class="ex-list">
+
+        <div class="ex-item" id="ex1" onclick="exDone('ex1')">
+          <div class="ex-check" id="ex1c"></div>
+          <div class="ex-thumb">🧘</div>
+          <div>
+            <div class="ex-name">Cat-Cow — Movilidad lumbar</div>
+            <div class="ex-detail">3 × 10 rep · Ritmo lento</div>
+          </div>
+        </div>
+
+        <div class="ex-item" id="ex2" onclick="exDone('ex2')">
+          <div class="ex-check" id="ex2c"></div>
+          <div class="ex-thumb">🦵</div>
+          <div>
+            <div class="ex-name">Dead Bug — Core estabilización</div>
+            <div class="ex-detail">3 × 8 rep · Respiración controlada</div>
+          </div>
+        </div>
+
+        <div class="ex-item" id="ex3" onclick="exDone('ex3')">
+          <div class="ex-check" id="ex3c"></div>
+          <div class="ex-thumb">🧍</div>
+          <div>
+            <div class="ex-name">Glute Bridge — Activación glúteo</div>
+            <div class="ex-detail">3 × 12 rep · Sostén 2 seg arriba</div>
+          </div>
+        </div>
+
+        <p class="ex-progress" id="ex-prog">Toca cada ejercicio para marcarlo</p>
+
+      </div>
+
+      <div class="footer">
+        <button class="btn-primary" style="background:var(--azul);box-shadow:0 8px 24px rgba(26,46,74,.3)" onclick="go(7)">He terminado — dar feedback →</button>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         S7 · FEEDBACK RPE
+    ══════════════════════════════════════════ -->
+    <div class="screen" id="s7">
+
+      <div class="hdr">
+        <button class="back-btn" onclick="go(6)">←</button>
+        <h2 class="screen-title">¿Cómo fue?</h2>
+        <p class="screen-sub">Tu fisio verá esto. Un minuto, y cerramos el día.</p>
+      </div>
+
+      <div class="rpe-body">
+
+        <div class="rpe-card">
+          <div class="t-name">Esfuerzo percibido (RPE)</div>
+          <div class="t-desc" style="margin-top:4px">¿Cómo de duro fue el entrenamiento?</div>
+          <div class="rpe-grid">
+            <button class="rpe-btn" onclick="rpeSelect(this)">1</button>
+            <button class="rpe-btn" onclick="rpeSelect(this)">2</button>
+            <button class="rpe-btn" onclick="rpeSelect(this)">3</button>
+            <button class="rpe-btn" onclick="rpeSelect(this)">4</button>
+            <button class="rpe-btn sel" onclick="rpeSelect(this)">5</button>
+            <button class="rpe-btn" onclick="rpeSelect(this)">6</button>
+            <button class="rpe-btn" onclick="rpeSelect(this)">7</button>
+            <button class="rpe-btn" onclick="rpeSelect(this)">8</button>
+            <button class="rpe-btn" onclick="rpeSelect(this)">9</button>
+            <button class="rpe-btn" onclick="rpeSelect(this)">10</button>
+          </div>
+          <div class="scale-row" style="margin-top:8px">
+            <span class="scale-end">Muy fácil</span>
+            <span class="scale-end">Máximo esfuerzo</span>
+          </div>
+        </div>
+
+        <div class="rpe-card">
+          <div class="toggle-row">
+            <div class="tgl-text">
+              <div class="tgl-lbl">¿Hubo alguna molestia nueva?</div>
+              <div class="tgl-sub">Dolor diferente al habitual</div>
+            </div>
+            <div class="toggle" id="pain-tgl" onclick="painToggle()">
+              <div class="knob"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-card" id="pain-alert">
+          <span style="font-size:18px">🚨</span>
+          <p>Tu fisio verá esta alerta hoy. Si el dolor es intenso, contacta con tu clínica directamente.</p>
+        </div>
+
+      </div>
+
+      <div class="footer">
+        <button class="btn-primary" onclick="go(8)">Cerrar sesión del día ✓</button>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         S8 · RECOMPENSA
+    ══════════════════════════════════════════ -->
+    <div class="screen" id="s8">
+
+      <div class="cel-ring">
+        <div class="cel-ava">🥚✨</div>
+      </div>
+
+      <h2 class="rew-title">¡Lo lograste hoy!</h2>
+      <p class="rew-sub">Tu Guardián lo ha notado. Cada sesión es una victoria clínica real.<br>Eso que sientes ahora se llama antifrágil.</p>
+
+      <div class="xp-chips">
+        <div class="xp-chip">
+          <span>⚡</span>
+          <span class="xp-chip-t">Triaje</span>
+          <span class="xp-chip-v">+5</span>
+        </div>
+        <div class="xp-chip">
+          <span>🎯</span>
+          <span class="xp-chip-t">Rutina</span>
+          <span class="xp-chip-v">+20</span>
+        </div>
+        <div class="xp-chip">
+          <span>📝</span>
+          <span class="xp-chip-t">Feedback</span>
+          <span class="xp-chip-v">+5</span>
+        </div>
+      </div>
+
+      <div class="streak-cel">
+        <span class="streak-cel-icon">🔥</span>
+        <div>
+          <div class="streak-cel-num">8 días seguidos</div>
+          <div class="streak-cel-lbl">Tu racha sigue viva · Mañana, Fase 2 al alcance</div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="go(4)">Ver mi Guardián →</button>
+      <button class="btn-ghost">Compartir Tarjeta Épica 🎴</button>
+
+    </div>
+
+  </div><!-- /screens -->
+
+</div><!-- /phone -->
+
+<!-- Nav dots -->
+<div class="nav-dots" id="ndots"></div>
+
+<script>
+  const LABELS = ['','Onboarding','Auditoría','Sombrero','Dashboard','Triaje','Rutina','Feedback','Recompensa'];
+  const N = 8;
+  let cur = 1;
+
+  // build dots
+  const ndots = document.getElementById('ndots');
+  for (let i = 1; i <= N; i++) {
+    const d = document.createElement('div');
+    d.className = 'nd' + (i === 1 ? ' on' : '');
+    d.title = LABELS[i];
+    d.onclick = () => go(i);
+    ndots.appendChild(d);
+  }
+
+  function go(n) {
+    if (n === cur || n < 1 || n > N) return;
+    const cEl = document.getElementById('s' + cur);
+    const nEl = document.getElementById('s' + n);
+
+    cEl.classList.add('exit');
+    setTimeout(() => cEl.classList.remove('active','exit'), 340);
+    nEl.classList.add('active');
+
+    document.querySelectorAll('.nd').forEach((d,i) => d.classList.toggle('on', i+1 === n));
+    cur = n;
+  }
+
+  // Audit sliders
+  const aVals = [18, 16, 14, 14];
+  function auditChange(el, id, idx) {
+    aVals[idx] = +el.value;
+    document.getElementById(id).textContent = el.value;
+    document.getElementById('audit-total').textContent = aVals.reduce((a,b)=>a+b,0);
+  }
+
+  // Triaje sliders
+  function tSet(el, id) {
+    document.getElementById(id).textContent = el.value;
+  }
+
+  // Exercise done
+  let exDone_cnt = 0;
+  function exDone(id) {
+    const el = document.getElementById(id);
+    const ck = document.getElementById(id + 'c');
+    if (el.classList.contains('done')) return;
+    el.classList.add('done');
+    ck.textContent = '✓';
+    exDone_cnt++;
+    document.getElementById('ex-prog').textContent = exDone_cnt + ' de 3 completados';
+  }
+
+  // RPE
+  function rpeSelect(btn) {
+    document.querySelectorAll('.rpe-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+  }
+
+  // Pain toggle
+  let painOn = false;
+  function painToggle() {
+    painOn = !painOn;
+    document.getElementById('pain-tgl').classList.toggle('on', painOn);
+    document.getElementById('pain-alert').classList.toggle('show', painOn);
+  }
+</script>
+
+</body>
+</html>
