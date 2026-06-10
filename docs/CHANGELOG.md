@@ -10,6 +10,10 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Diseño de la Auditoría de Vitalidad (2026-06-10)
+- **`docs/diseño/auditoria-vitalidad.md`** — diseño completo del test de entrada: anamnesis, 3-4 micro-tests (fuerza, aeróbico, movilidad/dolor), rúbrica de puntuación de los 4 bloques (0-100), interpretación por rangos, re-Auditorías y conexión con avatar/arquetipo. Marcado como borrador a validar por el equipo clínico.
+- **`app/lib/features/onboarding/auditoria_vitalidad.dart`** — lógica de cálculo de la puntuación (resultados crudos → 4 bloques → total), con umbrales editables.
+
 ### Añadido — Profundización del boceto (2026-06-10)
 - **`docs/PROPUESTA_DE_VALOR.md`** — propuesta de valor completa (problema, solución, mecanismo único, fosos defensivos, modelo de negocio) + **inventario completo de todo lo que hay que crear** (app paciente, panel clínica, backend, contenido) marcado por fase (MVP/Nevera/Visión Norte).
 - **`docs/diseño/avatar-evolucion.md`** — sistema de evolución del avatar con sentido clínico: doble eje (constancia + mejora real), **30 fases en 6 etapas mayores** (modelo de dos capas para muchas fases sin disparar el coste de arte), puertas clínicas, estado Legendario (Trinidad del Nivel 100) y asignación por test/valoraciones (Sombrero Seleccionador).

@@ -92,7 +92,7 @@ está la diferencia:
 | # | Pieza | Qué es | Fase |
 |---|-------|--------|------|
 | A1 | **Onboarding + Código de Honor** | Alta del paciente vinculado a su clínica. | 🟢 MVP |
-| A2 | **Auditoría de Vitalidad (1-100)** | Test físico inicial (fuerza, aeróbico, movilidad, constancia) del que nace el avatar. | 🟢 MVP |
+| A2 | **Auditoría de Vitalidad (1-100)** | Test físico inicial (fuerza, aeróbico, movilidad, constancia) del que nace el avatar. Diseño en [diseño/auditoria-vitalidad.md](diseño/auditoria-vitalidad.md). | 🟢 MVP |
 | A3 | **Sombrero Seleccionador** | Asigna familia/arquetipo y deja elegir 1 de 3 Guardianes. | 🟢 MVP |
 | A4 | **Avatar / Guardián (20 fases)** | El espejo del progreso. Sistema de evolución con sentido clínico. | 🟢 MVP |
 | A5 | **Dashboard de gamificación** | Avatar al centro + barra de XP + racha. | 🟢 MVP |

@@ -29,7 +29,9 @@
       "Bash(git config *)",
       "Bash(git commit --amend -m 'feat: boceto inicial del MVP v1.5 \\(cimientos para el equipo\\)' -m 'Cierra la Fase 0 \\(cimientos\\) del proyecto Anti Fragil: *)",
       "PowerShell(cmdkey /delete:LegacyGeneric:target=git:https://github.com)",
-      "Bash(git fetch *)"
+      "Bash(git fetch *)",
+      "Bash(git commit -m 'feat: propuesta de valor + sistema de avatar \\(30 fases\\) + panel clinica' -m 'Profundiza el boceto centrado en el MVP: *)",
+      "Bash(git commit -m 'feat: diseno de la Auditoria de Vitalidad \\(test de entrada + calculo\\)' -m 'Profundiza la puerta de entrada del sistema \\(MVP\\): *)"
     ]
   },
   "includeGitInstructions": true,
