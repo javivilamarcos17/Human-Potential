@@ -3,7 +3,7 @@
   Anti Frágil — Prototipo Navegable v0.2
   ─────────────────────────────────────────────────────────────────────────────
   Paciente demo : Javi Paciente  (javi@paciente.test)
-  Profesional   : Dra. Demo      (fisio · Clínica Demo Anti Frágil)
+  Profesional   : Dra. Elena Ruiz (fisio · MovePlus)
   Avatar        : Kael el Fluido · Agua · Fase 16 Guardián Pleno · Nivel 50
   XP total      : 4 620   Racha: 23 días
   Dolor (5 días): 7 → 6 → 5 → 4 → 3  (tendencia positiva ↓)
@@ -678,7 +678,7 @@ input[type=range]::-webkit-slider-thumb{
 <div class="proto-label">
   <div class="dot"></div>
   <strong>Anti Frágil</strong> &nbsp;·&nbsp; Prototipo Navegable v0.2
-  &nbsp;·&nbsp; Javi · Dra. Demo · Guardián Pleno N.50
+  &nbsp;·&nbsp; Javi · Dra. Elena Ruiz · Guardián Pleno N.50
 </div>
 
 <div class="phone">
@@ -703,15 +703,15 @@ input[type=range]::-webkit-slider-thumb{
       <p class="tagline">Tu equipo de salud, en el bolsillo.<br>Tu progreso, hecho un juego que engancha.</p>
 
       <div class="welcome-card">
-        <div class="label">Clínica Demo Anti Frágil te da la bienvenida</div>
-        <p>Hola, <strong>Javi</strong>. La <strong>Dra. Demo</strong> ya tiene preparado
+        <div class="label">MovePlus te da la bienvenida</div>
+        <p>Hola, <strong>Javi</strong>. La <strong>Dra. Elena Ruiz</strong> ya tiene preparado
            tu protocolo personalizado. Introduce tu Código de Honor para vincular tu cuenta
            y que comience el viaje.</p>
       </div>
 
       <div class="code-wrap">
         <span>🔑</span>
-        <input class="code-input" type="text" placeholder="HONOR-XXXX" value="HONOR-DEMO-001" maxlength="14">
+        <input class="code-input" type="text" placeholder="HONOR-XXXX" value="AF-8823" maxlength="7">
       </div>
 
       <button class="btn btn-green" onclick="go(2)">Comenzar mi viaje →</button>
@@ -727,7 +727,7 @@ input[type=range]::-webkit-slider-thumb{
         <button class="back back-dark" onclick="go(1)">←</button>
         <h2 class="h2">Auditoría de Vitalidad</h2>
         <p class="sub" style="margin-bottom:14px;">
-          La <strong style="color:var(--azul)">Dra. Demo</strong> ya ha evaluado tu punto de
+          La <strong style="color:var(--azul)">Dra. Elena Ruiz</strong> ya ha evaluado tu punto de
           partida. Revisa tus resultados y confirma.
         </p>
         <div class="score-row">
@@ -816,7 +816,7 @@ input[type=range]::-webkit-slider-thumb{
         <div class="archetype-banner">
           <span class="arch-icon">💧</span>
           <div class="arch-text">
-            <div class="arch-label">Arquetipo asignado por la Dra. Demo</div>
+            <div class="arch-label">Arquetipo asignado por la Dra. Elena Ruiz</div>
             <p>
               Tu auditoría (movilidad baja, buena base aeróbica) señala claramente
               al <strong>Agua</strong>: se adapta, no se rompe, persiste.
@@ -946,7 +946,7 @@ input[type=range]::-webkit-slider-thumb{
           <span class="act-chev">›</span>
         </button>
 
-        <button class="action sec">
+        <button class="action sec" onclick="demoAlert('Mi progreso')">
           <div class="act-icon">📊</div>
           <div class="act-text">
             <div class="act-title">Mi progreso</div>
@@ -955,7 +955,7 @@ input[type=range]::-webkit-slider-thumb{
           <span class="act-chev">›</span>
         </button>
 
-        <button class="action sec">
+        <button class="action sec" onclick="demoAlert('Tarjeta Épica')">
           <div class="act-icon">🎴</div>
           <div class="act-text">
             <div class="act-title">Tarjeta Épica</div>
@@ -1021,7 +1021,7 @@ input[type=range]::-webkit-slider-thumb{
 
         <div class="empathy">
           <span>💚</span>
-          <p>Con esa energía, hoy vas bien. La Dra. Demo te tiene preparada la rutina habitual.
+          <p>Con esa energía, hoy vas bien. La Dra. Elena Ruiz te tiene preparada la rutina habitual.
              Si en algún momento necesitas parar, aquí estamos.</p>
         </div>
 
@@ -1046,8 +1046,8 @@ input[type=range]::-webkit-slider-thumb{
         <div class="pack-ico">🎯</div>
         <div>
           <div class="pack-name">Lumbares fase 1</div>
-          <div class="pack-by">Prescrita por la <strong>Dra. Demo</strong> para ti</div>
-          <div class="pack-meta">Clínica Demo Anti Frágil · Protocolo lumbar semana 3</div>
+          <div class="pack-by">Prescrita por la <strong>Dra. Elena Ruiz</strong> para ti</div>
+          <div class="pack-meta">MovePlus · Protocolo lumbar semana 3</div>
         </div>
       </div>
 
@@ -1088,7 +1088,7 @@ input[type=range]::-webkit-slider-thumb{
         <button class="back back-dark" onclick="go(6)">←</button>
         <h2 class="h2">¿Cómo fue, Javi?</h2>
         <p class="sub" style="margin-bottom:18px;">
-          Un minuto. La Dra. Demo verá esto hoy y ajustará si hace falta.
+          Un minuto. La Dra. Elena Ruiz verá esto hoy y ajustará si hace falta.
         </p>
       </div>
 
@@ -1129,13 +1129,13 @@ input[type=range]::-webkit-slider-thumb{
 
         <div class="alert-card" id="pain-alert">
           <span style="font-size:18px">🚨</span>
-          <p><strong>La Dra. Demo verá esta alerta hoy.</strong> Si el dolor es intenso
+          <p><strong>La Dra. Elena Ruiz verá esta alerta hoy.</strong> Si el dolor es intenso
              o limitante, contáctala directamente a través de la clínica.</p>
         </div>
 
         <div class="thanks-card">
           <span style="font-size:18px">💬</span>
-          <p>Gracias, Javi. La Dra. Demo revisará esto esta tarde y ajustará tu próxima
+          <p>Gracias, Javi. La Dra. Elena Ruiz revisará esto esta tarde y ajustará tu próxima
              rutina si lo necesita.</p>
         </div>
 
@@ -1189,12 +1189,12 @@ input[type=range]::-webkit-slider-thumb{
         <span class="lu-icon">💧</span>
         <div>
           <div class="lu-title">Tu dolor ha bajado de 7 a 3 en 5 días</div>
-          <div class="lu-sub">La Dra. Demo lo verá en su panel. Esto es progreso clínico real.</div>
+          <div class="lu-sub">La Dra. Elena Ruiz lo verá en su panel. Esto es progreso clínico real.</div>
         </div>
       </div>
 
       <button class="btn btn-dark" onclick="go(4)" style="margin-bottom:0">Ver mi Guardián →</button>
-      <button class="btn btn-ghost">Compartir Tarjeta Épica 🎴</button>
+      <button class="btn btn-ghost" onclick="demoAlert('Compartir Tarjeta Épica')">Compartir Tarjeta Épica 🎴</button>
 
     </div>
 
