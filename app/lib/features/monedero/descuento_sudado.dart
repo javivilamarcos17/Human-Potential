@@ -6,17 +6,18 @@
 
 class ReglasDescuento {
   final double porRachaMensual; // € si mantuvo racha el mes
-  final double porReferido; // € por cada amigo dado de alta
-  final double porHito; // € por reto maestro / subida de etapa
+  final double porReferido; // € por cada amigo activo (la clínica puede topar el nº)
+  final double porHito; // € por reto maestro / subida de etapa (bono puntual)
   final double cuotaBase; // cuota mensual de referencia
   final double cuotaMinima; // suelo: la cuota nunca baja de aquí
 
+  // Valores por defecto alineados con docs/MODELO_PRECIOS.md (editables por clínica).
   const ReglasDescuento({
-    this.porRachaMensual = 5,
-    this.porReferido = 5,
-    this.porHito = 3,
-    this.cuotaBase = 40,
-    this.cuotaMinima = 20,
+    this.porRachaMensual = 2,
+    this.porReferido = 1,
+    this.porHito = 1,
+    this.cuotaBase = 12,
+    this.cuotaMinima = 4,
   });
 }
 

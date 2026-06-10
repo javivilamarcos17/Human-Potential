@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<!--
+  Anti Frágil — Panel Clínica (prototipo web)
+  ─────────────────────────────────────────────────────────────────────────────
+  Profesional : Dra. Elena Ruiz  (fisio · MovePlus)
+  Persona demo: Javi · Kael el Fluido · Agua · Fase 16 · Nivel 50 · Racha 24d
+  Semáforos   : Manuel García 🔴 (dolor 8/10) · Laura Sánchez 🟡 (4d sin act.)
+                Javi 🟢 (dolor 3/10 · racha 24) · Carmen Torres 🟢 · Pedro Díaz 🟢
+  Auditoría   : 62/100  (Fuerza 18 · Aeróbico 16 · Movilidad 12 · Constancia 12)
+  Dolor trend : 7 → 6 → 5 → 4 → 3 (5 días)
+  ─────────────────────────────────────────────────────────────────────────────
+  Vistas navegables:
+    V1 Pacientes (semáforos) → V2 Ficha de Javi
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Frágil · Panel Clínica · MovePlus</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════════════════ */
+:root {
+  --verde:    #2ECC8F;
+  --verde-d:  #1aa870;
+  --azul:     #1A2E4A;
+  --azul-mid: #243F62;
+  --calido:   #F5F3EE;
+  --gris:     #8A9BB0;
+  --rojo:     #E53935;
+  --rojo-bg:  rgba(229,57,53,.08);
+  --rojo-b:   rgba(229,57,53,.22);
+  --ambar:    #FFA726;
+  --ambar-bg: rgba(255,167,38,.08);
+  --ambar-b:  rgba(255,167,38,.22);
+  --verde-bg: rgba(46,204,143,.08);
+  --verde-b:  rgba(46,204,143,.22);
+  --dorado:   #F4C430;
+  --agua-l:   #80DEEA;
+  --white:    #ffffff;
+  --surface:  #F0EDE8;
+  --card:     #ffffff;
+  --border:   #E6E2DC;
+  --text:     #1A2E4A;
+  --text-2:   #5A6A7E;
+  --sidebar-w: 240px;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html, body { height:100%; }
+body {
+  font-family:'Inter',sans-serif;
+  background:var(--surface);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  display:flex;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════════ */
+.sidebar {
+  width:var(--sidebar-w);
+  background:var(--azul);
+  height:100vh;
+  position:fixed;
+  top:0; left:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  flex-shrink:0;
+  z-index:100;
+}
+
+.sidebar-brand {
+  display:flex;align-items:center;gap:12px;
+  padding:24px 22px 20px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.brand-logo {
+  width:38px;height:38px;border-radius:11px;
+  background:linear-gradient(145deg,var(--verde),var(--verde-d));
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(46,204,143,.3);
+}
+.brand-text {}
+.brand-name {
+  font-family:'Nunito',sans-serif;font-weight:900;
+  font-size:16px;color:#fff;line-height:1.1;
+}
+.brand-sub { font-size:11px;color:rgba(255,255,255,.4); }
+
+.sidebar-nav {
+  flex:1;padding:16px 12px;
+  display:flex;flex-direction:column;gap:4px;
+  overflow-y:auto;
+}
+.nav-section {
+  font-size:10px;font-weight:700;
+  color:rgba(255,255,255,.3);
+  text-transform:uppercase;letter-spacing:1px;
+  padding:10px 10px 6px;
+}
+.nav-item {
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:10px;
+  font-size:14px;font-weight:500;color:rgba(255,255,255,.6);
+  cursor:pointer;transition:background .15s,color .15s;
+  border:none;background:none;text-align:left;width:100%;
+}
+.nav-item:hover { background:rgba(255,255,255,.06);color:rgba(255,255,255,.85); }
+.nav-item.active { background:rgba(46,204,143,.15);color:var(--verde);font-weight:600; }
+.nav-item .ni-icon { font-size:17px;width:22px;text-align:center;flex-shrink:0; }
+.nav-badge {
+  margin-left:auto;
+  background:var(--rojo);color:#fff;
+  font-size:11px;font-weight:700;
+  padding:2px 7px;border-radius:8px;
+}
+
+.sidebar-user {
+  padding:16px 18px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.user-row {
+  display:flex;align-items:center;gap:10px;
+}
+.user-avatar {
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(145deg,#0D4A6B,#0A2A3D);
+  border:2px solid rgba(128,222,234,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.user-name {
+  font-size:13px;font-weight:700;color:#fff;margin-bottom:1px;
+}
+.user-clinic { font-size:11px;color:rgba(255,255,255,.4); }
+
+/* ═══════════════════════════════════════════════════════
+   MAIN AREA
+═══════════════════════════════════════════════════════ */
+.main {
+  margin-left:var(--sidebar-w);
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  overflow:hidden;
+}
+
+.main-header {
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  padding:0 32px;
+  height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+  position:sticky;top:0;z-index:50;
+}
+.header-breadcrumb {
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;font-weight:600;color:var(--text);
+}
+.header-breadcrumb .sep { color:var(--gris); }
+.header-breadcrumb .current { color:var(--text-2);font-weight:500; }
+.header-actions {
+  display:flex;align-items:center;gap:10px;
+}
+.hdr-btn {
+  width:34px;height:34px;border-radius:9px;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;transition:background .15s;
+  position:relative;
+}
+.hdr-btn:hover { background:#EBE8E2; }
+.hdr-btn .badge {
+  position:absolute;top:-4px;right:-4px;
+  width:14px;height:14px;
+  background:var(--rojo);border-radius:50%;border:2px solid #fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:8px;color:#fff;font-weight:700;
+}
+.hdr-clinic {
+  font-size:13px;font-weight:600;color:var(--text-2);
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:6px 14px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   VIEWS
+═══════════════════════════════════════════════════════ */
+.view {
+  display:none;
+  flex:1;
+  overflow-y:auto;
+  padding:28px 32px 40px;
+}
+.view.active { display:block; }
+
+/* ═══════════════════════════════════════════════════════
+   SHARED COMPONENTS
+═══════════════════════════════════════════════════════ */
+.page-title {
+  font-family:'Nunito',sans-serif;font-weight:900;
+  font-size:22px;color:var(--text);margin-bottom:4px;
+}
+.page-sub { font-size:14px;color:var(--text-2);margin-bottom:24px; }
+
+.card {
+  background:var(--card);
+  border-radius:16px;
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+.card-header {
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title {
+  font-size:14px;font-weight:700;color:var(--text);
+}
+.card-sub { font-size:12px;color:var(--text-2);margin-top:1px; }
+
+.chip {
+  display:inline-flex;align-items:center;gap:5px;
+  border-radius:20px;padding:4px 12px;
+  font-size:12px;font-weight:700;
+}
+.chip-red   { background:var(--rojo-bg); color:var(--rojo); border:1px solid var(--rojo-b); }
+.chip-amber { background:var(--ambar-bg);color:var(--ambar);border:1px solid var(--ambar-b); }
+.chip-green { background:var(--verde-bg);color:#1a7a55;   border:1px solid var(--verde-b); }
+
+.btn {
+  border:none;border-radius:10px;padding:9px 18px;
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;transition:opacity .15s,transform .12s;
+}
+.btn:active { transform:scale(.97); }
+.btn-primary { background:var(--verde);color:var(--azul); }
+.btn-secondary {
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text-2);
+}
+.btn-ghost { background:transparent;border:1px solid var(--border);color:var(--text-2); }
+
+/* ═══════════════════════════════════════════════════════
+   VIEW 1 · PACIENTES — SEMÁFOROS
+═══════════════════════════════════════════════════════ */
+
+.semaforo-stats {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  margin-bottom:24px;
+}
+.stat-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;padding:16px 20px;
+  display:flex;align-items:center;gap:14px;
+}
+.stat-icon {
+  width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
+}
+.stat-icon.red   { background:var(--rojo-bg); }
+.stat-icon.amber { background:var(--ambar-bg); }
+.stat-icon.green { background:var(--verde-bg); }
+.stat-num {
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:26px;
+  line-height:1;
+}
+.stat-num.red   { color:var(--rojo); }
+.stat-num.amber { color:var(--ambar); }
+.stat-num.green { color:var(--verde); }
+.stat-label { font-size:12px;color:var(--text-2);margin-top:2px; }
+
+.patient-table {
+  width:100%;border-collapse:collapse;
+}
+.pt-head th {
+  padding:10px 16px;text-align:left;
+  font-size:11px;font-weight:700;
+  color:var(--text-2);text-transform:uppercase;letter-spacing:.5px;
+  border-bottom:1px solid var(--border);
+  background:#FAFAF8;
+}
+.pt-row {
+  cursor:pointer;
+  transition:background .12s;
+  border-bottom:1px solid var(--border);
+}
+.pt-row:last-child { border-bottom:none; }
+.pt-row:hover { background:#FAFAF8; }
+.pt-row td { padding:14px 16px;vertical-align:middle; }
+
+.semaforo-dot {
+  width:12px;height:12px;border-radius:50%;display:inline-block;flex-shrink:0;
+}
+.semaforo-dot.red   { background:var(--rojo); box-shadow:0 0 6px rgba(229,57,53,.4); }
+.semaforo-dot.amber { background:var(--ambar);box-shadow:0 0 6px rgba(255,167,38,.4); }
+.semaforo-dot.green { background:var(--verde);box-shadow:0 0 6px rgba(46,204,143,.4); }
+
+.patient-name { font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px; }
+.patient-meta { font-size:12px;color:var(--text-2); }
+.alert-text { font-size:13px;color:var(--text-2);max-width:260px; }
+.alert-text.urgent { color:var(--rojo);font-weight:600; }
+.alert-text.warning { color:#B45309;font-weight:600; }
+
+.streak-mini {
+  display:flex;align-items:center;gap:5px;
+  font-size:13px;font-weight:600;
+}
+.streak-mini.high { color:var(--verde); }
+.streak-mini.zero { color:var(--text-2); }
+
+.ver-ficha-btn {
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text-2);border-radius:8px;
+  padding:6px 14px;font-size:12px;font-weight:600;
+  cursor:pointer;transition:background .15s;white-space:nowrap;
+}
+.ver-ficha-btn:hover { background:#E6E2DC;color:var(--text); }
+.ver-ficha-btn.primary {
+  background:rgba(46,204,143,.1);
+  border-color:rgba(46,204,143,.3);
+  color:var(--verde-d);
+}
+
+/* ═══════════════════════════════════════════════════════
+   VIEW 2 · FICHA DEL PACIENTE (JAVI)
+═══════════════════════════════════════════════════════ */
+
+.back-link {
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:600;color:var(--text-2);
+  cursor:pointer;margin-bottom:20px;
+  padding:6px 12px;border-radius:8px;
+  transition:background .15s;
+}
+.back-link:hover { background:var(--card); }
+
+/* Patient hero card */
+.patient-hero {
+  background:var(--azul);
+  border-radius:18px;padding:24px 28px;
+  display:flex;align-items:flex-start;gap:24px;
+  margin-bottom:22px;
+}
+.hero-avatar {
+  width:72px;height:72px;border-radius:20px;
+  background:linear-gradient(145deg,#062033,#0D4A6B);
+  border:2px solid rgba(128,222,234,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;flex-shrink:0;
+  box-shadow:0 0 28px rgba(0,151,167,.2);
+}
+.hero-info { flex:1; }
+.hero-name {
+  font-family:'Nunito',sans-serif;font-weight:900;
+  font-size:22px;color:#fff;margin-bottom:4px;
+}
+.hero-meta { font-size:13px;color:var(--gris);margin-bottom:12px; }
+.hero-chips { display:flex;gap:8px;flex-wrap:wrap; }
+.hero-chip {
+  display:inline-flex;align-items:center;gap:5px;
+  border-radius:20px;padding:5px 12px;
+  font-size:12px;font-weight:700;
+}
+.hero-chip.green {
+  background:rgba(46,204,143,.15);
+  color:var(--verde);border:1px solid rgba(46,204,143,.28);
+}
+.hero-chip.agua {
+  background:rgba(128,222,234,.12);
+  color:var(--agua-l);border:1px solid rgba(128,222,234,.22);
+}
+.hero-chip.gold {
+  background:rgba(244,196,48,.12);
+  color:var(--dorado);border:1px solid rgba(244,196,48,.22);
+}
+
+.hero-stats {
+  display:grid;grid-template-rows:1fr 1fr;
+  gap:8px;min-width:160px;
+}
+.hstat {
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:12px 16px;text-align:center;
+}
+.hstat-val {
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;
+  color:#fff;line-height:1;margin-bottom:2px;
+}
+.hstat-lbl { font-size:11px;color:var(--gris); }
+
+/* Content grid */
+.ficha-grid {
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  margin-bottom:16px;
+}
+
+/* Audit bars */
+.audit-list { padding:16px 20px;display:flex;flex-direction:column;gap:14px; }
+.audit-row {}
+.audit-row-top {
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:6px;
+}
+.audit-name { font-size:13px;font-weight:600;color:var(--text); }
+.audit-score {
+  font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:16px;color:var(--verde);
+}
+.audit-max { font-size:12px;color:var(--text-2);margin-left:2px; }
+.audit-bar-track {
+  height:7px;background:#EBE8E2;border-radius:4px;overflow:hidden;
+}
+.audit-bar-fill {
+  height:100%;
+  background:linear-gradient(90deg,var(--verde),var(--verde-d));
+  border-radius:4px;
+}
+.audit-total {
+  padding:14px 20px 16px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.audit-total-label { font-size:13px;font-weight:600;color:var(--text-2); }
+.audit-total-val {
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;color:var(--azul);
+}
+.audit-total-val span { font-size:14px;color:var(--text-2);font-weight:600; }
+
+/* Pain chart */
+.chart-area { padding:16px 20px 18px; }
+.chart-labels {
+  display:flex;justify-content:space-between;
+  margin-bottom:8px;
+  font-size:11px;color:var(--text-2);
+}
+.chart-svg { width:100%;overflow:visible; }
+.chart-footer {
+  display:flex;justify-content:space-between;
+  margin-top:10px;font-size:11px;color:var(--text-2);
+}
+.chart-trend {
+  font-size:13px;font-weight:700;color:var(--verde);
+  display:flex;align-items:center;gap:4px;margin-top:6px;
+}
+
+/* Last session */
+.session-body { padding:16px 20px; }
+.session-row {
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.session-row:last-child { border-bottom:none; }
+.sess-label { font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:2px; }
+.sess-val { font-size:14px;font-weight:600;color:var(--text); }
+.rpe-visual {
+  display:flex;gap:4px;
+}
+.rpe-pip {
+  width:20px;height:6px;border-radius:3px;background:#EBE8E2;
+}
+.rpe-pip.active { background:var(--verde); }
+
+/* Actions */
+.ficha-actions {
+  display:flex;gap:12px;flex-wrap:wrap;
+  padding:16px 20px;
+  border-top:1px solid var(--border);
+}
+
+/* ═══════════════════════════════════════════════════════
+   MODAL OVERLAY
+═══════════════════════════════════════════════════════ */
+.modal-overlay {
+  position:fixed;inset:0;z-index:999;
+  background:rgba(8,17,30,.65);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+}
+.modal-overlay.show { display:flex; }
+.modal-box {
+  background:var(--card);
+  border-radius:20px;padding:32px;
+  max-width:320px;text-align:center;
+  box-shadow:0 24px 64px rgba(0,0,0,.2);
+  border:1px solid var(--border);
+}
+.modal-icon { font-size:36px;margin-bottom:14px; }
+.modal-title {
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:18px;
+  color:var(--text);margin-bottom:8px;
+}
+.modal-body { font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:22px; }
+.modal-body strong { color:var(--text); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════════════ -->
+<aside class="sidebar">
+
+  <div class="sidebar-brand">
+    <div class="brand-logo">🛡️</div>
+    <div class="brand-text">
+      <div class="brand-name">Anti Frágil</div>
+      <div class="brand-sub">Panel clínica</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+
+    <div class="nav-section">Clínica</div>
+
+    <button class="nav-item active" onclick="showView('v-pacientes','Pacientes')">
+      <span class="ni-icon">👥</span>
+      Pacientes
+      <span class="nav-badge">2</span>
+    </button>
+
+    <button class="nav-item" onclick="demoNav('Packs y prescripción')">
+      <span class="ni-icon">📋</span>
+      Packs
+    </button>
+
+    <button class="nav-item" onclick="demoNav('Librería de vídeos')">
+      <span class="ni-icon">🎬</span>
+      Vídeos
+    </button>
+
+    <div class="nav-section">Configuración</div>
+
+    <button class="nav-item" onclick="demoNav('Plantillas de Auditoría')">
+      <span class="ni-icon">🧪</span>
+      Auditorías
+    </button>
+
+    <button class="nav-item" onclick="demoNav('Alta de paciente')">
+      <span class="ni-icon">➕</span>
+      Nuevo paciente
+    </button>
+
+    <button class="nav-item" onclick="demoNav('Ajustes de la clínica')">
+      <span class="ni-icon">⚙️</span>
+      Ajustes
+    </button>
+
+  </nav>
+
+  <div class="sidebar-user">
+    <div class="user-row">
+      <div class="user-avatar">👩‍⚕️</div>
+      <div>
+        <div class="user-name">Dra. Elena Ruiz</div>
+        <div class="user-clinic">MovePlus · Fisioterapia</div>
+      </div>
+    </div>
+  </div>
+
+</aside>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN
+═══════════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-breadcrumb">
+      <span>MovePlus</span>
+      <span class="sep">/</span>
+      <span class="current" id="breadcrumb-current">Pacientes</span>
+    </div>
+    <div class="header-actions">
+      <div class="hdr-clinic">Dra. Elena Ruiz</div>
+      <div class="hdr-btn" title="Notificaciones">
+        🔔
+        <div class="badge">2</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       VIEW 1 · PACIENTES — SEMÁFOROS
+  ═══════════════════════════════════════════ -->
+  <div class="view active" id="v-pacientes">
+
+    <div class="page-title">Pacientes</div>
+    <div class="page-sub">Estado hoy · Ordenados por prioridad de atención</div>
+
+    <!-- Stats row -->
+    <div class="semaforo-stats">
+      <div class="stat-card">
+        <div class="stat-icon red">🔴</div>
+        <div>
+          <div class="stat-num red">1</div>
+          <div class="stat-label">Requieren atención hoy</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon amber">🟡</div>
+        <div>
+          <div class="stat-num amber">1</div>
+          <div class="stat-label">Riesgo de abandono</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">🟢</div>
+        <div>
+          <div class="stat-num green">3</div>
+          <div class="stat-label">Evolucionando bien</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Patient table -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Lista de pacientes</div>
+          <div class="card-sub">5 pacientes activos · Miércoles 11 jun 2026</div>
+        </div>
+        <button class="btn btn-primary" onclick="demoNav('Alta de paciente')">+ Nuevo paciente</button>
+      </div>
+
+      <table class="patient-table">
+        <thead>
+          <tr class="pt-head">
+            <th style="width:40px"></th>
+            <th>Paciente</th>
+            <th>Estado / Alerta</th>
+            <th>Racha</th>
+            <th>Última sesión</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- 🔴 Manuel García — dolor alto -->
+          <tr class="pt-row" onclick="demoNav('Ficha de Manuel García')">
+            <td style="text-align:center">
+              <span class="semaforo-dot red"></span>
+            </td>
+            <td>
+              <div class="patient-name">Manuel García</div>
+              <div class="patient-meta">Lumbalgia crónica · 45 años</div>
+            </td>
+            <td>
+              <span class="chip chip-red">🔴 Atención</span>
+              <div class="alert-text urgent" style="margin-top:5px">Dolor 8/10 en triaje · Molestia nueva reportada</div>
+            </td>
+            <td>
+              <div class="streak-mini zero">🔥 3 días</div>
+            </td>
+            <td>
+              <div style="font-size:13px;color:var(--text-2)">Hoy · RPE 9/10</div>
+            </td>
+            <td>
+              <button class="ver-ficha-btn" onclick="event.stopPropagation();demoNav('Ficha de Manuel García')">Ver ficha →</button>
+            </td>
+          </tr>
+
+          <!-- 🟡 Laura Sánchez — riesgo abandono -->
+          <tr class="pt-row" onclick="demoNav('Ficha de Laura Sánchez')">
+            <td style="text-align:center">
+              <span class="semaforo-dot amber"></span>
+            </td>
+            <td>
+              <div class="patient-name">Laura Sánchez</div>
+              <div class="patient-meta">Cervicalgia · 38 años</div>
+            </td>
+            <td>
+              <span class="chip chip-amber">🟡 Revisar</span>
+              <div class="alert-text warning" style="margin-top:5px">4 días sin actividad · Riesgo de abandono</div>
+            </td>
+            <td>
+              <div class="streak-mini zero">— Sin racha</div>
+            </td>
+            <td>
+              <div style="font-size:13px;color:var(--text-2)">Hace 4 días · RPE 6/10</div>
+            </td>
+            <td>
+              <button class="ver-ficha-btn" onclick="event.stopPropagation();demoNav('Ficha de Laura Sánchez')">Ver ficha →</button>
+            </td>
+          </tr>
+
+          <!-- 🟢 Javi — todo bien (CON FICHA DETALLADA) -->
+          <tr class="pt-row" onclick="showView('v-ficha','Ficha · Javi')">
+            <td style="text-align:center">
+              <span class="semaforo-dot green"></span>
+            </td>
+            <td>
+              <div class="patient-name">Javi</div>
+              <div class="patient-meta">Lumbalgia · 32 años · Kael (Agua)</div>
+            </td>
+            <td>
+              <span class="chip chip-green">🟢 En progreso</span>
+              <div class="alert-text" style="margin-top:5px;color:var(--verde-d);font-weight:600;">Dolor 3/10 · Tendencia ↓ 7→3 en 5 días</div>
+            </td>
+            <td>
+              <div class="streak-mini high">🔥 24 días</div>
+            </td>
+            <td>
+              <div style="font-size:13px;color:var(--text-2)">Hoy · RPE 5/10</div>
+            </td>
+            <td>
+              <button class="ver-ficha-btn primary" onclick="event.stopPropagation();showView('v-ficha','Ficha · Javi')">Ver ficha →</button>
+            </td>
+          </tr>
+
+          <!-- 🟢 Carmen Torres -->
+          <tr class="pt-row" onclick="demoNav('Ficha de Carmen Torres')">
+            <td style="text-align:center">
+              <span class="semaforo-dot green"></span>
+            </td>
+            <td>
+              <div class="patient-name">Carmen Torres</div>
+              <div class="patient-meta">Rodilla post-op · 52 años</div>
+            </td>
+            <td>
+              <span class="chip chip-green">🟢 Estable</span>
+              <div class="alert-text" style="margin-top:5px">Dolor 2/10 · Sin incidencias</div>
+            </td>
+            <td>
+              <div class="streak-mini high">🔥 12 días</div>
+            </td>
+            <td>
+              <div style="font-size:13px;color:var(--text-2)">Ayer · RPE 4/10</div>
+            </td>
+            <td>
+              <button class="ver-ficha-btn" onclick="event.stopPropagation();demoNav('Ficha de Carmen Torres')">Ver ficha →</button>
+            </td>
+          </tr>
+
+          <!-- 🟢 Pedro Díaz -->
+          <tr class="pt-row" onclick="demoNav('Ficha de Pedro Díaz')">
+            <td style="text-align:center">
+              <span class="semaforo-dot green"></span>
+            </td>
+            <td>
+              <div class="patient-name">Pedro Díaz</div>
+              <div class="patient-meta">Core y postura · 28 años</div>
+            </td>
+            <td>
+              <span class="chip chip-green">🟢 En progreso</span>
+              <div class="alert-text" style="margin-top:5px">Dolor 1/10 · Buena adherencia</div>
+            </td>
+            <td>
+              <div class="streak-mini high">🔥 8 días</div>
+            </td>
+            <td>
+              <div style="font-size:13px;color:var(--text-2)">Hoy · RPE 7/10</div>
+            </td>
+            <td>
+              <button class="ver-ficha-btn" onclick="event.stopPropagation();demoNav('Ficha de Pedro Díaz')">Ver ficha →</button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /v-pacientes -->
+
+  <!-- ═══════════════════════════════════════════
+       VIEW 2 · FICHA — JAVI
+  ═══════════════════════════════════════════ -->
+  <div class="view" id="v-ficha">
+
+    <div class="back-link" onclick="showView('v-pacientes','Pacientes')">
+      ← Volver a pacientes
+    </div>
+
+    <!-- Patient hero -->
+    <div class="patient-hero">
+      <div class="hero-avatar">🛡️</div>
+      <div class="hero-info">
+        <div class="hero-name">Javi</div>
+        <div class="hero-meta">Lumbalgia · 32 años · Pack activo: Lumbares fase 1 · Código: AF-8823</div>
+        <div class="hero-chips">
+          <span class="hero-chip green">🟢 Evolucionando bien</span>
+          <span class="hero-chip agua">💧 Kael el Fluido · Agua</span>
+          <span class="hero-chip gold">⚡ Fase 16 · Guardián Pleno · Nivel 50</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat">
+          <div class="hstat-val" style="color:var(--dorado)">24</div>
+          <div class="hstat-lbl">días de racha</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-val" style="color:var(--verde)">3/10</div>
+          <div class="hstat-lbl">dolor hoy</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ficha grid (2 columns) -->
+    <div class="ficha-grid">
+
+      <!-- Auditoría de Vitalidad -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Auditoría de Vitalidad</div>
+            <div class="card-sub">Evaluación inicial · Dra. Elena Ruiz · MovePlus</div>
+          </div>
+        </div>
+        <div class="audit-list">
+
+          <div class="audit-row">
+            <div class="audit-row-top">
+              <span class="audit-name">💪 Fuerza Base</span>
+              <span class="audit-score">18<span class="audit-max">/30</span></span>
+            </div>
+            <div class="audit-bar-track">
+              <div class="audit-bar-fill" style="width:60%"></div>
+            </div>
+          </div>
+
+          <div class="audit-row">
+            <div class="audit-row-top">
+              <span class="audit-name">🏃 Capacidad Aeróbica</span>
+              <span class="audit-score">16<span class="audit-max">/30</span></span>
+            </div>
+            <div class="audit-bar-track">
+              <div class="audit-bar-fill" style="width:53%"></div>
+            </div>
+          </div>
+
+          <div class="audit-row">
+            <div class="audit-row-top">
+              <span class="audit-name">🧘 Movilidad / Dolor</span>
+              <span class="audit-score">12<span class="audit-max">/20</span></span>
+            </div>
+            <div class="audit-bar-track">
+              <div class="audit-bar-fill" style="width:60%"></div>
+            </div>
+          </div>
+
+          <div class="audit-row">
+            <div class="audit-row-top">
+              <span class="audit-name">📅 Constancia / Hábitos</span>
+              <span class="audit-score">12<span class="audit-max">/20</span></span>
+            </div>
+            <div class="audit-bar-track">
+              <div class="audit-bar-fill" style="width:60%"></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="audit-total">
+          <span class="audit-total-label">Puntuación total</span>
+          <span class="audit-total-val">62<span>/100</span></span>
+        </div>
+      </div>
+
+      <!-- Tendencia de dolor + Última sesión -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Dolor chart -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Tendencia de dolor</div>
+              <div class="card-sub">Últimos 5 días · Triaje diario</div>
+            </div>
+            <div class="chart-trend">↓ Mejorando</div>
+          </div>
+          <div class="chart-area">
+            <div class="chart-labels">
+              <span>Hace 5 días</span>
+              <span>Hoy</span>
+            </div>
+            <!-- SVG chart: valores 7,6,5,4,3 → y = 70-(val*7) para eje de 0-10 en 70px -->
+            <svg class="chart-svg" viewBox="0 0 300 80" height="80">
+              <!-- Grid lines -->
+              <line x1="0" y1="14" x2="300" y2="14" stroke="#E6E2DC" stroke-width="1" stroke-dasharray="4,4"/>
+              <line x1="0" y1="42" x2="300" y2="42" stroke="#E6E2DC" stroke-width="1" stroke-dasharray="4,4"/>
+              <line x1="0" y1="70" x2="300" y2="70" stroke="#E6E2DC" stroke-width="1" stroke-dasharray="4,4"/>
+              <!-- Labels -->
+              <text x="304" y="17" font-size="9" fill="#8A9BB0">10</text>
+              <text x="304" y="45" font-size="9" fill="#8A9BB0">5</text>
+              <text x="304" y="73" font-size="9" fill="#8A9BB0">0</text>
+              <!-- Area fill -->
+              <defs>
+                <linearGradient id="painGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#E53935"/>
+                  <stop offset="100%" stop-color="#2ECC8F"/>
+                </linearGradient>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(46,204,143,.15)"/>
+                  <stop offset="100%" stop-color="rgba(46,204,143,.02)"/>
+                </linearGradient>
+              </defs>
+              <!-- valores: 7→21, 6→28, 5→35, 4→42, 3→49 (y = 70-(val*7)) -->
+              <polygon
+                points="0,21 75,28 150,35 225,42 300,49 300,70 0,70"
+                fill="url(#areaGrad)"/>
+              <polyline
+                points="0,21 75,28 150,35 225,42 300,49"
+                fill="none"
+                stroke="url(#painGrad)"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+              <!-- Dots -->
+              <circle cx="0"   cy="21" r="4" fill="#E53935" stroke="#fff" stroke-width="1.5"/>
+              <circle cx="75"  cy="28" r="4" fill="#FFA726" stroke="#fff" stroke-width="1.5"/>
+              <circle cx="150" cy="35" r="4" fill="#FFA726" stroke="#fff" stroke-width="1.5"/>
+              <circle cx="225" cy="42" r="4" fill="#2ECC8F" stroke="#fff" stroke-width="1.5"/>
+              <circle cx="300" cy="49" r="4" fill="#1aa870" stroke="#fff" stroke-width="1.5"/>
+              <!-- Value labels -->
+              <text x="0"   y="14" font-size="10" fill="#E53935" font-weight="700" text-anchor="middle">7</text>
+              <text x="75"  y="21" font-size="10" fill="#FFA726" font-weight="700" text-anchor="middle">6</text>
+              <text x="150" y="28" font-size="10" fill="#FFA726" font-weight="700" text-anchor="middle">5</text>
+              <text x="225" y="35" font-size="10" fill="#2ECC8F" font-weight="700" text-anchor="middle">4</text>
+              <text x="300" y="42" font-size="10" fill="#1aa870" font-weight="700" text-anchor="middle">3</text>
+            </svg>
+            <div class="chart-footer">
+              <span>Dolor 7/10</span>
+              <span style="color:var(--verde);font-weight:600;">Hoy: 3/10 ↓</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Última sesión -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Última sesión</div>
+              <div class="card-sub">Hoy · Pack: Lumbares fase 1</div>
+            </div>
+            <span class="chip chip-green">Completada</span>
+          </div>
+          <div class="session-body">
+            <div class="session-row">
+              <div>
+                <div class="sess-label">Esfuerzo (RPE)</div>
+                <div class="sess-val">5 / 10 — Moderado</div>
+              </div>
+              <div class="rpe-visual">
+                <div class="rpe-pip active"></div>
+                <div class="rpe-pip active"></div>
+                <div class="rpe-pip active"></div>
+                <div class="rpe-pip active"></div>
+                <div class="rpe-pip active"></div>
+                <div class="rpe-pip"></div>
+                <div class="rpe-pip"></div>
+                <div class="rpe-pip"></div>
+                <div class="rpe-pip"></div>
+                <div class="rpe-pip"></div>
+              </div>
+            </div>
+            <div class="session-row">
+              <div>
+                <div class="sess-label">Molestia nueva</div>
+                <div class="sess-val" style="color:var(--verde-d)">No reportada ✓</div>
+              </div>
+            </div>
+            <div class="session-row">
+              <div>
+                <div class="sess-label">Ejercicios</div>
+                <div class="sess-val">Movilidad lumbar · Core básico</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /right col -->
+
+    </div><!-- /ficha-grid -->
+
+    <!-- Actions -->
+    <div class="card">
+      <div class="ficha-actions">
+        <button class="btn btn-primary" onclick="demoNav('Ajustar Pack')">🎯 Ajustar Pack</button>
+        <button class="btn btn-secondary" onclick="demoNav('Enviar mensaje a Javi')">💬 Enviar mensaje</button>
+        <button class="btn btn-ghost" onclick="demoNav('Nueva re-Auditoría')">📊 Re-Auditoría</button>
+        <button class="btn btn-ghost" onclick="demoNav('Historial completo')">📋 Ver historial completo</button>
+      </div>
+    </div>
+
+  </div><!-- /v-ficha -->
+
+</div><!-- /main -->
+
+<!-- ═══════════════════════════════════════════════
+     MODAL "PRÓXIMAMENTE"
+═══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-icon">🚀</div>
+    <div class="modal-title" id="modal-title">Función en desarrollo</div>
+    <div class="modal-body" id="modal-body">
+      Esta función estará disponible en el <strong>MVP completo</strong>.<br>
+      Estamos construyéndolo ahora mismo.
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="document.getElementById('modal').classList.remove('show')">
+      Entendido
+    </button>
+  </div>
+</div>
+
+<script>
+/* ── Vista activa ──────────────────────────── */
+function showView(id, label) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('breadcrumb-current').textContent = label;
+
+  // Sincronizar nav activo
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (id === 'v-pacientes') {
+    document.querySelectorAll('.nav-item')[0].classList.add('active');
+  }
+
+  // Scroll al inicio
+  document.getElementById(id).scrollTop = 0;
+}
+
+/* ── Demo nav (secciones no implementadas) ── */
+function demoNav(feature) {
+  document.getElementById('modal-title').textContent = feature;
+  document.getElementById('modal-body').innerHTML =
+    '<strong>' + feature + '</strong> estará disponible en el MVP.<br>' +
+    'Estamos construyendo esta funcionalidad ahora mismo.';
+  document.getElementById('modal').classList.add('show');
+}
+
+/* ── Cerrar modal ───────────────────────────── */
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('show');
+  }
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('modal').classList.remove('show');
+});
+</script>
+</body>
+</html>

@@ -9,3 +9,4 @@
 ✅ 2026-06-10 — One pager ejecutivo para inversores — docs/ONE_PAGER.md
 ✅ 2026-06-11 — Prototipo navegable v0.2 (datos demo reales: Javi/Dra.Demo/Guardián Pleno N50/racha 23d/dolor 7→3) — mockups/prototipo/index.html
 ✅ 2026-06-11 — Pulido v0.2: persona canónica (Dra. Elena Ruiz/MovePlus/AF-8823), racha coherente JS, botones muertos conectados, comentario XP — mockups/prototipo/index.html
+✅ 2026-06-11 — Panel clínica web (Dra. Elena Ruiz · MovePlus): semáforos 5 pacientes, ficha Javi (Auditoría 62/100, gráfico dolor 7→3, RPE, avatar, acciones), navegación V1↔V2 — mockups/prototipo/clinica.html

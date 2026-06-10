@@ -61,7 +61,9 @@
       "PowerShell(git add docs/RIESGOS_Y_MITIGACIONES.md coordinacion/agente-2/ESTADO.md)",
       "PowerShell(git add docs/KPIS_NEGOCIO.md coordinacion/agente-2/ESTADO.md)",
       "PowerShell(git add docs/MODELO_PRECIOS.md coordinacion/agente-2/ESTADO.md)",
-      "Bash(py --version)"
+      "Bash(py --version)",
+      "Bash(python -m http.server 8080)",
+      "Bash(git commit -m 'feat\\(copy\\): biblioteca de microcopy por pantalla del Core Loop *)"
     ]
   },
   "includeGitInstructions": true,
