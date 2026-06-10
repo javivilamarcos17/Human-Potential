@@ -22,12 +22,13 @@ declare
   v_video2    uuid := '66666666-6666-6666-6666-666666666666';
   v_presc     uuid := '77777777-7777-7777-7777-777777777777';
 begin
-  -- Clínica + profesional + paciente
-  insert into clinicas (id, nombre) values (v_clinica, 'Clínica Demo Anti Frágil');
+  -- Clínica + profesional + paciente — PERSONA DE DEMO CANÓNICA (usar la misma en todo:
+  -- maquetas, prototipo y demo). Ver docs/REVISION_CRITICA.md.
+  insert into clinicas (id, nombre) values (v_clinica, 'MovePlus');
   insert into profesionales (id, clinica_id, nombre, email, rol)
-    values (v_profesion, v_clinica, 'Dra. Demo', 'demo@clinica.test', 'fisio');
+    values (v_profesion, v_clinica, 'Dra. Elena Ruiz', 'elena@moveplus.test', 'fisio');
   insert into pacientes (id, clinica_id, nombre, email, codigo_honor)
-    values (v_paciente, v_clinica, 'Javi Paciente', 'javi@paciente.test', 'HONOR-DEMO-001');
+    values (v_paciente, v_clinica, 'Javi', 'javi@paciente.test', 'AF-8823');
 
   -- Auditoría inicial (total ~58/100 → base media)
   insert into auditorias_vitalidad (id, paciente_id, fuerza, aerobico, movilidad, constancia)

@@ -19,6 +19,33 @@
 
 ---
 
+## 👤 Persona de demo CANÓNICA (usar la misma en TODAS partes)
+
+> Para que nada se sienta genérico ni incoherente entre maquetas/prototipo/datos:
+
+- **Paciente:** Javi · **Código de Honor:** AF-8823
+- **Clínica:** MovePlus
+- **Fisioterapeuta:** Dra. Elena Ruiz
+- **Arquetipo:** Agua · **Guardián elegido:** Kael, el Fluido
+- Escenario "nuevo": Fase 1 (Huevo). Escenario "avanzado" (datos demo): Fase 16, nivel 50.
+
+---
+
+## 🔎 Revisión del prototipo navegable (agente 1) — 2026-06-10
+
+**Bien:** 8 pantallas navegables, estética muy cuidada, interacciones reales (sliders,
+toggle de molestia → alerta), personalización ("Javi", empatía sin culpa). Buen trabajo.
+
+**A pulir (enviado a agente 1):**
+| # | Incoherencia | Acción |
+|---|--------------|--------|
+| C3 | Racha 7 (dashboard) vs 8 (recompensa); al volver sigue 7. | Unificar la racha en todo el flujo. |
+| C4 | Nombres no canónicos (Dr. Rodríguez/MovePlus vs Dra. Demo/Clínica Demo; código AF-8823 vs HONOR-DEMO-001). | Usar la **persona canónica** de arriba en todo. |
+| C5 | Botones secundarios sin acción (Mi progreso, Tarjeta Épica, Compartir). | Conectarlos o marcarlos visualmente como "demo". |
+| C6 | XP/umbral de fase ilustrativos, no siguen la curva. | Calibración futura; dejar nota, no bloquea. |
+
+---
+
 ## ⚠️ Puntos a afinar (no son errores, pero hay que calibrarlos)
 
 - **Curva XP→nivel** (`avatar_evolucion.dart`) vs `nivel_min` de las 30 fases: hay que
