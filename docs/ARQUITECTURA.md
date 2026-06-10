@@ -136,7 +136,10 @@ CATÁLOGO (compartido o por clínica):
 | `clinicas` | Cada clínica/tenant. Raíz de todo. | `id`, `nombre`, `marca` (config white-label), `activa` |
 | `profesionales` | Fisios/entrenadores de una clínica. | `id`, `clinica_id`, `nombre`, `email`, `rol` |
 | `pacientes` | Clientes finales. | `id`, `clinica_id`, `nombre`, `email`, `codigo_honor`, `fecha_alta` |
-| `auditorias_vitalidad` | Foto física inicial (y revisiones). | `id`, `paciente_id`, `fuerza` (0-30), `aerobico` (0-30), `movilidad` (0-20), `constancia` (0-20), `total` (1-100), `fecha` |
+| `auditorias_vitalidad` | Foto física inicial (y revisiones). | `id`, `paciente_id`, `fuerza` (0-30), `aerobico` (0-30), `movilidad` (0-20), `constancia` (0-20), `total` (1-100), `plantilla_id`, `fecha` |
+| `plantillas_auditoria` | Plantillas de test configurables por clínica (D7). | `id`, `clinica_id`, `nombre`, `especialidad`, `es_default` |
+| `plantilla_items` | Cada ejercicio/pregunta de una plantilla y cómo puntúa. | `id`, `plantilla_id`, `bloque`, `enunciado`, `tipo_respuesta`, `puntos_max`, `regla_puntos` |
+| `auditoria_respuestas` | Respuestas concretas de cada auditoría hecha. | `id`, `auditoria_id`, `item_id`, `respuesta`, `video_url`, `puntos` |
 | `avatares` | El Guardián de cada paciente. | `id`, `paciente_id`, `arquetipo` (tierra/agua/viento…), `nivel` (1-100), `fase_visual` (1-30), `puntos_vitalidad`, `racha_dias` |
 | `fases_avatar` | Catálogo de las 30 fases (significado de cada forma). | `fase` (1-30), `nombre`, `etapa_mayor` (Huevo/Cría/Joven/Guardián/Alado/Deidad), `arco`, `nivel_min`, `puerta_clinica` |
 | `arquetipos` | Catálogo configurable de familias. | `id`, `nombre`, `descripcion`, `activo` |

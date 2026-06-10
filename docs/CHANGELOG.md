@@ -10,6 +10,13 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Cambiado — Auditoría configurable por profesional (D7) (2026-06-10)
+- **Decisión D7** en `SYSTEM_VISION.md`: la Auditoría y sus tests se especializan por clínica/profesional. Lo estable es el marco (4 bloques, 0-100); el contenido es configurable vía plantillas.
+- **`supabase/migrations/0003_plantillas_auditoria.sql`**: tablas `plantillas_auditoria`, `plantilla_items`, `auditoria_respuestas` + columna `plantilla_id` en `auditorias_vitalidad`.
+- `docs/diseño/auditoria-vitalidad.md` reescrito: separa el marco estable del contenido configurable; los micro-tests pasan a ser una "plantilla de ejemplo".
+- Inventario (PROPUESTA_DE_VALOR §6): A2 marcado como configurable + nueva pieza B6b (gestión de plantillas en el panel de la clínica).
+- Lección registrada en `lessons-learned/log.md`.
+
 ### Añadido — Diseño de la Auditoría de Vitalidad (2026-06-10)
 - **`docs/diseño/auditoria-vitalidad.md`** — diseño completo del test de entrada: anamnesis, 3-4 micro-tests (fuerza, aeróbico, movilidad/dolor), rúbrica de puntuación de los 4 bloques (0-100), interpretación por rangos, re-Auditorías y conexión con avatar/arquetipo. Marcado como borrador a validar por el equipo clínico.
 - **`app/lib/features/onboarding/auditoria_vitalidad.dart`** — lógica de cálculo de la puntuación (resultados crudos → 4 bloques → total), con umbrales editables.

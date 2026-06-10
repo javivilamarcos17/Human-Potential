@@ -92,7 +92,7 @@ está la diferencia:
 | # | Pieza | Qué es | Fase |
 |---|-------|--------|------|
 | A1 | **Onboarding + Código de Honor** | Alta del paciente vinculado a su clínica. | 🟢 MVP |
-| A2 | **Auditoría de Vitalidad (1-100)** | Test físico inicial (fuerza, aeróbico, movilidad, constancia) del que nace el avatar. Diseño en [diseño/auditoria-vitalidad.md](diseño/auditoria-vitalidad.md). | 🟢 MVP |
+| A2 | **Auditoría de Vitalidad (1-100)** | Test físico inicial (fuerza, aeróbico, movilidad, constancia) del que nace el avatar. **Configurable por profesional** (D7). Diseño en [diseño/auditoria-vitalidad.md](diseño/auditoria-vitalidad.md). | 🟢 MVP |
 | A3 | **Sombrero Seleccionador** | Asigna familia/arquetipo y deja elegir 1 de 3 Guardianes. | 🟢 MVP |
 | A4 | **Avatar / Guardián (20 fases)** | El espejo del progreso. Sistema de evolución con sentido clínico. | 🟢 MVP |
 | A5 | **Dashboard de gamificación** | Avatar al centro + barra de XP + racha. | 🟢 MVP |
@@ -118,6 +118,7 @@ está la diferencia:
 | B4 | **Panel de semáforos** | Alertas en rojo si dolor alto o molestia nueva. | 🟢 MVP |
 | B5 | **Librería de vídeos** | Catálogo de ejercicios (enlaces Vimeo/AWS). | 🟢 MVP |
 | B6 | **Creación y prescripción de Packs** | Agrupar vídeos y asignarlos a pacientes. | 🟢 MVP |
+| B6b | **Gestión de plantillas de Auditoría** | El profesional crea/edita sus tests (ejercicios, preguntas, umbrales) según su especialidad (D7). | 🟢 MVP |
 | B7 | **Métricas de adherencia** | Cuánto cumplen los pacientes (panel de negocio). | ❄️ Nevera |
 
 ### C) Backend y datos (Supabase)

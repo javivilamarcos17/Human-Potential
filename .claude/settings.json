@@ -31,7 +31,9 @@
       "PowerShell(cmdkey /delete:LegacyGeneric:target=git:https://github.com)",
       "Bash(git fetch *)",
       "Bash(git commit -m 'feat: propuesta de valor + sistema de avatar \\(30 fases\\) + panel clinica' -m 'Profundiza el boceto centrado en el MVP: *)",
-      "Bash(git commit -m 'feat: diseno de la Auditoria de Vitalidad \\(test de entrada + calculo\\)' -m 'Profundiza la puerta de entrada del sistema \\(MVP\\): *)"
+      "Bash(git commit -m 'feat: diseno de la Auditoria de Vitalidad \\(test de entrada + calculo\\)' -m 'Profundiza la puerta de entrada del sistema \\(MVP\\): *)",
+      "Edit(/.claude/skills/lessons-learned/**)",
+      "Bash(git commit -m 'feat: Auditoria configurable por profesional \\(D7\\) + plantillas' -m 'Recoge que la Auditoria y los tests se especializan por profesional/clinica *)"
     ]
   },
   "includeGitInstructions": true,

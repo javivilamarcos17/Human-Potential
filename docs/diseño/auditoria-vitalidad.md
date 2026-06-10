@@ -11,6 +11,26 @@
 
 ---
 
+## 0. Principio clave: un MARCO configurable, no un test único
+
+> **Decisión de negocio (D7):** la Auditoría y sus tests se **especializan por profesional/clínica.**
+> No hay un único test fijo para todos. Cada clínica define sus propios ejercicios, preguntas,
+> umbrales y protocolos según su especialidad (traumatología, suelo pélvico, deportiva, geriatría…).
+
+Para que esto funcione sin caos, separamos lo **estable** de lo **variable**:
+
+| Capa | Qué es | ¿Quién manda? |
+|------|--------|---------------|
+| **Estable (el marco)** | Los 4 bloques, la escala 0-100, y que de la Auditoría nacen avatar/arquetipo/punto-cero. | Fijo del producto. |
+| **Variable (el contenido)** | Qué ejercicios, qué preguntas, qué umbrales, cómo puntúa cada ítem, qué protocolos. | **El profesional/clínica.** |
+
+En la práctica: la app trae **plantillas de Auditoría** editables. Una clínica de suelo
+pélvico tendrá tests distintos a una de hombro, pero **ambas producen una Vitalidad 0-100**
+comparable dentro de su propio contexto. Lo que sigue en este documento es una **plantilla
+de ejemplo** (genérica), no la única posible.
+
+---
+
 ## 1. Qué es y para qué sirve
 
 Una puntuación única de **0 a 100** que resume el estado físico del paciente, compuesta por
@@ -51,11 +71,16 @@ Constancia y el Sombrero Seleccionador. **Borrador editable por el equipo clíni
 
 ---
 
-## 3. Los micro-tests (los 3-4 ejercicios grabados)
+## 3. Los micro-tests (los 3-4 ejercicios grabados) — PLANTILLA DE EJEMPLO
 
 > Cada test: instrucción en vídeo + el paciente **graba su intento** o **marca el resultado**
 > (Sí/No o número). La clínica puede revisar el vídeo después. Pensado para hacerse en casa,
-> sin material. **Ejercicios de ejemplo — el equipo clínico elige los definitivos.**
+> sin material.
+>
+> 🔧 **Esto es una plantilla de ejemplo (genérica).** Por la decisión D7, cada profesional
+> crea sus propias plantillas con sus ejercicios y umbrales (tablas `plantillas_auditoria` y
+> `plantilla_items`). Lo que importa del marco es que cada ítem suma a uno de los 4 bloques
+> sin pasarse de su tope (fuerza 30, aeróbico 30, movilidad 20, constancia 20).
 
 ### Test A — Fuerza Base (0–30)
 Tres micro-pruebas, 10 puntos cada una:
@@ -127,6 +152,13 @@ poder analizar después qué mejora más). El campo `total` se calcula solo en l
 ## 7. Dónde vive esto en el proyecto
 
 - Cuestionario y tests: pantalla `app/lib/features/onboarding/` (boceto).
-- Cálculo: `app/lib/features/onboarding/auditoria_vitalidad.dart` (lógica de puntuación).
-- Almacenamiento: tabla `auditorias_vitalidad` (`supabase/migrations/0001_esquema_inicial.sql`).
+- Cálculo: `app/lib/features/onboarding/auditoria_vitalidad.dart` (lógica de puntuación de ejemplo).
+- **Plantillas configurables (D7):** tablas `plantillas_auditoria`, `plantilla_items` y
+  `auditoria_respuestas` (`supabase/migrations/0003_plantillas_auditoria.sql`). El profesional
+  las gestiona desde el panel web de la clínica.
+- Almacenamiento del resultado: tabla `auditorias_vitalidad` (`supabase/migrations/0001…`).
 - Uso posterior: motor del avatar (`avatar_evolucion.dart`) y Sombrero (`sombrero_seleccionador.dart`).
+
+> Nota para el equipo: el cálculo del MVP puede empezar con la plantilla de ejemplo fija
+> (`auditoria_vitalidad.dart`) y evolucionar hacia el motor genérico que lee `regla_puntos`
+> de cada `plantilla_items`. Así no se bloquea el arranque por tener la configurabilidad total.

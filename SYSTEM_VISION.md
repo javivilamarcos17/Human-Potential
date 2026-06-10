@@ -44,6 +44,7 @@ Claude, es imperativo que NO añadas ni sugieras programar estas funcionalidades
 | **D4** | **Nº de arquetipos = configurable** | El arquetipo es un dato editable, no fijo en código. El MVP arranca con 3 familias (Tierra, Agua, Viento); añadir Fuego/Metal más adelante no requiere reprogramar, solo arte e ilustración nueva. | 2026-06-10 |
 | **D5** | **Arte de avatares: ilustrador humano** | El sistema deja *placeholders* intercambiables. Las ilustraciones finales (20 fases × familia) las hace un ilustrador humano, no IA. | 2026-06-10 |
 | **D6** | **Pagos siempre fuera de la app** | En el MVP no hay pasarela de pago in-app (ni Stripe in-app ni IAP). La app solo muestra saldos y descuentos visuales ("Descuento Sudado"). El cobro real ocurre en la web/recepción de la clínica. | 2026-06-10 |
+| **D7** | **Auditoría y tests configurables por profesional** | Lo estable es el marco (4 bloques, escala 0-100); el contenido (ejercicios, preguntas, umbrales, protocolos) lo especializa cada clínica/profesional vía plantillas editables. No hay un test único para todos. | 2026-06-10 · [diseño/auditoria-vitalidad.md](docs/diseño/auditoria-vitalidad.md) |
 
 ## 8. Auditoría de Vitalidad (puntuación 1–100)
 
