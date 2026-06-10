@@ -10,6 +10,9 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Panel web de la clínica al detalle (2026-06-10)
+- **`docs/diseño/panel-clinica.md`**: secciones del panel (B1–B6b), la pantalla de semáforos como alerta temprana, la ficha del paciente y la configurabilidad por profesional (D7).
+
 ### Añadido — Onboarding y registro (2026-06-10)
 - **`docs/diseño/onboarding-registro.md`**: embudo de entrada (Código de Honor → registro → anamnesis → Auditoría → Sombrero Seleccionador → avatar listo), principios anti-abandono y qué se inicializa al terminar (A1).
 
