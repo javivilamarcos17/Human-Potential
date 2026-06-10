@@ -10,6 +10,11 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Índice de docs + datos de demo + personalización (2026-06-10)
+- **`docs/README.md`** — índice maestro de toda la documentación (mapa de navegación del proyecto).
+- **`supabase/migrations/0004_datos_demo.sql`** — datos de ejemplo (clínica + paciente + avatar a media evolución + rutina + triajes) para enseñar el MVP/prototipo con datos realistas.
+- **`docs/diseño/personalizacion-y-detalles.md`** — principio rector: autoridad clínica + máxima personalización; las 4 capas, detalles pantalla por pantalla, tono y regla de oro del equipo.
+
 ### Añadido — Especificación del MVP al milímetro (2026-06-10)
 - **`docs/ESPECIFICACION_MVP.md`** — plano preciso pantalla por pantalla (app paciente A1-A12, panel clínica B1-B6b, backend) con campos, validaciones y la "definición de terminado" del MVP. Manda sobre los diseños si algo choca.
 
