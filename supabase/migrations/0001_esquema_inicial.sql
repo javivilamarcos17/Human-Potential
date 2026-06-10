@@ -83,7 +83,7 @@ create table avatares (
     paciente_id       uuid not null references pacientes(id) on delete cascade,
     arquetipo_id      uuid references arquetipos(id),
     nivel             smallint not null default 1 check (nivel between 1 and 100),
-    fase_visual       smallint not null default 1 check (fase_visual between 1 and 20),
+    fase_visual       smallint not null default 1 check (fase_visual between 1 and 30),
     puntos_vitalidad  integer not null default 0,   -- XP acumulada
     racha_dias        integer not null default 0,
     actualizado_en    timestamptz not null default now(),

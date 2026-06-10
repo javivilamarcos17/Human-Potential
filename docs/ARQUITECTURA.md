@@ -3,7 +3,7 @@
 > Documento vivo. Claude lo actualiza cuando cambia algo técnico relevante.
 > Si quieres saber cómo está construido el proyecto, lee esto.
 
-**Última actualización:** 2026-06-10 — Boceto inicial del MVP v1.5: stack, modelo de datos y estructura de la app.
+**Última actualización:** 2026-06-10 — Profundización del boceto: propuesta de valor, sistema de avatar (30 fases), catálogo de datos y panel de clínica.
 **Mantenedor:** Claude (con validación del dueño del proyecto)
 
 ---
@@ -71,14 +71,15 @@ Human Potential/
 │   │   │   ├── models/
 │   │   │   └── repositories/
 │   │   ├── features/                 ← una carpeta por funcionalidad del flujo
-│   │   │   ├── onboarding/           ← login + Código de Honor + Auditoría de Vitalidad
-│   │   │   ├── dashboard/            ← avatar central + XP + racha
+│   │   │   ├── onboarding/           ← login + Código de Honor + Auditoría + Sombrero Seleccionador
+│   │   │   ├── dashboard/            ← avatar central + XP + racha + motor de evolución
 │   │   │   ├── triaje/               ← popup diario dolor/energía
 │   │   │   ├── rutinas/              ← reproductor de vídeos + Packs
 │   │   │   ├── feedback/             ← RPE post-sesión
 │   │   │   ├── monedero/             ← Descuento Sudado + referidos
 │   │   │   ├── tarjetas/             ← tarjetas épicas para compartir
-│   │   │   └── upselling/            ← banners hacia servicios de clínica
+│   │   │   ├── upselling/            ← banners hacia servicios de clínica
+│   │   │   └── clinica/              ← panel web de la clínica (B1-B6)
 │   │   └── shared/                   ← widgets reutilizables (botones, tarjetas...)
 │   └── pubspec.yaml                  ← "libro de recetas" de dependencias Flutter
 │
@@ -136,7 +137,8 @@ CATÁLOGO (compartido o por clínica):
 | `profesionales` | Fisios/entrenadores de una clínica. | `id`, `clinica_id`, `nombre`, `email`, `rol` |
 | `pacientes` | Clientes finales. | `id`, `clinica_id`, `nombre`, `email`, `codigo_honor`, `fecha_alta` |
 | `auditorias_vitalidad` | Foto física inicial (y revisiones). | `id`, `paciente_id`, `fuerza` (0-30), `aerobico` (0-30), `movilidad` (0-20), `constancia` (0-20), `total` (1-100), `fecha` |
-| `avatares` | El Guardián de cada paciente. | `id`, `paciente_id`, `arquetipo` (tierra/agua/viento…), `nivel` (1-100), `fase_visual` (1-20), `puntos_vitalidad`, `racha_dias` |
+| `avatares` | El Guardián de cada paciente. | `id`, `paciente_id`, `arquetipo` (tierra/agua/viento…), `nivel` (1-100), `fase_visual` (1-30), `puntos_vitalidad`, `racha_dias` |
+| `fases_avatar` | Catálogo de las 30 fases (significado de cada forma). | `fase` (1-30), `nombre`, `etapa_mayor` (Huevo/Cría/Joven/Guardián/Alado/Deidad), `arco`, `nivel_min`, `puerta_clinica` |
 | `arquetipos` | Catálogo configurable de familias. | `id`, `nombre`, `descripcion`, `activo` |
 | `items_avatar` | Armaduras/halos/medallas desbloqueables. | `id`, `nombre`, `fase_minima`, `requiere_pago_clinica` (sí/no) |
 | `avatar_items` | Qué items tiene cada avatar. | `avatar_id`, `item_id`, `fecha_desbloqueo`, `origen` (logro/pago) |

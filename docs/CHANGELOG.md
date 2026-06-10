@@ -10,6 +10,15 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Profundización del boceto (2026-06-10)
+- **`docs/PROPUESTA_DE_VALOR.md`** — propuesta de valor completa (problema, solución, mecanismo único, fosos defensivos, modelo de negocio) + **inventario completo de todo lo que hay que crear** (app paciente, panel clínica, backend, contenido) marcado por fase (MVP/Nevera/Visión Norte).
+- **`docs/diseño/avatar-evolucion.md`** — sistema de evolución del avatar con sentido clínico: doble eje (constancia + mejora real), **30 fases en 6 etapas mayores** (modelo de dos capas para muchas fases sin disparar el coste de arte), puertas clínicas, estado Legendario (Trinidad del Nivel 100) y asignación por test/valoraciones (Sombrero Seleccionador).
+- **`supabase/migrations/0002_catalogo_avatar.sql`** — tabla catálogo `fases_avatar` (30 fases) + datos de ejemplo: 3 arquetipos y 10 retos maestros.
+- **Motor de evolución en Dart** (`app/lib/features/dashboard/avatar_evolucion.dart`): cálculo XP→nivel→fase con puertas clínicas y estado Legendario.
+- **Sombrero Seleccionador en Dart** (`app/lib/features/onboarding/sombrero_seleccionador.dart`): asignación de arquetipo por valoración + XP de partida.
+- **Esqueleto del panel web de la clínica** (`app/lib/features/clinica/panel_clinica_screen.dart`, B1-B6).
+- Ampliado `avatares.fase_visual` de 1-20 a 1-30.
+
 ### Añadido — Boceto inicial del MVP v1.5 (2026-06-10)
 - **Decisiones cerradas D1–D6** en `SYSTEM_VISION.md` (stack, multi-clínica, avatar, arquetipos, arte, pagos fuera).
 - **ADR-001** — Stack Flutter + Supabase.

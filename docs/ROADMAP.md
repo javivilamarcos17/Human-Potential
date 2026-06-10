@@ -3,6 +3,9 @@
 > Cómo se construye Anti Frágil, paso a paso y en orden.
 > El dueño del proyecto define las prioridades; Claude estima el esfuerzo.
 > Las estimaciones son orientativas y para **un equipo pequeño** (1-2 devs + 1 diseñador/ilustrador).
+>
+> **Qué construir (alcance completo):** ver [`PROPUESTA_DE_VALOR.md`](PROPUESTA_DE_VALOR.md) §6.
+> **Cómo evoluciona el avatar:** ver [`diseño/avatar-evolucion.md`](diseño/avatar-evolucion.md).
 
 ---
 
@@ -60,12 +63,13 @@ Sugerencia de orden de construcción en **sprints** (bloques de ~2 semanas):
 - [ ] Feedback RPE obligatorio post-sesión.
 - **Resultado:** el paciente puede completar su rutina diaria de principio a fin.
 
-### Sprint 4 — Gamificación
+### Sprint 4 — Gamificación (núcleo de retención)
 - [ ] Dashboard con avatar, barra de XP y racha.
-- [ ] Motor de puntos de vitalidad → evolución del avatar (20 fases).
+- [ ] Motor de evolución (XP→nivel→fase con puertas clínicas): **30 fases en 6 etapas mayores**. Base en `app/lib/features/dashboard/avatar_evolucion.dart`.
+- [ ] Retos Maestros + estado Legendario (Trinidad del Nivel 100).
 - [ ] Desbloqueo de items/medallas (incluido el desbloqueo por pago en clínica).
-- [ ] Integración de los **placeholders de avatar** (arte real lo entrega el ilustrador).
-- **Resultado:** el avatar evoluciona y engancha. (Núcleo de retención.)
+- [ ] Integración de los **placeholders de avatar** (6 bases × arquetipo; arte real lo entrega el ilustrador — D5).
+- **Resultado:** el avatar evoluciona reflejando el progreso clínico real. Ver [`diseño/avatar-evolucion.md`](diseño/avatar-evolucion.md).
 
 ### Sprint 5 — Panel web de la clínica
 - [ ] Alta de pacientes + generación de Código de Honor.
