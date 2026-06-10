@@ -50,7 +50,10 @@
       "PowerShell(git stash)",
       "PowerShell(git stash pop)",
       "PowerShell(git add docs/PLAN_PILOTO.md)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "PowerShell(git pull)",
+      "PowerShell(git add docs/FAQ_CLINICAS.md coordinacion/agente-2/ESTADO.md)",
+      "Bash(git rebase *)"
     ]
   },
   "includeGitInstructions": true,

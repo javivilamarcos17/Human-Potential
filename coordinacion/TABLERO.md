@@ -2,21 +2,21 @@
 
 > Quién hace qué y en qué estado. El organizador lo actualiza tras cada `git pull`.
 
-| Agente | Carpeta | Tarea en curso | Estado |
-|--------|---------|----------------|--------|
-| Organizador | (chat principal) | Diseño de producto/visual + integración | 🔄 activo |
-| Agente 1 | `coordinacion/agente-1/` | Ver su `TAREAS.md` | ⬜ a la espera de confirmar |
-| Agente 2 | `coordinacion/agente-2/` | Ver su `TAREAS.md` | ⬜ a la espera de confirmar |
+| Agente | Track | Tarea en curso | Estado |
+|--------|-------|----------------|--------|
+| Organizador | Diseño producto + integración + spec MVP al milímetro | `docs/ESPECIFICACION_MVP.md` | 🔄 activo |
+| Agente 1 | Marca & prototipo visual | `mockups/prototipo/` (prototipo navegable) | ▶ asignada |
+| Agente 2 | Negocio | `docs/PROYECCIONES_FINANCIERAS.md` | ▶ asignada |
 
 ## Entregables ya en el repo
-- `docs/PITCH_DECK.md` ✅
-- `docs/DOSSIER_DESARROLLO.md` ✅
-- `docs/PLAN_PILOTO.md` / `docs/IDENTIDAD_VISUAL.md` → en curso (uno por agente; el cruce da igual).
+PITCH_DECK ✅ · DOSSIER_DESARROLLO ✅ · PLAN_PILOTO ✅ · IDENTIDAD_VISUAL ✅ · ONE_PAGER ✅ · FAQ_CLINICAS ✅
 
-## Cola de tareas futuras (el organizador las irá repartiendo)
-- `docs/ONE_PAGER.md` — resumen ejecutivo 1 página (inversores).
-- `docs/FAQ_CLINICAS.md` — preguntas/objeciones para vender a clínicas (B2B).
-- `docs/PRIVACIDAD_RGPD.md` — borrador de privacidad de datos sanitarios (a validar por abogado).
+## Backlog por agente
+- **Agente 1 (visual):** prototipo navegable → `mockups/prototipo/clinica.html` → `docs/diseño/moodboard-avatares.md`
+- **Agente 2 (negocio):** PROYECCIONES → ANALISIS_COMPETENCIA → RIESGOS_Y_MITIGACIONES → KPIS_NEGOCIO
 
-> El mapeo "qué chat es agente-1 vs agente-2" lo decide el usuario; cada agente se
-> autoidentifica escribiendo en su `ESTADO.md` qué archivo entregó.
+## Aviso automático (los agentes "avisan" al organizador)
+Cuando un agente termina, escribe en su `ESTADO.md` y hace push. El organizador tiene un
+**vigía** (proceso en segundo plano) que detecta el cambio en el repositorio remoto y le
+avisa para hacer `git pull`, leer el `ESTADO.md` y asignar la siguiente tarea. El usuario ya
+no tiene que hacer de puente (aunque puede decir "continua" para acelerar).

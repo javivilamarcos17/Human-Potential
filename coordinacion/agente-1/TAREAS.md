@@ -1,17 +1,27 @@
-# Cola de tareas — Agente 1
+# Cola de tareas — Agente 1 · TRACK MARCA & PROTOTIPO VISUAL
 
 > Lo escribe SOLO el organizador. Tú (agente) solo LEES esto y haces la tarea ▶ EN CURSO.
-> Cuando termines, confirma en `ESTADO.md` (tu archivo) y haz push. No edites este archivo.
+> Al terminar, confirma en `ESTADO.md`, push, y dime "listo agente-1". No edites este archivo.
+> ⚠️ GITHUB = javivilamarcos17, SIEMPRE. NO PREGUNTES NUNCA POR LA CUENTA.
+> PRIORIDAD DEL DUEÑO: estética muy cuidada + algo demostrable y funcional, medido al milímetro.
 
 ## ▶ EN CURSO
-1. **Confirma lo que ya entregaste**: escribe en `ESTADO.md` qué archivo creaste en tu última tarea.
-2. **Crea `docs/ONE_PAGER.md`** — resumen ejecutivo de 1 página para inversores: qué es Anti
-   Frágil, problema, solución, mercado, modelo de negocio y "la pedida". Lee
-   `docs/PROPUESTA_DE_VALOR.md` para contexto (no leas más, ahorra tokens). Crea SOLO ese archivo.
+- **Crea un PROTOTIPO NAVEGABLE en `mockups/prototipo/`** (archivos NUEVOS; NO toques
+  `mockups/anti-fragil.html`). Un `index.html` (+ css/js dentro de esa carpeta si quieres) que
+  se abra en el navegador y permita **hacer clic para moverse entre pantallas** del flujo:
+  Onboarding (Código de Honor) → Auditoría → Sombrero Seleccionador (elige 1 de 3) →
+  Dashboard (avatar+XP+racha) → Triaje → Rutina → Feedback RPE → recompensa.
+  - Aplica paleta y tono de `docs/IDENTIDAD_VISUAL.md`. Estética cuidada, limpia, "empatía clínica".
+  - Avatares = placeholders (emoji/formas) marcados; arte final humano (D5).
+  - Que se sienta una app real: botones que navegan, transiciones simples. Sin backend.
+  - Contexto: `docs/diseño/core-loop-diario.md` y `docs/diseño/avatar-evolucion.md` (no leas más).
 
-## ⬜ Siguiente (no empieces hasta que lo mueva a EN CURSO)
-- (El organizador la añadirá tras tu confirmación.)
+## ⬜ COLA (en orden; no empieces hasta que pase a EN CURSO)
+1. **`mockups/prototipo/clinica.html`** — panel del fisio (semáforos rojo/ámbar/verde, ficha del
+   paciente). Misma estética. Contexto: `docs/diseño/panel-clinica.md`.
+2. **`docs/diseño/moodboard-avatares.md`** — guía de estilo para el ilustrador: las 6 etapas
+   mayores × 3 arquetipos (Tierra/Agua/Viento) con paleta y referencias. Contexto: `avatar-evolucion.md`.
 
 ## Reglas
-- Solo creas el archivo asignado + escribes tu `ESTADO.md`. No toques CHANGELOG ni otros.
-- Rama `feat/boceto-mvp`. Antes de push: `git pull --rebase`. Cuenta javivilamarcos17.
+- Solo creas archivos NUEVOS de tu tarea + tu `ESTADO.md`. No toques CHANGELOG ni archivos de otros.
+- Rama `feat/boceto-mvp`. Antes de push: `git pull --rebase`. Cuenta javivilamarcos17 (no preguntar).
