@@ -14,7 +14,10 @@
   - Aplica paleta y tono de `docs/IDENTIDAD_VISUAL.md`. Estética cuidada, limpia, "empatía clínica".
   - Avatares = placeholders (emoji/formas) marcados; arte final humano (D5).
   - Que se sienta una app real: botones que navegan, transiciones simples. Sin backend.
-  - Contexto: `docs/diseño/core-loop-diario.md` y `docs/diseño/avatar-evolucion.md` (no leas más).
+  - Contexto: `docs/diseño/core-loop-diario.md`, `docs/diseño/avatar-evolucion.md` y
+    `docs/diseño/personalizacion-y-detalles.md` (lee este último: aplica MÁXIMA personalización
+    — nombre del paciente "Javi", su fisio "Dra. Demo", su clínica — que NO se sienta genérico).
+    Puedes usar los datos de `supabase/migrations/0004_datos_demo.sql` como ejemplo realista.
 
 ## ⬜ COLA (en orden; no empieces hasta que pase a EN CURSO)
 1. **`mockups/prototipo/clinica.html`** — panel del fisio (semáforos rojo/ámbar/verde, ficha del
