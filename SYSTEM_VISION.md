@@ -1,121 +1,36 @@
 # SYSTEM_VISION.md — Visión del Proyecto
-
-> ⭐ **Este es el documento más importante del proyecto.**
-> Lo escribe el dueño del proyecto (tú), no el técnico.
-> Claude lo leerá al inicio de cada sesión para entender de qué va todo.
->
-> Instrucciones: rellena cada sección. Borra los ejemplos en cursiva.
-> No te preocupes por ser técnico — escribe como hablarías con un colega.
-
----
+# Visión del Proyecto: ANTI FRÁGIL (MVP v1.5)
 
 ## 1. ¿Qué es este proyecto?
+Anti Frágil es una aplicación móvil (ecosistema B2B2C) que soluciona el abandono en la industria de la salud física. Sustituye la "culpa" de las apps de fitness tradicionales por "empatía clínica" y gamificación. El usuario interactúa con un "Guardián Digital" (Avatar) que evoluciona visualmente a medida que el usuario cumple sus rutinas de prevención y recuperación, generando aversión a la pérdida y una fuerte retención a largo plazo.
 
-> *Ejemplo: "Una herramienta para que nuestros conductores registren los partes de trabajo desde el móvil sin papel."*
+## 2. Público Objetivo
+* **Usuarios Finales (Pacientes):** Personas con dolores posturales, lesiones previas o sedentarias que buscan recuperar su vitalidad sin castigos inflexibles.
+* **Profesionales (B2B):** Clínicas de fisioterapia, entrenadores y nutricionistas que usan la app para prescribir rutinas, monitorizar el dolor de sus pacientes y retenerlos.
 
-[Escribe aquí en 2-3 frases qué problema resuelve este proyecto]
+## 3. Core Loop (El flujo principal del usuario)
+1. **Triaje Diario:** Al entrar, el usuario reporta su Nivel de Dolor (1-10) y Energía (1-10).
+2. **Acción:** Reproduce un vídeo o "Pack de Rutina" asignado previamente por su clínico.
+3. **Feedback:** Al terminar, indica su Esfuerzo (RPE) y si hubo molestias.
+4. **Recompensa:** Gana "Puntos de Vitalidad" (XP). Su Avatar evoluciona a lo largo de 20 etapas visuales según la constancia.
 
----
+## 4. Motor de Monetización y Viralidad
+* **El Descuento Sudado:** Un panel visual donde el usuario ve cómo su cuota baja al traer referidos o mantener rachas.
+* **Tarjetas Épicas:** Generación de imágenes verticales dinámicas (Avatar + Nivel + Frase de superación) listas para compartir en Instagram/TikTok.
+* **Upselling Quirúrgico:** Banners automáticos que saltan si el usuario reporta mucho dolor o se estanca, invitándole a reservar una sesión presencial con la clínica (fuera de la app).
 
-## 2. ¿Para quién es?
+## 5. Panel Administrativo (Back-Office Web)
+* Dashboard para que los profesionales den de alta pacientes (generando un Código de Honor).
+* Asignación de rutinas (enlaces a vídeos de Vimeo/AWS).
+* Panel de Semáforos: Alertas en rojo si un paciente reporta un dolor >7 en su triaje.
 
-> *Ejemplo: "Para los 40 conductores de la flota y los 3 supervisores de operaciones."*
+## 6. LÍMITES ESTRICTOS (Qué NO vamos a construir en este MVP)
+Claude, es imperativo que NO añadas ni sugieras programar estas funcionalidades en esta fase para controlar los costes y el tiempo de entrega:
+* **NO hay IA generativa:** El avatar no habla ni razona. Todo funciona por lógica condicional tradicional.
+* **NO hay Wearables:** Sin integración con Apple Health, Google Fit, ni biosensores.
+* **NO hay pasarelas de pago in-app:** Ni Stripe, ni IAP (In-App Purchases) de Apple/Google. Todo el pago se hace fuera de la plataforma. La app solo muestra saldos/descuentos visuales.
+* **NO hay comunidad social interna:** Ni chats, ni ligas de empresas, ni muros de noticias. La viralidad ocurre exportando imágenes a redes sociales externas.
 
-**Usuarios principales:**
-- [Tipo de usuario 1] — [qué hace en el sistema]
-- [Tipo de usuario 2] — [qué hace en el sistema]
-
----
-
-## 3. ¿Cuál es el objetivo central?
-
-> *Ejemplo: "Eliminar el papel y tener los partes en digital antes de fin de mes."*
-
-[Una frase clara del objetivo principal]
-
----
-
-## 4. Stack técnico elegido
-
-> Si no sabes qué poner aquí, deja que Claude lo decida y luego rellénalo.
-
-- **Frontend (lo que ve el usuario):** [ej: React, Vue, nativo móvil, web simple...]
-- **Backend (el servidor):** [ej: Python, Node.js, sin servidor...]
-- **Base de datos:** [ej: PostgreSQL, Supabase, Excel, ninguna...]
-- **Hosting (dónde vive):** [ej: Vercel, servidor propio, local...]
-
----
-
-## 5. Decisiones cerradas ✅
-
-> Estas decisiones YA están tomadas. Claude NO debe cuestionarlas ni reabrirlas
-> salvo que tú explícitamente lo pidas con información nueva.
-
-| ID | Decisión | Razón |
-|----|----------|-------|
-| D1 | [ej: Usamos Supabase como base de datos] | [ej: Ya tenemos cuenta y experiencia] |
-| D2 | [ej: La app es solo web, no móvil nativa] | [ej: Presupuesto limitado] |
-
-*Añade más filas según vayan cerrándose decisiones.*
-
----
-
-## 6. Decisiones abiertas ❓
-
-> Estas decisiones están PENDIENTES. Bloquean avance hasta que se resuelvan.
-
-| ID | Pregunta | Quién decide | Fecha límite |
-|----|----------|--------------|--------------|
-| O1 | [ej: ¿Los supervisores ven todos los partes o solo los de su equipo?] | [ej: Javier] | [ej: 15/06] |
-
-*Añade más filas según aparezcan dudas.*
-
----
-
-## 7. Lo que NO es este proyecto
-
-> Igual de importante que lo que sí es. Evita que Claude añada cosas de más.
-
-- [ej: No es una app de nóminas]
-- [ej: No gestiona inventario de vehículos]
-- [ej: No tiene integración con el ERP por ahora]
-
----
-
-## 8. Fases del proyecto
-
-> *Ejemplo simplificado de cómo dividir el trabajo*
-
-| Fase | Qué incluye | Estado |
-|------|-------------|--------|
-| Fase 1 | [ej: Login + ver lista de partes] | ⬜ Pendiente |
-| Fase 2 | [ej: Crear y editar partes desde móvil] | ⬜ Pendiente |
-| Fase 3 | [ej: Panel de supervisores + exportar Excel] | ⬜ Pendiente |
-
----
-
-## 9. Contexto de negocio relevante
-
-> Información que Claude necesita para tomar buenas decisiones técnicas.
-> No tiene que ser técnica — puede ser operativa, legal, cultural...
-
-> *Ejemplo: "Los conductores solo tienen móvil y conexión limitada en ruta. La oficina
-> usa Windows. El jefe revisa todo los lunes por la mañana."*
-
-[Escribe aquí lo que Claude necesita saber sobre cómo funciona tu negocio]
-
----
-
-## 10. Métricas de éxito
-
-> ¿Cómo sabrás que el proyecto ha funcionado?
-
-> *Ejemplo: "En 3 meses, el 100% de los partes se registran en digital y tardamos
-> menos de 2 minutos por parte."*
-
-- [Métrica 1]
-- [Métrica 2]
-
----
-
-*Última actualización: [fecha] por [nombre]*
+## 7. Decisiones Técnicas Pendientes
+* Selección del Stack Tecnológico (Sugerido: Flutter/React Native para frontend móvil híbrido; Firebase/Supabase para backend rápido y gestión de autenticación).
+* Estructura exacta de la base de datos para relacionar Pacientes -> Clínicos -> Rutinas -> Registro de dolor.
