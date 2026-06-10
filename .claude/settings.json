@@ -23,7 +23,8 @@
       "Bash(git branch*)",
       "Bash(git fetch*)",
       "Bash(git pull*)",
-      "Bash(git push origin*)"
+      "Bash(git push origin*)",
+      "PowerShell($f = Get-Command flutter -ErrorAction SilentlyContinue; if \\($f\\) { \"flutter: $\\($f.Source\\)\" } else { \"flutter: NO instalado\" }; $d = Get-Command dart -ErrorAction SilentlyContinue; if \\($d\\) { \"dart: $\\($d.Source\\)\" } else { \"dart: NO instalado\" })"
     ]
   },
   "includeGitInstructions": true,

@@ -54,4 +54,5 @@ Claude creará el archivo con el formato correcto.
 
 ## ADRs de este proyecto
 
-*[Se añaden aquí cuando se crean]*
+- [ADR-001 — Stack tecnológico: Flutter + Supabase](ADR-001-stack-tecnologico.md) · Aceptada · 2026-06-10
+- [ADR-002 — Arquitectura multi-clínica (multi-tenant)](ADR-002-arquitectura-multi-tenant.md) · Aceptada · 2026-06-10
