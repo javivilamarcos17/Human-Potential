@@ -59,7 +59,9 @@
       "Bash(cat docs/diseño/personalizacion-y-detalles.md)",
       "Bash(cat supabase/migrations/0004_datos_demo.sql)",
       "PowerShell(git add docs/RIESGOS_Y_MITIGACIONES.md coordinacion/agente-2/ESTADO.md)",
-      "PowerShell(git add docs/KPIS_NEGOCIO.md coordinacion/agente-2/ESTADO.md)"
+      "PowerShell(git add docs/KPIS_NEGOCIO.md coordinacion/agente-2/ESTADO.md)",
+      "PowerShell(git add docs/MODELO_PRECIOS.md coordinacion/agente-2/ESTADO.md)",
+      "Bash(py --version)"
     ]
   },
   "includeGitInstructions": true,
