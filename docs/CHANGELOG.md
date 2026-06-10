@@ -10,6 +10,10 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — UX como prioridad #1 + Riesgos (2026-06-11)
+- **`docs/diseño/experiencia-usuario.md`** — la experiencia de usuario, lo visual y la personalización declaradas **prioridad #1 del MVP**: sensación objetivo, principios UX, momentos clave, microinteracciones y checklist de "pantalla terminada".
+- **`docs/RIESGOS_Y_MITIGACIONES.md`** (agente 2) integrado en el índice; agente 2 avanza a KPIS.
+
 ### Revisión crítica + integración (2026-06-10)
 - **`docs/REVISION_CRITICA.md`** — control de calidad vivo. Detectadas y **corregidas** 2 incoherencias del avatar al pasar de 20 a 30 fases: maqueta ("Fase 10 = Guardián Pleno" → Fase 16) y datos de demo (nivel 47/fase 10 → nivel 50/fase 16, coherente con `fases_avatar`).
 - **`docs/PROYECCIONES_FINANCIERAS.md`** (agente 2) integrado en el índice; siguiente en su cola: ANALISIS_COMPETENCIA.

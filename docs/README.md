@@ -9,6 +9,8 @@
 - [ROADMAP.md](ROADMAP.md) — plan de creación por fases y sprints.
 
 ## 🎨 Diseño de producto (`diseño/`)
+- ⭐ [experiencia-usuario.md](diseño/experiencia-usuario.md) — **UX/visual/personalización: la prioridad #1 del MVP.**
+- ⭐ [personalizacion-y-detalles.md](diseño/personalizacion-y-detalles.md) — autoridad clínica + máxima personalización.
 - [onboarding-registro.md](diseño/onboarding-registro.md) — embudo de entrada.
 - [auditoria-vitalidad.md](diseño/auditoria-vitalidad.md) — el test de entrada (configurable, D7).
 - [avatar-evolucion.md](diseño/avatar-evolucion.md) — 30 fases con sentido clínico.
@@ -28,7 +30,8 @@
 - [FAQ_CLINICAS.md](FAQ_CLINICAS.md) — objeciones y respuestas B2B.
 - [PROYECCIONES_FINANCIERAS.md](PROYECCIONES_FINANCIERAS.md) — escenarios de ingresos/costes.
 - [ANALISIS_COMPETENCIA.md](ANALISIS_COMPETENCIA.md) — competidores y fosos defensivos.
-- *(en curso por los agentes: RIESGOS, KPIS, MODELO_PRECIOS, GO_TO_MARKET, PRIVACIDAD_RGPD)*
+- [RIESGOS_Y_MITIGACIONES.md](RIESGOS_Y_MITIGACIONES.md) — riesgos del proyecto y cómo mitigarlos.
+- *(en curso por los agentes: KPIS, MODELO_PRECIOS, GO_TO_MARKET, PRIVACIDAD_RGPD)*
 
 ## 🛠️ Técnico
 - [ARQUITECTURA.md](ARQUITECTURA.md) — stack, modelo de datos, cómo arrancar.
