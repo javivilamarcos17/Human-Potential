@@ -907,6 +907,8 @@ input[type=range]::-webkit-slider-thumb{
           <div class="av-slogan">23 días seguidos, Javi. Tu zona lumbar lo nota.</div>
         </div>
 
+        <!-- C6: valores de XP, nivel y progreso de barra son ilustrativos para la demo;
+             la lógica real se calculará en tiempo de ejecución desde la BD. -->
         <div class="xp-bar-wrap">
           <div class="xp-bar-top">
             <span class="xp-lbl">Vitalidad XP</span>
@@ -1142,7 +1144,7 @@ input[type=range]::-webkit-slider-thumb{
       </div>
 
       <div class="footer">
-        <button class="btn btn-green" onclick="go(8)">Cerrar sesión del día ✓</button>
+        <button class="btn btn-green" onclick="sessionDone=true; go(8)">Cerrar sesión del día ✓</button>
       </div>
     </div>
 
@@ -1221,6 +1223,9 @@ for (let i = 1; i <= N; i++) {
   ndots.appendChild(d);
 }
 
+/* C3: racha coherente — se actualiza al volver al Dashboard tras completar la sesión */
+let sessionDone = false;
+
 function go(n) {
   if (n === cur || n < 1 || n > N) return;
   const cEl = document.getElementById('s' + cur);
@@ -1229,7 +1234,44 @@ function go(n) {
   setTimeout(() => cEl.classList.remove('active','out'), 320);
   nEl.classList.add('active');
   document.querySelectorAll('.nd').forEach((d,i) => d.classList.toggle('on', i+1 === n));
+  // Si volvemos al Dashboard (s4) después de haber completado la sesión (desde s8),
+  // actualizamos la racha a 24 para que sea coherente con la pantalla de recompensa.
+  if (n === 4 && sessionDone) {
+    document.querySelector('.streak-n').textContent = '24';
+    document.querySelector('.av-slogan').textContent = '24 días seguidos, Javi. Tu zona lumbar lo nota.';
+  }
   cur = n;
+}
+
+/* C5: botones "próximamente" */
+function demoAlert(feature) {
+  // Overlay suave en lugar de alert del navegador — más acorde a la estética
+  const ov = document.createElement('div');
+  ov.style.cssText = `
+    position:fixed;inset:0;z-index:9999;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(8,17,30,.75);backdrop-filter:blur(6px);
+    animation:fadein .2s ease;
+  `;
+  ov.innerHTML = \`
+    <div style="background:#1A2E4A;border:1px solid rgba(255,255,255,.1);
+                border-radius:24px;padding:28px 32px;max-width:300px;text-align:center;
+                box-shadow:0 24px 64px rgba(0,0,0,.5);">
+      <div style="font-size:32px;margin-bottom:12px;">🚀</div>
+      <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:18px;
+                  color:#fff;margin-bottom:8px;">\${feature}</div>
+      <div style="font-size:13px;color:#8A9BB0;line-height:1.55;margin-bottom:20px;">
+        Esta función estará disponible en el MVP.<br>Estamos construyéndolo ahora mismo.
+      </div>
+      <button onclick="this.closest('div').parentElement.remove()"
+        style="background:#2ECC8F;color:#1A2E4A;border:none;border-radius:12px;
+               padding:12px 28px;font-weight:700;font-size:14px;cursor:pointer;width:100%;">
+        Entendido
+      </button>
+    </div>
+  \`;
+  document.body.appendChild(ov);
+  ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
 }
 
 /* ── Auditoría sliders ──────────────────────── */
