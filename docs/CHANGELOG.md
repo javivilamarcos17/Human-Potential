@@ -10,6 +10,9 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Maqueta visual navegable (2026-06-10)
+- **`mockups/anti-fragil.html`**: boceto visual que se abre en el navegador (sin instalar nada) con las pantallas clave (Dashboard/avatar, Triaje, Feedback, Panel clínica con semáforos) y el visor de evolución del avatar (6 etapas mayores → 30 fases). Placeholders editables; arte final por ilustrador humano (D5).
+
 ### Añadido — Diseño del Core Loop diario (2026-06-10)
 - **`docs/diseño/core-loop-diario.md`**: el ciclo diario paso a paso (triaje → dashboard → rutina → feedback RPE → recompensa), economía de Puntos de Vitalidad, reglas de racha "sin tiranía", semáforos de alerta a la clínica y reenganche amable del abandono.
 - **`app/lib/features/dashboard/economia_puntos.dart`**: lógica de XP por acción + bonus de racha + XP por re-Auditoría + actualización de racha (con descanso protegido).

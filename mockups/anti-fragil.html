@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!--
+  Anti Frágil — MAQUETA VISUAL (boceto navegable)
+  ----------------------------------------------------------------------------
+  Esto NO es la app real: es un dibujo interactivo para VER la idea y valorar
+  opciones (sobre todo del avatar). Se abre con doble clic en cualquier navegador.
+  100% editable: cambia textos, colores y "avatares" (aquí son placeholders con
+  emoji/formas; el arte final lo hará un ilustrador humano — decisión D5).
+  ----------------------------------------------------------------------------
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Frágil — Maqueta visual</title>
+<style>
+  :root{
+    --azul:#2D9CDB; --verde:#27AE60; --fondo:#F5F7FA; --tinta:#1c2b36;
+    --suave:#e8eef3; --sombra:0 10px 30px rgba(20,40,60,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif}
+  body{background:linear-gradient(160deg,#eaf4fb,#f5f7fa);color:var(--tinta);padding:32px 16px}
+  h1{text-align:center;color:var(--azul);font-size:26px}
+  .sub{text-align:center;color:#5b6b78;margin:6px 0 28px;font-size:14px}
+  .aviso{max-width:780px;margin:0 auto 28px;background:#fff8e6;border:1px solid #f0d98c;
+    border-radius:12px;padding:12px 16px;font-size:13px;color:#7a5d00;text-align:center}
+
+  /* Rejilla de pantallas */
+  .pantallas{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start}
+
+  /* Marco de móvil */
+  .movil{width:300px;background:#fff;border-radius:34px;box-shadow:var(--sombra);
+    border:10px solid #11212c;overflow:hidden}
+  .notch{height:22px;background:#11212c;border-radius:0 0 14px 14px;width:120px;margin:0 auto}
+  .pant{padding:18px 16px 22px}
+  .titulo-pant{font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:#9aa7b1;text-align:center;margin-bottom:10px}
+
+  /* Dashboard / avatar */
+  .avatar{width:150px;height:150px;margin:8px auto;border-radius:50%;
+    background:radial-gradient(circle at 50% 38%,#bfe6fb,#7cc4ee 60%,#4aa6e0);
+    display:flex;align-items:center;justify-content:center;font-size:74px;
+    box-shadow:inset 0 -8px 18px rgba(0,0,0,.12),0 8px 22px rgba(74,166,224,.4)}
+  .nombre-avatar{text-align:center;font-weight:700;margin-top:6px}
+  .fase{text-align:center;color:#5b6b78;font-size:12px;margin-bottom:12px}
+  .xp{background:var(--suave);border-radius:20px;height:14px;overflow:hidden;margin:6px 0}
+  .xp > i{display:block;height:100%;width:62%;background:linear-gradient(90deg,var(--verde),#6fd39a)}
+  .fila{display:flex;justify-content:space-between;font-size:12px;color:#5b6b78;margin-top:4px}
+  .racha{display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0;
+    background:#fff4e8;color:#c2671b;border-radius:12px;padding:8px;font-weight:600;font-size:13px}
+  .btn{display:block;width:100%;border:none;border-radius:14px;padding:13px;margin-top:10px;
+    font-size:14px;font-weight:600;color:#fff;background:var(--azul);cursor:pointer}
+  .btn.verde{background:var(--verde)}
+  .btn.ghost{background:#fff;color:var(--azul);border:2px solid var(--azul)}
+
+  /* Triaje */
+  .escala{display:flex;gap:5px;justify-content:space-between;margin:10px 0 2px}
+  .escala span{flex:1;text-align:center;padding:9px 0;border-radius:9px;background:var(--suave);
+    font-size:13px;font-weight:600}
+  .escala span.on{background:var(--azul);color:#fff}
+  .escala.dolor span.on{background:#e0564a}
+  .lbl{font-size:13px;font-weight:600;margin-top:14px}
+
+  /* Feedback */
+  .toggle{display:flex;gap:8px;margin-top:8px}
+  .toggle span{flex:1;text-align:center;padding:11px;border-radius:11px;border:2px solid var(--suave);font-weight:600;font-size:13px}
+  .toggle span.on{border-color:var(--azul);color:var(--azul);background:#eaf4fb}
+
+  /* Tarjeta clínica (semáforo) */
+  .paciente{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:#fff;
+    box-shadow:0 4px 12px rgba(20,40,60,.07);margin-bottom:9px;font-size:13px}
+  .dot{width:12px;height:12px;border-radius:50%}
+  .dot.r{background:#e0564a}.dot.a{background:#f0a93c}.dot.v{background:var(--verde)}
+
+  /* Evolución del avatar */
+  .evo{max-width:980px;margin:40px auto 0;background:#fff;border-radius:20px;padding:24px;box-shadow:var(--sombra)}
+  .evo h2{color:var(--azul);font-size:19px;margin-bottom:4px}
+  .evo p{font-size:13px;color:#5b6b78;margin-bottom:18px}
+  .etapas{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+  .etapa{width:140px;text-align:center}
+  .huevo{width:96px;height:96px;margin:0 auto 8px;border-radius:46% 46% 50% 50%/58% 58% 42% 42%;
+    display:flex;align-items:center;justify-content:center;font-size:46px;
+    background:radial-gradient(circle at 50% 35%,#d4f0ff,#8fcdf0 65%,#5aa9e2);box-shadow:var(--sombra)}
+  .etapa b{display:block;font-size:13px;margin-top:2px}
+  .etapa small{font-size:11px;color:#8a97a1}
+  .flecha{display:flex;align-items:center;font-size:22px;color:#b9c6d0}
+  .pildora{display:inline-block;background:#eaf4fb;color:var(--azul);border-radius:20px;
+    padding:3px 10px;font-size:11px;font-weight:600;margin-top:6px}
+  footer{text-align:center;color:#8a97a1;font-size:12px;margin:36px 0 6px}
+</style>
+</head>
+<body>
+
+  <h1>Anti Frágil — Maqueta visual</h1>
+  <p class="sub">Un dibujo navegable para VER la idea. No es la app real.</p>
+  <div class="aviso">
+    🎨 Los avatares son <b>placeholders</b> (emoji y formas) solo para visualizar el concepto.
+    El arte final lo hará un ilustrador humano. Todo aquí es <b>100% editable</b>.
+  </div>
+
+  <div class="pantallas">
+
+    <!-- PANTALLA 1 — DASHBOARD -->
+    <div class="movil">
+      <div class="notch"></div>
+      <div class="pant">
+        <div class="titulo-pant">Mi Guardián</div>
+        <div class="avatar">🐉</div>
+        <div class="nombre-avatar">Guardián de Agua</div>
+        <div class="fase">Fase 10 · Guardián Pleno · Nivel 47</div>
+        <div class="xp"><i></i></div>
+        <div class="fila"><span>XP 4.620</span><span>Nivel 48 →</span></div>
+        <div class="racha">🔥 Racha de 23 días</div>
+        <button class="btn">▶ Tu rutina de hoy</button>
+        <button class="btn ghost">Ver mi evolución</button>
+      </div>
+    </div>
+
+    <!-- PANTALLA 2 — TRIAJE -->
+    <div class="movil">
+      <div class="notch"></div>
+      <div class="pant">
+        <div class="titulo-pant">¿Cómo estás hoy?</div>
+        <div class="lbl">Nivel de dolor</div>
+        <div class="escala dolor">
+          <span>1</span><span>2</span><span class="on">3</span><span>…</span><span>10</span>
+        </div>
+        <div class="lbl">Nivel de energía</div>
+        <div class="escala">
+          <span>1</span><span>…</span><span class="on">7</span><span>…</span><span>10</span>
+        </div>
+        <button class="btn verde" style="margin-top:26px">Empezar el día</button>
+        <p style="font-size:11px;color:#8a97a1;text-align:center;margin-top:12px">
+          Si vienes con dolor, hoy te propondré algo más suave. Sin culpa. 💙
+        </p>
+      </div>
+    </div>
+
+    <!-- PANTALLA 3 — FEEDBACK RPE -->
+    <div class="movil">
+      <div class="notch"></div>
+      <div class="pant">
+        <div class="titulo-pant">¿Qué tal la sesión?</div>
+        <div class="lbl">Esfuerzo percibido (1-10)</div>
+        <div class="escala">
+          <span>1</span><span>…</span><span class="on">6</span><span>…</span><span>10</span>
+        </div>
+        <div class="lbl">¿Notaste alguna molestia nueva?</div>
+        <div class="toggle">
+          <span>Sí</span><span class="on">No</span>
+        </div>
+        <button class="btn verde" style="margin-top:24px">+30 XP · Guardar</button>
+        <p style="font-size:11px;color:#8a97a1;text-align:center;margin-top:10px">
+          Tu fisio verá esto al instante.
+        </p>
+      </div>
+    </div>
+
+    <!-- PANTALLA 4 — PANEL CLÍNICA (semáforos) -->
+    <div class="movil">
+      <div class="notch"></div>
+      <div class="pant">
+        <div class="titulo-pant">Panel clínica · Pacientes</div>
+        <div class="paciente"><span class="dot r"></span> Ana G. — <b>Dolor 8/10 hoy</b></div>
+        <div class="paciente"><span class="dot a"></span> Luis M. — 4 días sin actividad</div>
+        <div class="paciente"><span class="dot v"></span> Marta R. — Todo en orden</div>
+        <div class="paciente"><span class="dot v"></span> Javi P. — Racha 23 días 🔥</div>
+        <div class="paciente"><span class="dot a"></span> Sara T. — Dolor medio sostenido</div>
+        <button class="btn" style="margin-top:14px">Ver ficha del paciente</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- EVOLUCIÓN DEL AVATAR (para valorar opciones visualmente) -->
+  <div class="evo">
+    <h2>La evolución del Guardián — 6 etapas mayores · 30 fases</h2>
+    <p>Del huevo a la deidad. Cada etapa es una pieza de arte base; dentro hay varias
+       sub-fases (mejoras visuales). Aquí, placeholders para valorar el recorrido.</p>
+    <div class="etapas">
+      <div class="etapa"><div class="huevo">🥚</div><b>Huevo</b><small>Fases 1-4</small><div class="pildora">La Semilla</div></div>
+      <div class="flecha">→</div>
+      <div class="etapa"><div class="huevo">🐣</div><b>Cría</b><small>Fases 5-9</small><div class="pildora">La Semilla</div></div>
+      <div class="flecha">→</div>
+      <div class="etapa"><div class="huevo">🦎</div><b>Joven</b><small>Fases 10-13</small><div class="pildora">La Forja</div></div>
+      <div class="flecha">→</div>
+      <div class="etapa"><div class="huevo">🛡️</div><b>Guardián</b><small>Fases 14-20</small><div class="pildora">La Forja</div></div>
+      <div class="flecha">→</div>
+      <div class="etapa"><div class="huevo">🕊️</div><b>Alado</b><small>Fases 21-27</small><div class="pildora">El Ascenso</div></div>
+      <div class="flecha">→</div>
+      <div class="etapa"><div class="huevo" style="background:radial-gradient(circle at 50% 35%,#fff3c4,#ffd86b 65%,#f4b740)">👑</div><b>Deidad</b><small>Fases 28-30 + Legendaria</small><div class="pildora">El Olimpo</div></div>
+    </div>
+    <p style="text-align:center;margin-top:18px">
+      <span class="pildora" style="background:#eaf9ef;color:var(--verde)">💧 Agua</span>
+      <span class="pildora" style="background:#f3eee6;color:#9a7b3c">🪨 Tierra</span>
+      <span class="pildora" style="background:#eef4ff;color:#5a78c4">🌬️ Viento</span>
+      &nbsp;— cada arquetipo tendrá su propia versión de estas 6 etapas.
+    </p>
+  </div>
+
+  <footer>Anti Frágil · maqueta visual editable · placeholders, no arte final</footer>
+</body>
+</html>
