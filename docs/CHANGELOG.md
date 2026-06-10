@@ -10,6 +10,13 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Documentos de negocio (trabajo en paralelo de agentes) (2026-06-10)
+- **`docs/PITCH_DECK.md`** — guion de Pitch Deck para inversores (13 diapositivas).
+- **`docs/DOSSIER_DESARROLLO.md`** — dossier para pedir presupuesto a equipos de desarrollo (alcance, sprints, criterios, preguntas).
+- **`docs/PLAN_PILOTO.md`** — plan de validación con la primera clínica (objetivo, métricas, 5 fases en 10 semanas, criterios de éxito).
+- **`docs/IDENTIDAD_VISUAL.md`** — guía de marca (personalidad, paleta por arquetipo, tipografía, estilo de ilustración, copy sin culpa, Tarjetas Épicas).
+- **`coordinacion/`** — sistema de coordinación de agentes en paralelo (carpeta + cola por agente).
+
 ### Añadido — Panel web de la clínica al detalle (2026-06-10)
 - **`docs/diseño/panel-clinica.md`**: secciones del panel (B1–B6b), la pantalla de semáforos como alerta temprana, la ficha del paciente y la configurabilidad por profesional (D7).
 
