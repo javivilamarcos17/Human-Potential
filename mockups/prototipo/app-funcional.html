@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Frágil · MVP funcional — Core Loop real</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* CORE LOOP FUNCIONAL — misma lógica que app/lib (economia_puntos + avatar_evolucion).
+     Estado real en localStorage: XP, nivel, fase, racha por fecha de calendario.
+     "Simular día siguiente" permite probar la racha sin esperar 24 h. */
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#060d18;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:var(--af-font-texto);padding:24px}
+  .phone{position:relative;width:390px;min-height:800px;background:var(--af-bg);border-radius:46px;border:1px solid var(--af-line);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .aurora{position:absolute;inset:0;overflow:hidden;filter:blur(70px);opacity:.55}
+  .aurora i{position:absolute;border-radius:50%}
+  .aurora i:nth-child(1){width:420px;height:420px;left:-130px;top:-90px;background:#103a5c;animation:fl 11s ease-in-out infinite}
+  .aurora i:nth-child(2){width:360px;height:360px;right:-120px;top:160px;background:#0d4a45;animation:fl 13s ease-in-out infinite reverse}
+  .aurora i:nth-child(3){width:300px;height:300px;left:40px;bottom:-80px;background:#11314f;animation:fl 9s ease-in-out infinite}
+  @keyframes fl{0%,100%{transform:translate(0,0)}50%{transform:translate(26px,-18px)}}
+  .sbar{position:relative;display:flex;justify-content:space-between;padding:18px 28px 0;color:var(--af-texto-suave);font-size:13px;z-index:2}
+  .content{position:relative;z-index:2;padding:12px 22px 24px}
+  .scr{display:none;animation:in .4s ease both}
+  .scr.on{display:block}
+  @keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .h1{font-family:var(--af-font-display);font-weight:900;font-size:24px;color:var(--af-texto);line-height:1.25}
+  .sub{font-size:13px;color:var(--af-texto-suave);margin-top:3px}
+  .panel{background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-l);backdrop-filter:blur(var(--af-blur-cristal));padding:16px;margin-top:14px}
+  .cta{display:block;width:100%;border:0;text-align:center;text-decoration:none;font-family:var(--af-font-display);font-weight:800;font-size:15px;color:#062018;background:linear-gradient(135deg,var(--af-primario),var(--af-primario-osc));border-radius:var(--af-radio-m);padding:15px;box-shadow:var(--af-sombra-flotante);cursor:pointer;transition:var(--af-t-rapida);margin-top:14px}
+  .cta:hover{transform:translateY(-2px)}
+  .cta[disabled]{opacity:.4;pointer-events:none}
+  .sec{display:block;width:100%;border:0;background:none;text-align:center;font-size:13px;font-weight:600;color:var(--af-texto-suave);padding:10px;cursor:pointer}
+  .sec:hover{color:var(--af-texto)}
+
+  /* home */
+  .stage{text-align:center;padding:6px 0 2px}
+  .ava-wrap{position:relative;width:150px;height:150px;margin:8px auto 4px;animation:resp 5.2s ease-in-out infinite}
+  @keyframes resp{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .ava-halo{position:absolute;inset:-18px;border-radius:50%;background:radial-gradient(circle,rgba(91,208,232,.28),transparent 65%);animation:pulso 4.5s ease-in-out infinite}
+  @keyframes pulso{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+  .chip{display:inline-flex;align-items:center;gap:7px;background:var(--af-panel);border:1px solid var(--af-line);border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--af-texto);backdrop-filter:blur(var(--af-blur-cristal))}
+  .chip i{width:8px;height:8px;border-radius:50%;background:var(--af-agua)}
+  .nombre-g{font-family:var(--af-font-display);font-weight:900;font-size:19px;color:var(--af-texto);margin-top:8px}
+  .stats{display:flex;gap:10px;margin-top:14px}
+  .stat{flex:1;background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-m);backdrop-filter:blur(var(--af-blur-cristal));padding:12px 6px;text-align:center}
+  .stat b{display:block;font-family:var(--af-font-display);font-weight:900;font-size:21px;color:var(--af-texto)}
+  .stat s{text-decoration:none;font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--af-texto-suave)}
+  .xpbar{margin-top:14px}
+  .xprow{display:flex;justify-content:space-between;font-size:12px;color:var(--af-texto-suave);margin-bottom:6px}
+  .xprow b{color:var(--af-texto)}
+  .track{height:12px;border-radius:8px;background:rgba(255,255,255,.08);overflow:hidden}
+  .fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--af-primario-osc),var(--af-primario));transition:width .8s ease;animation:brillo 2.8s ease-in-out infinite}
+  @keyframes brillo{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+  .hecho-hoy{margin-top:12px;text-align:center;font-size:13px;color:var(--af-primario);font-weight:600}
+
+  /* sliders */
+  .t-num{font-family:var(--af-font-display);font-weight:900;font-size:42px;text-align:center}
+  input[type=range]{width:100%;accent-color:var(--af-primario);margin:8px 0 4px}
+  .scale{display:flex;justify-content:space-between;font-size:11px;color:var(--af-texto-suave)}
+  .alerta-roja{display:none;margin-top:12px;background:rgba(229,57,53,.12);border:1px solid rgba(229,57,53,.4);border-radius:var(--af-radio-m);padding:12px;font-size:12.5px;color:var(--af-texto);line-height:1.5}
+  .alerta-roja b{color:var(--af-rojo)}
+
+  /* rutina */
+  .ej{display:flex;align-items:center;gap:12px;background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-m);backdrop-filter:blur(var(--af-blur-cristal));padding:13px 15px;margin-top:10px;cursor:pointer;transition:var(--af-t-rapida)}
+  .ej:hover{background:rgba(255,255,255,.09)}
+  .ej .chk{width:26px;height:26px;border-radius:50%;border:2px solid var(--af-line);display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;transition:var(--af-t-rapida);flex:0 0 26px}
+  .ej.ok .chk{background:var(--af-primario);border-color:var(--af-primario);color:#062018}
+  .ej .t1{font-size:14.5px;font-weight:600;color:var(--af-texto)}
+  .ej .t2{font-size:12px;color:var(--af-texto-suave)}
+
+  /* recompensa */
+  .premio{text-align:center;padding-top:8px}
+  .xp-big{font-family:var(--af-font-display);font-weight:900;font-size:46px;color:var(--af-dorado)}
+  .desg{margin-top:12px;text-align:left}
+  .desg .fila{display:flex;justify-content:space-between;padding:9px 2px;border-bottom:1px solid var(--af-line);font-size:13.5px;color:var(--af-texto-suave)}
+  .desg .fila b{color:var(--af-texto)}
+  .desg .fila:last-child{border:0}
+  .evo{display:none;margin-top:12px;background:linear-gradient(135deg,rgba(244,196,48,.14),rgba(46,204,143,.10));border:1.5px solid rgba(244,196,48,.45);border-radius:var(--af-radio-l);padding:14px;font-size:13.5px;color:var(--af-texto);line-height:1.5}
+  .evo b{color:var(--af-dorado)}
+
+  .toolbar{display:flex;gap:8px;margin-top:14px}
+  .tool{flex:1;font-size:11.5px;font-weight:600;color:var(--af-texto-suave);background:var(--af-panel);border:1px solid var(--af-line);border-radius:10px;padding:9px;cursor:pointer;text-align:center;transition:var(--af-t-rapida)}
+  .tool:hover{color:var(--af-texto);background:rgba(255,255,255,.1)}
+  .volver{display:block;text-align:center;color:var(--af-texto-suave);font-size:12px;text-decoration:none;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="aurora"><i></i><i></i><i></i></div>
+  <div class="sbar"><b>9:41</b><span id="fecha-sim"></span></div>
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="scr on" id="home">
+      <div class="stage">
+        <div class="ava-wrap"><div class="ava-halo"></div><div id="ava-svg"></div></div>
+        <div class="chip"><i></i><span id="chip-fase">Fase 1 · Huevo · Nivel 1</span></div>
+        <div class="nombre-g">Kael, el Fluido</div>
+        <div class="sub" id="saludo">Tu Guardián te espera, Javi.</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b id="st-racha">0</b><s>racha 🔥</s></div>
+        <div class="stat"><b id="st-sesiones">0</b><s>sesiones</s></div>
+        <div class="stat"><b id="st-xp">0</b><s>XP total</s></div>
+      </div>
+      <div class="xpbar">
+        <div class="xprow"><span>Vitalidad</span><b id="xp-detalle">Nivel 1 · 0/100 XP</b></div>
+        <div class="track"><div class="fill" id="xp-fill" style="width:0%"></div></div>
+      </div>
+      <div class="hecho-hoy" id="hecho-hoy" style="display:none">✓ Jornada de hoy completada. Kael descansa contigo.</div>
+      <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
+      <div class="toolbar">
+        <div class="tool" onclick="diaSiguiente()">⏭ Simular día siguiente</div>
+        <div class="tool" onclick="reset()">↺ Reiniciar demo</div>
+      </div>
+      <a class="volver" href="../demo.html">← Hub de demo</a>
+    </div>
+
+    <!-- TRIAJE -->
+    <div class="scr" id="triaje">
+      <div class="h1">Triaje de hoy</div>
+      <div class="sub">30 segundos. Tu fisio lo ve en tiempo real.</div>
+      <div class="panel">
+        <div class="sub">Nivel de dolor — <span class="cfg-zona">zona lumbar</span></div>
+        <div class="t-num" id="v-dolor" style="color:var(--af-primario)">3</div>
+        <input type="range" min="1" max="10" value="3" oninput="dolor(this.value)">
+        <div class="scale"><span>Sin dolor</span><span>Insoportable</span></div>
+      </div>
+      <div class="panel">
+        <div class="sub">Energía</div>
+        <div class="t-num" id="v-energia" style="color:var(--af-agua)">7</div>
+        <input type="range" min="1" max="10" value="7" oninput="energia(this.value)">
+        <div class="scale"><span>Agotado</span><span>A tope</span></div>
+      </div>
+      <div class="alerta-roja" id="alerta">
+        <b>⚠ Aviso enviado a <span class="cfg-fisio">tu fisio</span> (<span class="cfg-clinica">tu clínica</span>).</b><br>
+        Dolor alto registrado. Tu rutina de hoy se adapta a versión suave — sin culpa,
+        <span class="cfg-nombre">.</span>: reportarlo ES cuidarte.
+      </div>
+      <button class="cta" onclick="cerrarTriaje()">Registrar triaje · +5 XP</button>
+    </div>
+
+    <!-- RUTINA -->
+    <div class="scr" id="rutina">
+      <div class="h1" id="rut-titulo">Tu rutina de hoy</div>
+      <div class="sub" id="rut-sub"></div>
+      <div id="rut-lista"></div>
+      <button class="cta" id="btn-rutina" disabled onclick="ir('feedback')">Completar rutina · +20 XP</button>
+      <button class="sec" onclick="ir('home')">Hoy no puedo terminarla</button>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div class="scr" id="feedback">
+      <div class="h1">¿Cómo fue, <span class="cfg-nombre">?</span>?</div>
+      <div class="sub">Tu esfuerzo percibido calibra la próxima rutina.</div>
+      <div class="panel">
+        <div class="sub">Esfuerzo (RPE)</div>
+        <div class="t-num" id="v-rpe" style="color:var(--af-dorado)">6</div>
+        <input type="range" min="1" max="10" value="6" oninput="document.getElementById('v-rpe').textContent=this.value">
+        <div class="scale"><span>Muy fácil</span><span>Al límite</span></div>
+      </div>
+      <div class="panel" style="display:flex;justify-content:space-between;align-items:center">
+        <div><div class="t1" style="font-size:14.5px;font-weight:600;color:var(--af-texto)">¿Alguna molestia nueva?</div>
+        <div class="sub">Si la hay, tu fisio lo sabrá al momento.</div></div>
+        <input type="checkbox" id="molestia" style="width:22px;height:22px;accent-color:var(--af-rojo)">
+      </div>
+      <button class="cta" onclick="terminarJornada()">Enviar feedback · +5 XP</button>
+    </div>
+
+    <!-- RECOMPENSA -->
+    <div class="scr" id="premio">
+      <div class="premio">
+        <div class="h1">Jornada completada 💚</div>
+        <div class="xp-big" id="xp-ganada">+30 XP</div>
+        <div class="panel desg" id="desglose"></div>
+        <div class="evo" id="evo-aviso"></div>
+        <button class="cta" onclick="ir('home');pintar()">Volver con Kael</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+/* ╔══════════════════════════════════════════════════════════════════╗
+   ║  CONFIGURACIÓN DEL PILOTO — edita SOLO esto (sin tocar el resto)  ║
+   ║  Cambia nombre, fisio, clínica y la rutina. "video" es opcional:  ║
+   ║  pega un enlace de Vimeo/YouTube y aparecerá el botón ▶ Ver.      ║
+   ╚══════════════════════════════════════════════════════════════════╝ */
+const CONFIG = {
+  paciente: 'Javi',
+  fisio:    'Dra. Elena Ruiz',
+  clinica:  'MovePlus',
+  zona:     'zona lumbar',
+  pack: {
+    nombre: 'Pack Lumbar',
+    ejercicios: [
+      {nombre:'Gato-camello',     detalle:'2 series · 10 repeticiones · respira lento',          video:''},
+      {nombre:'Puente de glúteo', detalle:'3 series · 12 repeticiones · sube en 2s, baja en 3s', video:''},
+      {nombre:'Bird-dog',         detalle:'2 series · 8 por lado · la lumbar no se mueve',       video:''},
+    ]
+  },
+  packSuave: {
+    nombre: 'Rutina suave (dolor alto)',
+    ejercicios: [
+      {nombre:'Respiración diafragmática', detalle:'3 min · tumbado · manos en el abdomen', video:''},
+      {nombre:'Báscula pélvica suave',     detalle:'2 series · 8 repeticiones · sin dolor', video:''},
+      {nombre:'Rodillas al pecho',         detalle:'30s por pierna · mecerse suave',        video:''},
+    ]
+  }
+};
+
+/* ════ LÓGICA REAL (espejo de economia_puntos.dart y avatar_evolucion.dart) ════ */
+const XP = {triaje:5, rutina:20, feedback:5, porDiaRacha:2, topeBonus:20};
+
+function nivelDesdeXp(xp){            // curva: 100 XP base, +8% por nivel
+  let nivel=1, coste=100, acum=0;
+  while(nivel<100 && xp>=acum+coste){acum+=coste; nivel++; coste=Math.round(coste*1.08);}
+  return nivel;
+}
+function progresoNivel(xp){           // % hacia el siguiente nivel (para la barra)
+  let nivel=1, coste=100, acum=0;
+  while(nivel<100 && xp>=acum+coste){acum+=coste; nivel++; coste=Math.round(coste*1.08);}
+  return {nivel, dentro:xp-acum, coste};
+}
+// Las 30 puertas (espejo del catálogo Dart). p = estado del paciente.
+const FASES=[
+ [1,1,p=>true],[2,2,p=>p.ses>=1],[3,4,p=>p.racha>=3],[4,6,p=>p.ses>=5],[5,8,p=>p.racha>=7],
+ [6,11,p=>p.reaud>=1],[7,14,p=>p.ses>=10],[8,17,p=>p.racha>=14],[9,20,p=>p.mejora>=1],
+ [10,24,p=>p.retos>=1],[11,28,p=>p.ses>=20],[12,32,p=>p.retos>=2],[13,36,p=>p.racha>=30],
+ [14,40,p=>p.mejora>=5],[15,45,p=>p.retos>=3],[16,50,p=>p.retos>=4],[17,55,p=>p.reaud>=2],
+ [18,60,p=>p.racha>=60],[19,65,p=>p.retos>=5],[20,70,p=>p.mejora>=10],[21,73,p=>p.retos>=6],
+ [22,76,p=>p.racha>=90],[23,80,p=>p.retos>=7],[24,84,p=>p.aud>=70],[25,88,p=>p.retos>=8],
+ [26,92,p=>p.aud>=80],[27,96,p=>p.aud>=85],[28,98,p=>p.retos>=9],[29,99,p=>p.aud>=90],
+ [30,100,p=>nivelDesdeXp(p.xp)>=100]];
+function faseDesde(p){
+  const nivel=nivelDesdeXp(p.xp); let f=1;
+  for(const [fase,nivMin,puerta] of FASES){ if(nivel>=nivMin && puerta(p)) f=fase; else break; }
+  return f;
+}
+const ETAPAS=[[1,4,'Huevo'],[5,9,'Cría'],[10,13,'Joven'],[14,20,'Guardián'],[21,27,'Alado'],[28,30,'Deidad']];
+const etapaDe=f=>ETAPAS.find(([a,b])=>f>=a&&f<=b)[2];
+
+/* ════ ESTADO PERSISTENTE ════ */
+const K='af_mvp_v1';
+const hoyISO=()=>S.fechaSim || new Date().toISOString().slice(0,10);
+let S=JSON.parse(localStorage.getItem(K)||'null')||{
+  xp:0, ses:0, racha:0, ultDia:null, reaud:0, retos:0, mejora:0, aud:62, fechaSim:null, hechoHoy:false, dolorHoy:3};
+const save=()=>localStorage.setItem(K,JSON.stringify(S));
+
+/* ════ AVATAR SVG por etapa (placeholder D5) ════ */
+function avatarSvg(fase){
+  const et=etapaDe(fase), c1='#9BE8F7', c2='#2E86C1';
+  const grad=`<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs>`;
+  const cara=(y=0)=>`<circle cx="60" cy="${68+y}" r="4.5" fill="#0A2A3C"/><circle cx="90" cy="${68+y}" r="4.5" fill="#0A2A3C"/><path d="M63 ${82+y}c4 4 20 4 24 0" stroke="#0A2A3C" stroke-width="3.5" stroke-linecap="round" fill="none"/>`;
+  let cuerpo='';
+  if(et==='Huevo')      cuerpo=`<path d="M75 18C52 42 44 64 48 88a27 27 0 0 0 54 0c4-24-4-46-27-70z" fill="url(#g)"/><path d="M60 60l6 8 8-10 8 10 6-8" stroke="rgba(255,255,255,.6)" stroke-width="2.5" fill="none"/>`;
+  else if(et==='Cría')  cuerpo=`<circle cx="75" cy="80" r="38" fill="url(#g)"/><path d="M75 16c8 12 13 19 13 27a13 13 0 1 1-26 0c0-8 5-15 13-27z" fill="${c1}"/>${cara(6)}`;
+  else if(et==='Joven') cuerpo=`<ellipse cx="75" cy="84" rx="36" ry="42" fill="url(#g)"/><path d="M75 10c10 14 16 23 16 33a16 16 0 1 1-32 0c0-10 6-19 16-33z" fill="${c1}"/><path d="M28 78c-8 8-8 20 0 28M122 78c8 8 8 20 0 28" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>${cara(4)}`;
+  else if(et==='Guardián')cuerpo=`<ellipse cx="75" cy="84" rx="38" ry="44" fill="url(#g)"/><path d="M75 6c11 15 18 25 18 36a18 18 0 1 1-36 0c0-11 7-21 18-36z" fill="${c1}"/><path d="M22 70c-10 10-10 26 0 38M128 70c10 10 10 26 0 38" stroke="${c1}" stroke-width="5" stroke-linecap="round"/><path d="M48 122l-7 14M102 122l7 14" stroke="${c2}" stroke-width="5" stroke-linecap="round"/>${cara(2)}`;
+  else if(et==='Alado') cuerpo=`<path d="M18 60C30 38 50 46 50 64M132 60c-12-22-32-14-32 4" fill="none" stroke="${c1}" stroke-width="5" stroke-linecap="round"/><ellipse cx="75" cy="84" rx="38" ry="44" fill="url(#g)"/><path d="M75 4c12 16 19 27 19 39a19 19 0 1 1-38 0c0-12 7-23 19-39z" fill="${c1}"/>${cara(2)}<circle cx="75" cy="84" r="52" fill="none" stroke="rgba(244,196,48,.4)" stroke-width="2" stroke-dasharray="6 8"/>`;
+  else                  cuerpo=`<circle cx="75" cy="80" r="46" fill="url(#g)"/><path d="M75 2c13 17 21 29 21 42a21 21 0 1 1-42 0c0-13 8-25 21-42z" fill="${c1}"/>${cara(0)}<circle cx="75" cy="80" r="58" fill="none" stroke="#F4C430" stroke-width="3"/><path d="M75 138l5 12 5-12M30 40l-10-8M120 40l10-8" stroke="#F4C430" stroke-width="3" stroke-linecap="round"/>`;
+  return `<svg width="150" height="150" viewBox="0 0 150 150" fill="none">${grad}${cuerpo}</svg>`;
+}
+
+/* ════ UI ════ */
+const $=id=>document.getElementById(id);
+function ir(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');}
+function pintar(){
+  const p={...S}, f=faseDesde(p), pr=progresoNivel(S.xp);
+  $('ava-svg').innerHTML=avatarSvg(f);
+  $('chip-fase').textContent=`Fase ${f} · ${etapaDe(f)} · Nivel ${pr.nivel}`;
+  $('st-racha').textContent=S.racha; $('st-sesiones').textContent=S.ses; $('st-xp').textContent=S.xp;
+  $('xp-detalle').textContent=`Nivel ${pr.nivel} · ${pr.dentro}/${pr.coste} XP`;
+  $('xp-fill').style.width=Math.min(100,Math.round(pr.dentro/pr.coste*100))+'%';
+  $('fecha-sim').textContent=hoyISO();
+  const hecho=S.hechoHoy && S.ultDia===hoyISO();
+  $('hecho-hoy').style.display=hecho?'block':'none';
+  $('btn-empezar').style.display=hecho?'none':'block';
+  $('saludo').textContent=hecho?`Hasta mañana, ${CONFIG.paciente}.`:(S.racha>0?`${S.racha} días seguidos, ${CONFIG.paciente}. Kael lo nota.`:`Tu Guardián te espera, ${CONFIG.paciente}.`);
+  document.querySelectorAll('.cfg-nombre').forEach(e=>e.textContent=CONFIG.paciente);
+  document.querySelectorAll('.cfg-fisio').forEach(e=>e.textContent=CONFIG.fisio);
+  document.querySelectorAll('.cfg-clinica').forEach(e=>e.textContent=CONFIG.clinica);
+  document.querySelectorAll('.cfg-zona').forEach(e=>e.textContent=CONFIG.zona);
+}
+function dolor(v){const e=$('v-dolor');e.textContent=v;e.style.color=v>=8?'var(--af-rojo)':v>=5?'var(--af-ambar)':'var(--af-primario)';$('alerta').style.display=v>=8?'block':'none';S.dolorHoy=+v;}
+function energia(v){$('v-energia').textContent=v;}
+function cerrarTriaje(){
+  const suave=S.dolorHoy>=8, pack=suave?CONFIG.packSuave:CONFIG.pack;
+  $('rut-titulo').textContent=suave?'Rutina suave de hoy':'Tu rutina de hoy';
+  $('rut-sub').textContent=suave?'Adaptada por tu dolor — movilidad sin carga'
+                                :`${pack.nombre} · prescrito por ${CONFIG.fisio}`;
+  $('rut-lista').innerHTML=pack.ejercicios.map(e=>
+    `<div class="ej" onclick="marcar(this)"><div class="chk">✓</div><div style="flex:1">
+       <div class="t1">${e.nombre}</div><div class="t2">${e.detalle}</div></div>
+       ${e.video?`<a href="${e.video}" target="_blank" onclick="event.stopPropagation()" style="font-size:12px;font-weight:700;color:var(--af-agua);text-decoration:none">▶ Ver</a>`:''}
+     </div>`).join('');
+  ir('rutina');
+}
+function marcar(el){el.classList.toggle('ok');
+  $('btn-rutina').disabled=document.querySelectorAll('.ej.ok').length<document.querySelectorAll('.ej').length;}
+function terminarJornada(){
+  // racha real por calendario (espejo de la regla Dart)
+  const hoy=hoyISO(), ayer=S.fechaSim?prevISO(S.fechaSim):prevISO(new Date().toISOString().slice(0,10));
+  S.racha=(S.ultDia===ayer)?S.racha+1:1;
+  const bonus=Math.min(S.racha*XP.porDiaRacha,XP.topeBonus);
+  const ganada=XP.triaje+XP.rutina+XP.feedback+bonus;
+  const faseAntes=faseDesde({...S});
+  S.xp+=ganada; S.ses+=1; S.ultDia=hoy; S.hechoHoy=true; save();
+  const faseAhora=faseDesde({...S});
+  $('xp-ganada').textContent='+'+ganada+' XP';
+  $('desglose').innerHTML=
+    `<div class="fila"><span>Triaje diario</span><b>+${XP.triaje}</b></div>
+     <div class="fila"><span>Rutina completada</span><b>+${XP.rutina}</b></div>
+     <div class="fila"><span>Feedback RPE</span><b>+${XP.feedback}</b></div>
+     <div class="fila"><span>Bonus racha (${S.racha} días × 2, tope 20)</span><b>+${bonus}</b></div>`
+    +($('molestia').checked?`<div class="fila"><span style="color:var(--af-rojo)">⚠ Molestia nueva → alerta enviada a ${CONFIG.clinica}</span><b></b></div>`:'');
+  const evo=$('evo-aviso');
+  if(faseAhora>faseAntes){evo.style.display='block';evo.innerHTML=`✨ <b>¡Kael ha evolucionado!</b> Fase ${faseAntes} → <b>Fase ${faseAhora} (${etapaDe(faseAhora)})</b>. Esto no lo regala la app: lo has ganado tú.`;}
+  else evo.style.display='none';
+  document.querySelectorAll('.ej').forEach(e=>e.classList.remove('ok'));$('btn-rutina').disabled=true;$('molestia').checked=false;
+  ir('premio');
+}
+function prevISO(iso){const d=new Date(iso);d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
+function diaSiguiente(){const d=new Date(hoyISO());d.setDate(d.getDate()+1);S.fechaSim=d.toISOString().slice(0,10);S.hechoHoy=false;save();pintar();}
+function reset(){localStorage.removeItem(K);location.reload();}
+pintar();
+</script>
+</body>
+</html>
