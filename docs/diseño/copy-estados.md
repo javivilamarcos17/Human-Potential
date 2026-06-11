@@ -154,7 +154,7 @@ Acción:  Reintentar  |  Omitir por hoy
 ```
 
 > La rutina completada **nunca se pierde** aunque el feedback falle. Dejar claro que
-> el XP y la racha están a salvo — solo falta el feedback clínico.
+> los Puntos de Vitalidad y la racha están a salvo — solo falta el feedback clínico.
 
 ---
 

@@ -72,26 +72,7 @@
 
 ---
 
-### Arquetipo FUEGO · Guardián: Ignis el Incandescente
-
-| Hito | Frase |
-|------|-------|
-| R7 | *"Siete días de fuego. Esto apenas empieza."* |
-| R14 | *"Dos semanas encendido. El fuego no pide permiso."* |
-| R21 | *"Veintiún días. La llama que no se apaga ya es una hoguera."* |
-| R30 | *"Un mes de fuego. La fuerza no es un accidente."* |
-| R60 | *"Sesenta días ardiendo. El fuego ya es parte de mí."* |
-| R90 | *"Noventa días. Lo que empezó como una chispa ya es un incendio."* |
-| F5 | *"El fuego ha encontrado su centro."* |
-| F10 | *"A esta temperatura, nada se rompe. Todo se forja."* |
-| F16 | *"Guardián Pleno. Ignis y yo somos lo mismo."* |
-| F30 | *"El fuego ha alcanzado su forma suprema. Imparable."* |
-| A1 | *"Los números no mienten. Mi cuerpo responde."* |
-| A+ | *"Diez puntos arriba. El fuego tiene recompensa."* |
-
----
-
-### Arquetipo TIERRA · Guardián: Gaia la Firme
+### Arquetipo TIERRA · Guardián: [Guardián Tierra — nombre PENDIENTE de aprobación del dueño]
 
 | Hito | Frase |
 |------|-------|
@@ -103,14 +84,14 @@
 | R90 | *"Noventa días de tierra. Lo que se construye despacio, dura para siempre."* |
 | F5 | *"La tierra ha echado raíces. Nadie me mueve."* |
 | F10 | *"En la profundidad de la tierra, todo tiene fundamento."* |
-| F16 | *"Guardián Plena. Gaia y yo compartimos la misma fuerza."* |
+| F16 | *"Guardián Plena. Mi Guardián y yo compartimos la misma fuerza."* |
 | F30 | *"La tierra ha alcanzado su cima. Inamovible."* |
 | A1 | *"Los números no mienten. Mi cuerpo se sostiene."* |
 | A+ | *"Diez puntos arriba. La constancia tiene recompensa."* |
 
 ---
 
-### Arquetipo AIRE · Guardián: Zeph el Veloz
+### Arquetipo VIENTO · Guardián: [Guardián Viento — nombre PENDIENTE de aprobación del dueño]
 
 | Hito | Frase |
 |------|-------|
@@ -122,7 +103,7 @@
 | R90 | *"Noventa días. El aire que se mueve no envejece."* |
 | F5 | *"El aire ha encontrado su corriente."* |
 | F10 | *"A esta altura, la perspectiva lo cambia todo."* |
-| F16 | *"Guardián Pleno. Zeph y yo somos velocidad con propósito."* |
+| F16 | *"Guardián Pleno. Mi Guardián y yo somos velocidad con propósito."* |
 | F30 | *"El aire ha alcanzado su libertad máxima. Sin límites."* |
 | A1 | *"Los números no mienten. Mi cuerpo se mueve mejor."* |
 | A+ | *"Diez puntos arriba. La agilidad tiene recompensa."* |
@@ -154,6 +135,31 @@
 
 - [ ] ¿Habla en primera persona del usuario?
 - [ ] ¿Puede leerse sin saber nada de la app y aun así impactar?
-- [ ] ¿Es coherente con el arquetipo (metáforas de agua, fuego, tierra, aire)?
+- [ ] ¿Es coherente con el arquetipo (metáforas de agua, tierra, viento)? *(Fuego/Metal: solo en Visión Norte)*
 - [ ] ¿Tiene menos de 70 caracteres? (para que quepa bien en la imagen)
 - [ ] ¿Evita mencionar números internos del sistema (nivel, XP, fase)?
+
+---
+
+## 🔮 VISIÓN NORTE (Fase 2/3 — NO usar en MVP)
+
+> Arquetipos reservados para fases futuras del producto (decisión D4).
+> Estas frases están aquí para no perderlas, no para usarlas.
+> **No incluir Fuego ni Metal en ningún contenido del MVP.**
+
+### Arquetipo FUEGO · Guardián: Ignis el Incandescente *(pendiente de aprobación)*
+
+| Hito | Frase |
+|------|-------|
+| R7 | *"Siete días de fuego. Esto apenas empieza."* |
+| R14 | *"Dos semanas encendido. El fuego no pide permiso."* |
+| R21 | *"Veintiún días. La llama que no se apaga ya es una hoguera."* |
+| R30 | *"Un mes de fuego. La fuerza no es un accidente."* |
+| R60 | *"Sesenta días ardiendo. El fuego ya es parte de mí."* |
+| R90 | *"Noventa días. Lo que empezó como una chispa ya es un incendio."* |
+| F5 | *"El fuego ha encontrado su centro."* |
+| F10 | *"A esta temperatura, nada se rompe. Todo se forja."* |
+| F16 | *"Guardián Pleno. Ignis y yo somos lo mismo."* |
+| F30 | *"El fuego ha alcanzado su forma suprema. Imparable."* |
+| A1 | *"Los números no mienten. Mi cuerpo responde."* |
+| A+ | *"Diez puntos arriba. El fuego tiene recompensa."* |

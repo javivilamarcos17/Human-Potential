@@ -167,9 +167,8 @@
 | Arquetipo | Cuerpo |
 |-----------|--------|
 | **Agua** | Eres del Agua. Fluidez, movilidad y adaptación: estas son tus fortalezas. Tu Guardián se llama **Kael, el Fluido**. |
-| **Fuego** | Eres del Fuego. Fuerza, resistencia y potencia: estas son tus fortalezas. Tu Guardián se llama **Ignis, el Incandescente**. |
-| **Tierra** | Eres de la Tierra. Estabilidad, constancia y solidez: estas son tus fortalezas. Tu Guardián se llama **Gaia, la Firme**. |
-| **Aire** | Eres del Aire. Agilidad, coordinación y precisión: estas son tus fortalezas. Tu Guardián se llama **Zeph, el Veloz**. |
+| **Tierra** | Eres de la Tierra. Estabilidad, constancia y solidez: estas son tus fortalezas. Tu Guardián se llama **[Guardián Tierra — nombre PENDIENTE de aprobación del dueño]**. |
+| **Viento** | Eres del Viento. Agilidad, coordinación y precisión: estas son tus fortalezas. Tu Guardián se llama **[Guardián Viento — nombre PENDIENTE de aprobación del dueño]**. |
 
 | Elemento | Texto |
 |----------|-------|
@@ -497,12 +496,12 @@
 | Agua | 30 días | *"30 días de movimiento. Nada me detiene."* |
 | Agua | Fase 10 | *"El Agua toma su forma. Yo también."* |
 | Agua | Fase 16 | *"Guardián Pleno. Kael y yo hemos llegado juntos."* |
-| Fuego | 7 días | *"7 días de fuego. Esto apenas empieza."* |
-| Fuego | 30 días | *"30 días encendido. El fuego no se apaga."* |
 | Tierra | 7 días | *"7 días firme. La constancia construye montañas."* |
 | Tierra | 30 días | *"30 días de tierra. Sólido como siempre."* |
-| Aire | 7 días | *"7 días en movimiento. Ligero y preciso."* |
-| Aire | 30 días | *"30 días sin parar. El aire nunca descansa."* |
+| Viento | 7 días | *"7 días en movimiento. Ligero y preciso."* |
+| Viento | 30 días | *"30 días sin parar. El viento nunca descansa."* |
+
+> 🔮 **VISIÓN NORTE (Fase 2/3 — NO usar en MVP):** las frases de Fuego (Ignis el Incandescente) están en `copy-tarjetas-epicas.md` § Visión Norte.
 
 **Pie de tarjeta (todas):** Prescrito por {fisio} · {clinica} · Anti Frágil
 
