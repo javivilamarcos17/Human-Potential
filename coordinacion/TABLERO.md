@@ -15,8 +15,9 @@
 | Organizador | TODO (modo solitario por eficiencia de tokens) | Construcción directa | 🔄 activo |
 | Agentes 1-3 | — | Pausados (bloqueos de permisos; el organizador absorbió sus pendientes) | ⏸️ |
 
-**Hecho en modo solitario (2026-06-11):** RLS completa (migración 0006) · monedero.html premium ·
-correcciones IC-2…IC-7 + I2 aplicadas · hub demo con evolución y monedero · index.html verificado al listón.
+**Hecho en modo solitario (2026-06-11):** RLS completa (migración 0006) · monedero.html ·
+sombrero.html · upselling.html · correcciones IC-2…IC-7 + I2 · flujo del index conectado ·
+hub demo con 9 piezas · QA de enlaces 0 rotos. **Inventario visual MVP A1-A12: COMPLETO.**
 
 ## Entregado y verificado ✅
 - **Visual:** prototipo navegable v0.2 (8 pantallas, persona canónica, pulido C3-C5) · maqueta panorámica · IDENTIDAD_VISUAL

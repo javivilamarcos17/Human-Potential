@@ -10,6 +10,12 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Inventario visual del MVP completo: A1-A12 con pantalla premium (2026-06-11)
+- **`mockups/prototipo/sombrero.html`** (A3): revelación del arquetipo (Agua, ligada a la Auditoría 62/100) + elección 1 de 3 Guardianes con SVG propios. Solo Kael oficial; los otros dos marcados "(nombre provisional)" según el léxico.
+- **`mockups/prototipo/upselling.html`** (A12): banner empático tras dolor alto 2 días — invita a sesión presencial con la Dra. Elena Ruiz; reserva fuera de la app (D6). Era la última pieza del MVP sin representación visual.
+- **Flujo conectado**: el dashboard de `index.html` ahora enlaza a `evolucion.html` y `tarjeta-epica.html` (botones que antes eran demoAlert).
+- **QA de enlaces**: todos los href de demo.html y los 8 prototipos verificados — 0 rotos.
+
 ### Modo solitario: RLS + monedero + QA aplicado (2026-06-11)
 - **Migración 0006 — políticas RLS completas**: aislamiento multi-clínica en las 29 tablas (paciente ve lo suyo; profesional solo su clínica; pacientes B2C invisibles para clínicas — D8; catálogos solo lectura) + batería de pruebas obligatoria pre-despliegue. Cumple ESPECIFICACION_MVP §C y PRIVACIDAD_RGPD §7.
 - **`mockups/prototipo/monedero.html`** (A9): Descuento Sudado al listón premium — cuota 12→4 € con suelo protegido, desglose (racha/referidos/reto), código JAVI-AF-2026 copiable, CTA a Tarjeta Épica, nota D6.
