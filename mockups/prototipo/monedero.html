@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Frágil · Monedero — Descuento Sudado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* Pantalla del Descuento Sudado (A9) · listón board-premium · D6: sin pago in-app */
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#060d18;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:var(--af-font-texto);padding:24px}
+  .phone{position:relative;width:390px;min-height:800px;background:var(--af-bg);border-radius:46px;border:1px solid var(--af-line);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .aurora{position:absolute;inset:0;overflow:hidden;filter:blur(70px);opacity:.55}
+  .aurora i{position:absolute;border-radius:50%}
+  .aurora i:nth-child(1){width:420px;height:420px;left:-130px;top:-90px;background:#103a5c;animation:fl 11s ease-in-out infinite}
+  .aurora i:nth-child(2){width:360px;height:360px;right:-120px;top:160px;background:#0d4a45;animation:fl 13s ease-in-out infinite reverse}
+  .aurora i:nth-child(3){width:300px;height:300px;left:40px;bottom:-80px;background:#11314f;animation:fl 9s ease-in-out infinite}
+  @keyframes fl{0%,100%{transform:translate(0,0)}50%{transform:translate(26px,-18px)}}
+  .sbar{position:relative;display:flex;justify-content:space-between;padding:18px 28px 0;color:var(--af-texto-suave);font-size:13px;z-index:2}
+  .content{position:relative;z-index:2;padding:14px 22px 28px}
+
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .back{width:38px;height:38px;border-radius:50%;background:var(--af-panel);border:1px solid var(--af-line);display:flex;align-items:center;justify-content:center;color:var(--af-texto);text-decoration:none;font-size:17px;transition:var(--af-t-rapida)}
+  .back:hover{background:rgba(255,255,255,.12)}
+  .titulo{font-family:var(--af-font-display);font-weight:900;font-size:22px;color:var(--af-texto)}
+  .sub{font-size:13px;color:var(--af-texto-suave)}
+
+  /* saldo héroe */
+  .hero{position:relative;text-align:center;padding:26px 18px 22px;border-radius:var(--af-radio-xl);background:var(--af-panel);border:1px solid var(--af-line);backdrop-filter:blur(var(--af-blur-cristal));margin-bottom:14px;overflow:hidden}
+  .hero::after{content:"";position:absolute;top:-60%;left:-30%;width:60%;height:220%;background:linear-gradient(100deg,transparent,rgba(244,196,48,.10),transparent);animation:sweep 2.8s ease-in-out infinite}
+  @keyframes sweep{0%{transform:translateX(-120%)}60%,100%{transform:translateX(420%)}}
+  .coin{width:74px;height:74px;margin:0 auto 10px;animation:resp 5.2s ease-in-out infinite}
+  @keyframes resp{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .hero .lbl{font-size:13px;color:var(--af-texto-suave);letter-spacing:.6px;text-transform:uppercase}
+  .hero .euros{font-family:var(--af-font-display);font-weight:900;font-size:44px;color:var(--af-dorado);line-height:1.15}
+  .hero .frase{font-size:13px;color:var(--af-texto-suave);margin-top:4px}
+  .hero .frase b{color:var(--af-texto)}
+
+  /* cuota: de 12 € hacia el suelo 4 € */
+  .cuota{background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-l);backdrop-filter:blur(var(--af-blur-cristal));padding:18px;margin-bottom:14px}
+  .cuota .fila{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .cuota .que{font-size:13px;color:var(--af-texto-suave)}
+  .cuota .cifras{font-family:var(--af-font-display);font-weight:800;font-size:17px;color:var(--af-texto)}
+  .cuota .cifras s{color:var(--af-texto-suave);font-weight:600;margin-right:6px}
+  .cuota .cifras b{color:var(--af-primario);font-size:22px}
+  .track{position:relative;height:12px;border-radius:8px;background:rgba(255,255,255,.08);overflow:hidden}
+  .track .fill{position:absolute;inset:0 38% 0 0;border-radius:8px;background:linear-gradient(90deg,var(--af-primario-osc),var(--af-primario));animation:brillo 2.8s ease-in-out infinite}
+  @keyframes brillo{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+  .marcas{display:flex;justify-content:space-between;font-size:11px;color:var(--af-texto-suave);margin-top:6px}
+  .marcas b{color:var(--af-dorado)}
+
+  /* desglose */
+  .lista{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+  .item{display:flex;align-items:center;gap:12px;background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-m);backdrop-filter:blur(var(--af-blur-cristal));padding:13px 15px;transition:var(--af-t-rapida)}
+  .item:hover{background:rgba(255,255,255,.09)}
+  .item .ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;background:rgba(46,204,143,.14)}
+  .item .tx{flex:1}
+  .item .t1{font-size:15px;font-weight:600;color:var(--af-texto)}
+  .item .t2{font-size:12px;color:var(--af-texto-suave)}
+  .item .val{font-family:var(--af-font-display);font-weight:800;font-size:17px;color:var(--af-primario)}
+
+  /* referido */
+  .ref{background:linear-gradient(135deg,rgba(91,208,232,.10),rgba(46,204,143,.08));border:1px solid rgba(91,208,232,.25);border-radius:var(--af-radio-l);padding:16px;margin-bottom:14px;backdrop-filter:blur(var(--af-blur-cristal))}
+  .ref .t1{font-family:var(--af-font-display);font-weight:800;font-size:15px;color:var(--af-texto);margin-bottom:4px}
+  .ref .t2{font-size:12px;color:var(--af-texto-suave);margin-bottom:10px}
+  .codigo{display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.30);border:1px dashed rgba(91,208,232,.45);border-radius:12px;padding:11px 14px}
+  .codigo b{font-family:var(--af-font-display);font-weight:800;letter-spacing:2px;color:var(--af-agua);font-size:17px}
+  .copiar{font-size:12px;font-weight:600;color:var(--af-texto);background:var(--af-panel);border:1px solid var(--af-line);border-radius:9px;padding:6px 12px;cursor:pointer;transition:var(--af-t-rapida)}
+  .copiar:hover{background:rgba(255,255,255,.14)}
+
+  .cta{display:block;text-align:center;text-decoration:none;font-family:var(--af-font-display);font-weight:800;font-size:15px;color:#062018;background:linear-gradient(135deg,var(--af-primario),var(--af-primario-osc));border-radius:var(--af-radio-m);padding:15px;box-shadow:var(--af-sombra-flotante);transition:var(--af-t-rapida);margin-bottom:12px}
+  .cta:hover{transform:translateY(-2px)}
+  .nota{text-align:center;font-size:11px;color:var(--af-texto-suave);line-height:1.5}
+  .toast{position:absolute;left:50%;bottom:30px;transform:translateX(-50%) translateY(80px);background:#10293f;border:1px solid var(--af-line);color:var(--af-texto);font-size:13px;padding:10px 18px;border-radius:12px;transition:var(--af-t-media);opacity:0;z-index:5}
+  .toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="aurora"><i></i><i></i><i></i></div>
+  <div class="sbar"><b>9:41</b><span>WIFI ▮▮▮</span></div>
+  <div class="content">
+
+    <div class="top">
+      <a class="back" href="index.html" title="Volver al inicio">←</a>
+      <div>
+        <div class="titulo">Tu Descuento Sudado</div>
+        <div class="sub">MovePlus · se aplica al pagar en tu clínica</div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <svg class="coin" viewBox="0 0 74 74" fill="none">
+        <circle cx="37" cy="37" r="33" fill="#F4C430" opacity=".14"/>
+        <circle cx="37" cy="37" r="26" fill="none" stroke="#F4C430" stroke-width="3"/>
+        <circle cx="37" cy="37" r="20" fill="rgba(244,196,48,.12)"/>
+        <path d="M30 44c2 3 5 4 7.5 4 3.5 0 6.5-2 6.5-5 0-7-13-4-13-11 0-3 3-5 6.5-5 2.5 0 5 1 6.5 3" stroke="#F4C430" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M37 23v-3M37 54v-3" stroke="#F4C430" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <div class="lbl">Descuento acumulado</div>
+      <div class="euros">8,00 €</div>
+      <div class="frase"><b>24 días de constancia, Javi.</b> Esto lo has sudado tú.</div>
+    </div>
+
+    <div class="cuota">
+      <div class="fila">
+        <span class="que">Tu cuota este mes</span>
+        <span class="cifras"><s>12 €</s> → <b>4 €</b>/mes</span>
+      </div>
+      <div class="track"><div class="fill"></div></div>
+      <div class="marcas"><span>12 € cuota base</span><b>4 € — suelo alcanzado 🏆</b></div>
+    </div>
+
+    <div class="lista">
+      <div class="item">
+        <div class="ic">🔥</div>
+        <div class="tx"><div class="t1">Racha de 30 días</div><div class="t2">Mes completo sin romperla</div></div>
+        <div class="val">−2 €</div>
+      </div>
+      <div class="item">
+        <div class="ic">🤝</div>
+        <div class="tx"><div class="t1">3 amigos activos</div><div class="t2">−1 € por amigo (máx. 4)</div></div>
+        <div class="val">−3 €</div>
+      </div>
+      <div class="item">
+        <div class="ic">⚡</div>
+        <div class="tx"><div class="t1">Reto Maestro superado</div><div class="t2">Bono puntual de MovePlus</div></div>
+        <div class="val">−3 €</div>
+      </div>
+    </div>
+
+    <div class="ref">
+      <div class="t1">Invita y sudad juntos</div>
+      <div class="t2">Cada amigo que entre con tu código: descuento para los dos.</div>
+      <div class="codigo">
+        <b>JAVI-AF-2026</b>
+        <button class="copiar" onclick="copiar()">Copiar</button>
+      </div>
+    </div>
+
+    <a class="cta" href="tarjeta-epica.html">✨ Compartir mi Tarjeta Épica</a>
+    <div class="nota">El descuento es informativo: tu clínica lo aplica al cobrar.<br>En la app nunca se paga (D6). Tu cuota nunca baja de 4 €.</div>
+  </div>
+  <div class="toast" id="toast">Código copiado · compártelo donde quieras</div>
+</div>
+<script>
+  function copiar(){
+    navigator.clipboard && navigator.clipboard.writeText('JAVI-AF-2026');
+    var t=document.getElementById('toast');
+    t.classList.add('on');
+    setTimeout(function(){t.classList.remove('on')},2200);
+  }
+</script>
+</body>
+</html>
