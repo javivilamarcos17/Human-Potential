@@ -206,11 +206,20 @@ const CONFIG = {
     ]
   },
   packSuave: {
-    nombre: 'Rutina suave (dolor alto)',
+    nombre: 'Rutina suave (recuperación)',
     ejercicios: [
       {nombre:'Respiración diafragmática', detalle:'3 min · tumbado · manos en el abdomen', video:''},
       {nombre:'Báscula pélvica suave',     detalle:'2 series · 8 repeticiones · sin dolor', video:''},
       {nombre:'Rodillas al pecho',         detalle:'30s por pierna · mecerse suave',        video:''},
+    ]
+  },
+  packAvanzado: {
+    nombre: 'Pack Lumbar · Progresión',
+    ejercicios: [
+      {nombre:'Peso muerto con goma',  detalle:'3 series · 10 reps · espalda larga',        video:''},
+      {nombre:'Plancha frontal',       detalle:'3 × 30s · abdomen activo',                  video:''},
+      {nombre:'Puente a una pierna',   detalle:'2 series · 8 por lado · pelvis estable',    video:''},
+      {nombre:'Bird-dog con pausa',    detalle:'2 series · 6 por lado · 3s de pausa',       video:''},
     ]
   }
 };
@@ -294,11 +303,37 @@ function dolor(v){const e=$('v-dolor');e.textContent=v;e.style.color=v>=8?'var(-
     wa.href='https://wa.me/'+CONFIG.whatsappFisio+'?text='+encodeURIComponent(`⚠ Anti Frágil — ${CONFIG.paciente}: dolor ${v}/10 en ${CONFIG.zona} hoy (${hoyISO()}). Rutina adaptada a suave.`);}
   else wa.style.display='none';}
 function energia(v){$('v-energia').textContent=v;}
+/* ── MOTOR DE ADAPTACIÓN DIGITAL ─────────────────────────────────────────
+   La app decide la rutina con los datos del paciente y explica el porqué.
+   Empatía clínica: adapta, no castiga. Y guía a presencial cuando los datos lo piden. */
+function decidirRutina(){
+  const energia=+$('v-energia').textContent, u=S.hist.slice(-5);
+  const med=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+  const rpe3=med(S.hist.slice(-3).map(x=>x.r)), dolor5=med(u.map(x=>x.d));
+  const molestiaAyer=S.hist.length&&S.hist[S.hist.length-1].m;
+  // dolor medio no baja en 14 días → estancamiento
+  const v=S.hist.slice(-14), estancado=v.length>=14 && med(v.slice(-7).map(x=>x.d))>=med(v.slice(0,7).map(x=>x.d));
+
+  if(S.dolorHoy>=8) return {pack:CONFIG.packSuave, titulo:'Rutina suave de hoy',
+    motivo:`Dolor alto hoy. Bajamos la carga para proteger tu ${CONFIG.zona} — moverse suave también es avanzar.`, vender:true};
+  if(molestiaAyer) return {pack:CONFIG.packSuave, titulo:'Rutina suave de hoy',
+    motivo:'Ayer notaste una molestia nueva. Hoy toca consolidar, no apretar.', vender:true};
+  if(S.dolorHoy>=5||energia<=3) return {pack:CONFIG.packSuave, titulo:'Rutina ajustada de hoy',
+    motivo:S.dolorHoy>=5?'Dolor moderado hoy: la app ha rebajado la intensidad por ti.':'Energía baja hoy: mejor poco y bien que mucho y mal.', vender:false};
+  if(rpe3!==null&&rpe3>=8) return {pack:CONFIG.packSuave, titulo:'Día de descarga',
+    motivo:`Tus últimos esfuerzos han sido muy altos (RPE ${rpe3.toFixed(1)}). Hoy descargamos para que el cuerpo asimile.`, vender:false};
+  if(u.length>=5&&dolor5<=3&&rpe3!==null&&rpe3<=4) return {pack:CONFIG.packAvanzado, titulo:'¡Subes de nivel!',
+    motivo:`5 días con dolor bajo y esfuerzo cómodo: tu ${CONFIG.zona} pide más. La app te sube a progresión.`, vender:false};
+  if(estancado) return {pack:CONFIG.pack, titulo:'Tu rutina de hoy',
+    motivo:'Tu dolor lleva 2 semanas sin bajar. La app seguirá contigo — pero unas manos expertas podrían encontrar lo que falta.', vender:true};
+  return {pack:CONFIG.pack, titulo:'Tu rutina de hoy', motivo:'', vender:false};
+}
 function cerrarTriaje(){
-  const suave=S.dolorHoy>=8, pack=suave?CONFIG.packSuave:CONFIG.pack;
-  $('rut-titulo').textContent=suave?'Rutina suave de hoy':'Tu rutina de hoy';
-  $('rut-sub').textContent=suave?'Adaptada por tu dolor — movilidad sin carga'
-                                :`${pack.nombre} · prescrito por ${CONFIG.fisio}`;
+  const dec=decidirRutina(), pack=dec.pack;
+  $('rut-titulo').textContent=dec.titulo;
+  $('rut-sub').innerHTML=(dec.motivo?`<span style="color:var(--af-agua)">🤖 ${dec.motivo}</span><br>`:'')
+    +`${pack.nombre} · plan digital Anti Frágil`
+    +(dec.vender?`<br><a href="upselling.html" style="color:var(--af-dorado);font-weight:700;text-decoration:none">💆 O resuélvelo antes: sesión presencial con ${CONFIG.fisio} →</a>`:'');
   $('rut-lista').innerHTML=pack.ejercicios.map(e=>
     `<div class="ej" onclick="marcar(this)"><div class="chk">✓</div><div style="flex:1">
        <div class="t1">${e.nombre}</div><div class="t2">${e.detalle}</div></div>
