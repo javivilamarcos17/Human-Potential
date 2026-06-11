@@ -367,3 +367,26 @@ Antes de marcar una pieza como terminada, verificar:
 que no funciona técnicamente, revisar con el dueño del producto antes de modificar.*
 
 *Versión: 1.0 · Fecha: 2026-06-11 · Responsable: Agente 1 (Marca & Prototipo Visual)*
+
+---
+
+## Líneas evolutivas por nivel de partida (dirección del dueño, 2026-06-12)
+
+Cada elemento tiene **varias líneas evolutivas según la Auditoría inicial** — el avatar
+nace reflejando tu punto de partida y su arte cuenta ese viaje:
+
+| Línea | Vitalidad inicial | Estética | El viaje que cuenta |
+|-------|------------------|----------|---------------------|
+| **Brote** 🌱 | 0-40 | Más tierna/mona, formas suaves | De la fragilidad a la fuerza — la transformación más dramática |
+| **Atlas** 🛡️ | 41-70 | Equilibrada, proporciones sólidas | La constancia que esculpe |
+| **Apex** ⚡ | 71-100 | Atlética desde el inicio, dinámica | Mantener la cima y perfeccionarla |
+
+Reglas de dirección de arte (estilo "Pokémon moderno"):
+- **Épica creciente:** a cada etapa el cuerpo gana atleticismo, postura erguida, hombros,
+  elementos de poder (cresta → yelmo → alas → corona). Nada de "bola con ojos" más allá de Cría.
+- **Originalidad evolutiva:** las evoluciones sorprenden (cambio de silueta, no solo tamaño).
+- **El huevo ya vive:** sub-fases del huevo (liso → runas → grietas de luz → eclosión).
+- **Cruce de líneas:** una re-Auditoría con gran mejora puede saltar tu siguiente evolución
+  a la rama superior (momento "wow" máximo). La línea no es jaula.
+- Elementos: MVP 3 (Agua/Tierra/Viento — D4); visión 5 (+ Fuego, Rayo/Roca…). Configurable.
+- BBDD: `avatares.linea` (campo nuevo, Season 1+). Season 0 lanza con 1 línea por elemento.

@@ -257,9 +257,9 @@ const CONFIG = {
       nombre: 'Lidomare',
       whatsapp: '',                       // los resúmenes y alertas del cliente van aquí
       actividades: [
-        {nombre:'Pilates máquina',    detalle:'Complemento perfecto para tu espalda · mar/jue 19:00', cta:'Reservar plaza'},
-        {nombre:'Sala de fuerza guiada', detalle:'Tu pack de progresión, con supervisión · lun-vie',  cta:'Pedir info'},
-        {nombre:'Fisioterapia',       detalle:'Si el dolor no cede, valoración presencial',           cta:'Pedir cita'},
+        {nombre:'Pilates máquina',    detalle:'Complemento perfecto para tu espalda · mar/jue 19:00', cta:'Me interesa'},
+        {nombre:'Sala de fuerza guiada', detalle:'Tu pack de progresión, con supervisión · lun-vie',  cta:'Me interesa'},
+        {nombre:'Fisioterapia',       detalle:'Si el dolor no cede, valoración presencial',           cta:'Me interesa'},
       ]
     }
   },
@@ -320,6 +320,10 @@ function faseDesde(p){
 }
 const ETAPAS=[[1,4,'Huevo'],[5,9,'Cría'],[10,13,'Joven'],[14,20,'Guardián'],[21,27,'Alado'],[28,30,'Deidad']];
 const etapaDe=f=>ETAPAS.find(([a,b])=>f>=a&&f<=b)[2];
+// Línea evolutiva según la valoración inicial (D3): el avatar nace reflejando tu punto de partida.
+// Brote (0-40): viaje de fragilidad a fuerza, estética tierna. Atlas (41-70): equilibrada.
+// Apex (71-100): atlética desde el inicio. La re-Auditoría puede cruzarte de línea (momento wow).
+const lineaDe=aud=>aud<=40?'Línea Brote 🌱':aud<=70?'Línea Atlas 🛡️':'Línea Apex ⚡';
 
 /* ════ ESTADO PERSISTENTE ════ */
 const K='af_mvp_v1';
@@ -330,17 +334,55 @@ const save=()=>localStorage.setItem(K,JSON.stringify(S));
 
 /* ════ AVATAR SVG por etapa (placeholder D5) ════ */
 function avatarSvg(fase){
-  const et=etapaDe(fase), c1='#9BE8F7', c2='#2E86C1';
-  const grad=`<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs>`;
-  const cara=(y=0)=>`<circle cx="60" cy="${68+y}" r="4.5" fill="#0A2A3C"/><circle cx="90" cy="${68+y}" r="4.5" fill="#0A2A3C"/><path d="M63 ${82+y}c4 4 20 4 24 0" stroke="#0A2A3C" stroke-width="3.5" stroke-linecap="round" fill="none"/>`;
-  let cuerpo='';
-  if(et==='Huevo')      cuerpo=`<path d="M75 18C52 42 44 64 48 88a27 27 0 0 0 54 0c4-24-4-46-27-70z" fill="url(#g)"/><path d="M60 60l6 8 8-10 8 10 6-8" stroke="rgba(255,255,255,.6)" stroke-width="2.5" fill="none"/>`;
-  else if(et==='Cría')  cuerpo=`<circle cx="75" cy="80" r="38" fill="url(#g)"/><path d="M75 16c8 12 13 19 13 27a13 13 0 1 1-26 0c0-8 5-15 13-27z" fill="${c1}"/>${cara(6)}`;
-  else if(et==='Joven') cuerpo=`<ellipse cx="75" cy="84" rx="36" ry="42" fill="url(#g)"/><path d="M75 10c10 14 16 23 16 33a16 16 0 1 1-32 0c0-10 6-19 16-33z" fill="${c1}"/><path d="M28 78c-8 8-8 20 0 28M122 78c8 8 8 20 0 28" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>${cara(4)}`;
-  else if(et==='Guardián')cuerpo=`<ellipse cx="75" cy="84" rx="38" ry="44" fill="url(#g)"/><path d="M75 6c11 15 18 25 18 36a18 18 0 1 1-36 0c0-11 7-21 18-36z" fill="${c1}"/><path d="M22 70c-10 10-10 26 0 38M128 70c10 10 10 26 0 38" stroke="${c1}" stroke-width="5" stroke-linecap="round"/><path d="M48 122l-7 14M102 122l7 14" stroke="${c2}" stroke-width="5" stroke-linecap="round"/>${cara(2)}`;
-  else if(et==='Alado') cuerpo=`<path d="M18 60C30 38 50 46 50 64M132 60c-12-22-32-14-32 4" fill="none" stroke="${c1}" stroke-width="5" stroke-linecap="round"/><ellipse cx="75" cy="84" rx="38" ry="44" fill="url(#g)"/><path d="M75 4c12 16 19 27 19 39a19 19 0 1 1-38 0c0-12 7-23 19-39z" fill="${c1}"/>${cara(2)}<circle cx="75" cy="84" r="52" fill="none" stroke="rgba(244,196,48,.4)" stroke-width="2" stroke-dasharray="6 8"/>`;
-  else                  cuerpo=`<circle cx="75" cy="80" r="46" fill="url(#g)"/><path d="M75 2c13 17 21 29 21 42a21 21 0 1 1-42 0c0-13 8-25 21-42z" fill="${c1}"/>${cara(0)}<circle cx="75" cy="80" r="58" fill="none" stroke="#F4C430" stroke-width="3"/><path d="M75 138l5 12 5-12M30 40l-10-8M120 40l10-8" stroke="#F4C430" stroke-width="3" stroke-linecap="round"/>`;
-  return `<svg width="150" height="150" viewBox="0 0 150 150" fill="none">${grad}${cuerpo}</svg>`;
+  const et=etapaDe(fase);
+  const G='<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9BE8F7"/><stop offset="1" stop-color="#2E86C1"/></linearGradient><linearGradient id="g2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#2E86C1"/><stop offset="1" stop-color="#5BD0E8"/></linearGradient></defs>';
+  const ojos=(x1,x2,y,r=4)=>`<circle cx="${x1}" cy="${y}" r="${r}" fill="#06283C"/><circle cx="${x2}" cy="${y}" r="${r}" fill="#06283C"/><circle cx="${x1+1.5}" cy="${y-1.5}" r="1.4" fill="#fff"/><circle cx="${x2+1.5}" cy="${y-1.5}" r="1.4" fill="#fff"/>`;
+  let b='';
+  if(et==='Huevo') b=`
+    <path d="M75 16C50 44 42 68 47 92a28 28 0 0 0 56 0c5-24-3-48-28-76z" fill="url(#g)"/>
+    <path d="M58 52l8 10 9-13 9 13 8-10" stroke="#E8FBFF" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M62 96l6-7 7 8 7-8 6 7" stroke="rgba(232,251,255,.55)" stroke-width="2.5" fill="none"/>
+    <circle cx="75" cy="74" r="5" fill="#E8FBFF" opacity=".9"><animate attributeName="opacity" values=".4;1;.4" dur="2.6s" repeatCount="indefinite"/></circle>`;
+  else if(et==='Cría') b=`
+    <path d="M75 30c-17 0-28 12-28 28 0 12 6 20 14 28l-7 12 14-6c2 1 5 1 7 1s5 0 7-1l14 6-7-12c8-8 14-16 14-28 0-16-11-28-28-28z" fill="url(#g)"/>
+    <path d="M75 12c6 8 10 13 10 19a10 10 0 1 1-20 0c0-6 4-11 10-19z" fill="#9BE8F7"/>
+    <path d="M47 62c-7 1-12 6-13 12 6 1 11-1 15-5M103 62c7 1 12 6 13 12-6 1-11-1-15-5" fill="#5BD0E8"/>
+    ${ojos(64,86,58,5)}
+    <path d="M68 72c3 3 11 3 14 0" stroke="#06283C" stroke-width="2.6" stroke-linecap="round" fill="none"/>`;
+  else if(et==='Joven') b=`
+    <path d="M75 26L58 44l-4 26 6 30c4 8 10 12 15 12s11-4 15-12l6-30-4-26L75 26z" fill="url(#g)"/>
+    <path d="M75 8l9 16-9 8-9-8 9-16z" fill="#9BE8F7"/>
+    <path d="M54 56c-10-2-18 2-22 10 7 3 14 2 20-3M96 56c10-2 18 2 22 10-7 3-14 2-20-3" fill="url(#g2)"/>
+    <path d="M70 112l-6 16 11-7 11 7-6-16" fill="#2E86C1"/>
+    ${ojos(66,84,52)}
+    <path d="M69 64c3 2 9 2 12 0" stroke="#06283C" stroke-width="2.4" stroke-linecap="round" fill="none"/>`;
+  else if(et==='Guardián') b=`
+    <path d="M75 24L52 38l-8 24 8 20-4 26c8 8 18 12 27 12s19-4 27-12l-4-26 8-20-8-24-23-14z" fill="url(#g)"/>
+    <path d="M75 4l12 18-12 10-12-10L75 4z" fill="#9BE8F7"/>
+    <path d="M44 62c-12-4-22 0-28 10 8 4 17 3 24-3l4-7zM106 62c12-4 22 0 28 10-8 4-17 3-24-3l-4-7z" fill="url(#g2)"/>
+    <path d="M52 38l-14-8 6 16M98 38l14-8-6 16" fill="#5BD0E8"/>
+    <path d="M60 118l-8 20 13-8M90 118l8 20-13-8" fill="#2E86C1"/>
+    ${ojos(64,86,54)}
+    <path d="M66 66c4 3 14 3 18 0" stroke="#06283C" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <path d="M58 84l8 6 9-8 9 8 8-6" stroke="#E8FBFF" stroke-width="2.5" fill="none" opacity=".8"/>`;
+  else if(et==='Alado') b=`
+    <path d="M40 54C18 42 8 48 4 64c12 8 24 8 34 0l2-10zM110 54c22-12 32-6 36 10-12 8-24 8-34 0l-2-10z" fill="url(#g2)" opacity=".95"/>
+    <path d="M75 18L54 34l-6 26 6 22-2 28c6 10 14 14 23 14s17-4 23-14l-2-28 6-22-6-26-21-16z" fill="url(#g)"/>
+    <path d="M75 0l13 18-13 12-13-12L75 0z" fill="#9BE8F7"/>
+    <path d="M62 124l-10 22 15-9M88 124l10 22-15-9" fill="#2E86C1"/>
+    ${ojos(64,86,50)}
+    <path d="M66 62c4 3 14 3 18 0" stroke="#06283C" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <circle cx="75" cy="84" r="56" fill="none" stroke="rgba(244,196,48,.45)" stroke-width="2" stroke-dasharray="5 9"/>`;
+  else b=`
+    <path d="M30 50C10 36 2 44 0 60c10 9 22 10 32 2l-2-12zM120 50c20-14 28-6 30 10-10 9-22 10-32 2l2-12z" fill="url(#g2)"/>
+    <path d="M75 14L52 30l-7 28 7 24-3 30c7 11 16 16 26 16s19-5 26-16l-3-30 7-24-7-28-23-16z" fill="url(#g)"/>
+    <path d="M75 0l8 10 10-4-2 12 10 6-12 6-2 12-12-8-12 8-2-12-12-6 10-6-2-12 10 4 8-10z" fill="#F4C430"/>
+    ${ojos(64,86,48)}
+    <path d="M64 60c5 4 17 4 22 0" stroke="#06283C" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+    <path d="M56 82l9 7 10-9 10 9 9-7" stroke="#F4C430" stroke-width="3" fill="none"/>
+    <path d="M60 128l-9 22 14-9M90 128l9 22-14-9" fill="#2E86C1"/>
+    <circle cx="75" cy="80" r="62" fill="none" stroke="#F4C430" stroke-width="2.5" opacity=".7"><animate attributeName="r" values="58;64;58" dur="4.5s" repeatCount="indefinite"/></circle>`;
+  return `<svg width="150" height="150" viewBox="0 0 150 150" fill="none">${G}${b}</svg>`;
 }
 
 /* ════ UI ════ */
@@ -349,7 +391,7 @@ function ir(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove(
 function pintar(){
   const p={...S}, f=faseDesde(p), pr=progresoNivel(S.xp);
   $('ava-svg').innerHTML=avatarSvg(f);
-  $('chip-fase').textContent=`Fase ${f} · ${etapaDe(f)} · Nivel ${pr.nivel}`;
+  $('chip-fase').textContent=`Fase ${f} · ${etapaDe(f)} · Nivel ${pr.nivel} · ${lineaDe(S.aud)}`;
   $('st-racha').textContent=S.racha; $('st-sesiones').textContent=S.ses; $('st-xp').textContent=S.xp;
   $('xp-detalle').textContent=`Nivel ${pr.nivel} · ${pr.dentro}/${pr.coste} XP`;
   $('xp-fill').style.width=Math.min(100,Math.round(pr.dentro/pr.coste*100))+'%';
@@ -371,7 +413,11 @@ function pintar(){
          <div class="t1">${a.nombre}</div><div class="t2">${a.detalle}</div></div>
          ${c.whatsapp?`<a href="https://wa.me/${c.whatsapp}?text=${encodeURIComponent('Hola, soy '+CONFIG.paciente+' (Anti Frágil). Me interesa: '+a.nombre)}" target="_blank" style="font-size:12px;font-weight:700;color:var(--af-dorado);text-decoration:none">${a.cta} →</a>`
                      :`<span style="font-size:12px;font-weight:700;color:var(--af-dorado)">${a.cta} →</span>`}
-       </div>`).join('');
+       </div>`).join('')
+      +`<div class="ej" style="border-style:dashed" onclick="ir('triaje')"><div style="flex:1">
+          <div class="t1">🏠 Hoy no puedo ir al centro</div>
+          <div class="t2">Sin problema: tu rutina en casa de hoy equivale a tu sesión — el vínculo no se rompe.</div>
+        </div></div>`;
   } else bl.style.display='none';
 }
 function miCentro(){return S.perfil&&S.perfil.centro?CONFIG.centros[S.perfil.centro]:null;}
