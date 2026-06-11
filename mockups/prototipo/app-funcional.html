@@ -551,7 +551,9 @@ function pintar(){
   $('hecho-hoy').style.display=hecho?'block':'none';
   $('btn-empezar').style.display=hecho?'none':'block';
   pintarPreguntaDia();
-  if(gap<2||hecho) $('saludo').textContent=hecho?`Hasta mañana, ${CONFIG.paciente}.`:(S.racha>0?`${S.racha} días seguidos, ${CONFIG.paciente}. Kael lo nota.`:`Tu Guardián te espera, ${CONFIG.paciente}.`);
+  if(gap<2||hecho) $('saludo').innerHTML=hecho?`Hasta mañana, ${CONFIG.paciente}.`
+    :(S.racha>0?`<b style="color:var(--af-ambar)">🔥 Tu racha de ${S.racha} días se apaga a medianoche.</b><br>5 minutos bastan para mantenerla viva, ${CONFIG.paciente}.`
+    :`Tu Guardián te espera, ${CONFIG.paciente}.`);
   document.querySelectorAll('.cfg-nombre').forEach(e=>e.textContent=CONFIG.paciente);
   document.querySelectorAll('.cfg-fisio').forEach(e=>e.textContent=CONFIG.fisio);
   document.querySelectorAll('.cfg-clinica').forEach(e=>e.textContent=CONFIG.clinica);
