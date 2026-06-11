@@ -154,6 +154,10 @@
         <div class="track"><div class="fill" id="xp-fill" style="width:0%"></div></div>
       </div>
       <div class="hecho-hoy" id="hecho-hoy" style="display:none">✓ Jornada de hoy completada. Kael descansa contigo.</div>
+      <div id="eclosion" style="display:none;margin-top:14px;background:linear-gradient(135deg,rgba(244,196,48,.13),rgba(91,208,232,.08));border:1.5px solid rgba(244,196,48,.4);border-radius:var(--af-radio-l);padding:14px;cursor:pointer" onclick="abrirPrueba()">
+        <div style="font-family:var(--af-font-display);font-weight:800;font-size:15px;color:var(--af-dorado)" id="ec-titulo">🥚 Semana de Eclosión</div>
+        <div class="sub" id="ec-sub"></div>
+      </div>
       <div id="centro-bloque" style="display:none">
         <div class="xprow" style="margin-top:14px"><span id="centro-titulo" style="font-weight:700;color:var(--af-dorado)"></span></div>
         <div id="centro-lista"></div>
@@ -167,6 +171,19 @@
         <div class="tool" onclick="reset()">↺ Reiniciar</div>
       </div>
       <a class="volver" href="../demo.html">← Hub de demo</a>
+    </div>
+
+    <!-- PRUEBA DE ECLOSIÓN -->
+    <div class="scr" id="prueba">
+      <div class="h1" id="pr-titulo"></div>
+      <div class="sub" id="pr-detalle"></div>
+      <div class="panel" style="text-align:center">
+        <div class="t-num" id="pr-valor" style="color:var(--af-dorado)">0</div>
+        <input type="range" id="pr-rango" min="0" max="60" value="0" oninput="$('pr-valor').textContent=this.value">
+        <div class="scale"><span>0</span><span id="pr-unidad"></span></div>
+      </div>
+      <button class="cta" onclick="registrarPrueba()">Registrar mi marca real</button>
+      <button class="sec" onclick="ir('home')">Hoy no — mañana sigue aquí</button>
     </div>
 
     <!-- MI PROGRESO -->
@@ -271,6 +288,18 @@ const CONFIG = {
   clinica:  'MovePlus',
   zona:     'zona lumbar',
   whatsappFisio: '',   // ej. '34600111222' — activa el envío real de alertas y resúmenes
+  /* SEMANA DE ECLOSIÓN: 7 micro-pruebas reales (1/día) que afinan la Vitalidad
+     provisional del alta. El Guardián nace del trabajo, no de un formulario.
+     bloque: f(fuerza,0-30) a(aeróbico,0-30) m(movilidad,0-20) c(constancia,0-20) */
+  pruebas: [
+    {bloque:'f', titulo:'Sentadillas en 45 segundos', detalle:'Al ritmo que puedas, sin dolor. Cuenta las completas.', unidad:'sentadillas', aPuntos:v=>Math.min(30,Math.round(v*1.2))},
+    {bloque:'a', titulo:'Marcha rápida sin parar', detalle:'¿Cuántos minutos aguantas hoy a paso vivo?', unidad:'minutos', aPuntos:v=>Math.min(30,Math.round(v/2))},
+    {bloque:'m', titulo:'Flexión de tronco', detalle:'De pie, piernas rectas: ¿a cuántos cm te quedas del suelo? (0 = lo tocas)', unidad:'cm del suelo', aPuntos:v=>Math.max(0,20-Math.round(v/2))},
+    {bloque:'f', titulo:'Plancha frontal', detalle:'Segundos manteniendo la postura con el abdomen activo.', unidad:'segundos', aPuntos:v=>Math.min(30,Math.round(v/3))},
+    {bloque:'a', titulo:'Subir escaleras', detalle:'¿Cuántos pisos seguidos subes sin pararte?', unidad:'pisos', aPuntos:v=>Math.min(30,v*5)},
+    {bloque:'m', titulo:'Sentadilla profunda mantenida', detalle:'Segundos abajo del todo, talones en el suelo.', unidad:'segundos', aPuntos:v=>Math.min(20,Math.round(v/2))},
+    {bloque:'c', titulo:'La semana completa', detalle:'¿Cuántos días has entrenado esta semana (incluida la app)?', unidad:'días', aPuntos:v=>Math.min(20,Math.round(v*20/7))},
+  ],
   /* CENTROS (B2B2C — D8): el centro reparte su código; el cliente entra gratis.
      El centro recibe los datos (WhatsApp), pone su marca y ofrece sus actividades
      DENTRO de la app del cliente (su canal de venta y conexión). Editable a mano: */
@@ -433,6 +462,11 @@ function pintar(){
   document.querySelectorAll('.cfg-fisio').forEach(e=>e.textContent=CONFIG.fisio);
   document.querySelectorAll('.cfg-clinica').forEach(e=>e.textContent=CONFIG.clinica);
   document.querySelectorAll('.cfg-zona').forEach(e=>e.textContent=CONFIG.zona);
+  const pr=pruebaPendiente(), ec=$('eclosion');
+  if(pr){ec.style.display='block';
+    $('ec-sub').textContent='Prueba '+(S.pruebasHechas.length+1)+'/'+CONFIG.pruebas.length+' · '+pr.titulo+' · +15 XP — toca para hacerla';}
+  else if(S.pruebasHechas&&S.pruebasHechas.length>=CONFIG.pruebas.length){ec.style.display='none';}
+  else ec.style.display='none';
   // Bloque del centro (B2B2C): sus actividades dentro de la app del cliente
   const c=miCentro(), bl=$('centro-bloque');
   if(c){bl.style.display='block';
@@ -481,6 +515,39 @@ function decidirRutina(){
   if(estancado) return {pack:CONFIG.pack, titulo:'Tu rutina de hoy',
     motivo:'Tu dolor lleva 2 semanas sin bajar. La app seguirá contigo — pero unas manos expertas podrían encontrar lo que falta.', vender:true};
   return {pack:CONFIG.pack, titulo:'Tu rutina de hoy', motivo:'', vender:false};
+}
+function pruebaPendiente(){
+  S.pruebasHechas=S.pruebasHechas||[];
+  if(S.pruebasHechas.length>=CONFIG.pruebas.length) return null;
+  const ultima=S.pruebasHechas[S.pruebasHechas.length-1];
+  if(ultima&&ultima.f===hoyISO()) return null;            // 1 prueba por día
+  return CONFIG.pruebas[S.pruebasHechas.length];
+}
+function abrirPrueba(){
+  const pr=pruebaPendiente(); if(!pr) return;
+  $('pr-titulo').textContent='Prueba '+(S.pruebasHechas.length+1)+' de '+CONFIG.pruebas.length;
+  $('pr-detalle').textContent=pr.titulo+' — '+pr.detalle;
+  $('pr-unidad').textContent=pr.unidad;$('pr-rango').value=0;$('pr-valor').textContent=0;
+  ir('prueba');
+}
+function registrarPrueba(){
+  const pr=CONFIG.pruebas[S.pruebasHechas.length], v=+$('pr-rango').value;
+  S.bloques=S.bloques||{};
+  const pts=pr.aPuntos(v);
+  // si ya hay medida real del bloque, promedia; si no, sustituye la estimación
+  S.bloques[pr.bloque]=S.bloques[pr.bloque+'_real']?Math.round((S.bloques[pr.bloque]+pts)/2):pts;
+  S.bloques[pr.bloque+'_real']=true;
+  const est={f:10,a:10,m:13,c:6};                          // pesos por defecto si falta algún bloque
+  S.aud=Math.min(100,['f','a','m','c'].reduce((t,k)=>t+(S.bloques[k]!=null?S.bloques[k]:est[k]),0));
+  S.pruebasHechas.push({f:hoyISO(),v,pts});
+  S.xp+=15; save();                                         // XP por prueba real
+  const fin=S.pruebasHechas.length>=CONFIG.pruebas.length;
+  alert((fin?'✨ SEMANA DE ECLOSIÓN COMPLETADA.
+':'')+'Marca registrada: '+v+' '+pr.unidad+' → +15 XP.
+Vitalidad afinada: '+S.aud+'/100'+(fin?'
+
+Tu valoración ya es REAL. Tu Guardián crece sobre cimientos verdaderos.':''));
+  pintar(); ir('home');
 }
 function tiempo(el){S.tiempoHoy=+el.dataset.min;
   document.querySelectorAll('.t-tiempo').forEach(t=>{t.style.borderColor='';t.style.color='';});
