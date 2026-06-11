@@ -14,4 +14,5 @@
 ✅ 2026-06-11 — Plan go-to-market — docs/PLAN_GO_TO_MARKET.md
 ✅ 2026-06-11 — Privacidad y RGPD — docs/PRIVACIDAD_RGPD.md
 ✅ 2026-06-11 — Checklist lanzamiento piloto — docs/CHECKLIST_LANZAMIENTO.md
-✅ 2026-06-11 — Guion demo para clínicas (4 partes + cierres por reacción) — docs/GUION_DEMO_CLINICAS.md
+✅ 2026-06-11 — Guion demo clínicas — docs/GUION_DEMO_CLINICAS.md
+✅ 2026-06-11 — Onboarding clínica nueva (semana 0-4, criterios activación, señales peligro) — docs/ONBOARDING_CLINICA.md
