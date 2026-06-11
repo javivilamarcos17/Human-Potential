@@ -1,0 +1,12 @@
+{
+  "name": "Anti Frágil — tu Guardián",
+  "short_name": "Anti Frágil",
+  "start_url": "app-funcional.html",
+  "display": "standalone",
+  "background_color": "#0A1626",
+  "theme_color": "#0A1626",
+  "icons": [{
+    "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjQ0IiBmaWxsPSIjMEExNjI2Ii8+PHBhdGggZD0iTTk2IDI4Yy0yNiAzNC0zNCA1OC0yOSA4MmEyOSAyOSAwIDAgMCA1OCAwYzUtMjQtMy00OC0yOS04MnoiIGZpbGw9IiM1QkQwRTgiLz48L3N2Zz4=",
+    "sizes": "192x192", "type": "image/svg+xml", "purpose": "any"
+  }]
+}

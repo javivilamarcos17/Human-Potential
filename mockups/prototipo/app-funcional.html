@@ -7,6 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="tokens.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0A1626">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
   /* CORE LOOP FUNCIONAL — misma lógica que app/lib (economia_puntos + avatar_evolucion).
      Estado real en localStorage: XP, nivel, fase, racha por fecha de calendario.
@@ -607,6 +611,7 @@ function enviarResumen(){
 if(S.perfil){CONFIG.paciente=S.perfil.nombre;CONFIG.zona=S.perfil.zona;}
 pintar();
 if(!S.perfil) ir('alta');
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
