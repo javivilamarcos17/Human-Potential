@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!-- Anti Frágil — HUB DE DEMO para reuniones. Abrir y presentar desde aquí. -->
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Frágil · Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="prototipo/tokens.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--af-font-texto);background:var(--af-bg);color:var(--af-texto);
+    min-height:100vh;padding:48px 24px}
+  .wrap{max-width:980px;margin:0 auto}
+  h1{font-family:var(--af-font-display);font-weight:900;font-size:40px;letter-spacing:-.5px}
+  h1 span{color:var(--af-primario)}
+  .sub{color:var(--af-texto-suave);font-size:16px;margin:8px 0 36px;line-height:1.6;max-width:640px}
+  h2{font-family:var(--af-font-display);font-size:20px;margin:34px 0 14px;color:var(--af-texto)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+  a.card{display:block;text-decoration:none;color:inherit;background:var(--af-panel);
+    border:1px solid var(--af-line);border-radius:var(--af-radio-l);padding:22px;
+    backdrop-filter:blur(var(--af-blur-cristal));transition:transform .18s,border-color .18s}
+  a.card:hover{transform:translateY(-3px);border-color:rgba(46,204,143,.4)}
+  .ic{font-size:30px;margin-bottom:10px}
+  .ct{font-size:17px;font-weight:700;margin-bottom:5px}
+  .cd{font-size:13.5px;color:var(--af-texto-suave);line-height:1.55}
+  .tag{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;letter-spacing:1px;
+    text-transform:uppercase;color:var(--af-primario);background:rgba(46,204,143,.1);
+    border:1px solid rgba(46,204,143,.3);border-radius:20px;padding:4px 12px}
+  .status{background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-l);
+    padding:24px;backdrop-filter:blur(var(--af-blur-cristal))}
+  .row{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--af-line);font-size:14px;line-height:1.55}
+  .row:last-child{border:none}
+  .row b{color:var(--af-primario);flex-shrink:0}
+  .row span{color:var(--af-texto-suave)}
+  .row strong{color:var(--af-texto);font-weight:600}
+  .foot{margin-top:36px;font-size:12px;color:rgba(255,255,255,.3);text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Anti <span>Frágil</span></h1>
+  <p class="sub">El ecosistema que acaba con el abandono en salud física: tu fisio te prescribe,
+  tu Guardián evoluciona contigo, y tu progreso clínico real se convierte en un juego que engancha.
+  <strong style="color:var(--af-texto)">Esto es el boceto fundacional del MVP</strong> — la base sobre
+  la que trabajará el equipo de desarrollo.</p>
+
+  <h2>📱 Demos navegables (haz clic y prueba)</h2>
+  <div class="grid">
+    <a class="card" href="prototipo/board-premium.html">
+      <div class="ic">🛡️</div>
+      <div class="ct">El Board del paciente</div>
+      <div class="cd">La pantalla diaria: tu Guardián vivo (Kael, fase 16), vitalidad, racha
+      y el mensaje de tu fisio. El listón visual del producto.</div>
+      <span class="tag">Referencia premium</span>
+    </a>
+    <a class="card" href="prototipo/index.html">
+      <div class="ic">🔄</div>
+      <div class="ct">El viaje completo del paciente</div>
+      <div class="cd">8 pantallas clicables: alta con Código de Honor → Auditoría → elegir
+      Guardián → triaje diario → rutina → feedback → recompensa.</div>
+      <span class="tag">Flujo completo</span>
+    </a>
+    <a class="card" href="prototipo/clinica.html">
+      <div class="ic">🚦</div>
+      <div class="ct">El panel del fisioterapeuta</div>
+      <div class="cd">Semáforos de alerta (dolor alto en rojo), ficha del paciente con su
+      evolución del dolor 7→3 y su auditoría. Lo que compra la clínica.</div>
+      <span class="tag">Lado B2B</span>
+    </a>
+    <a class="card" href="anti-fragil.html">
+      <div class="ic">🥚</div>
+      <div class="ct">La evolución del Guardián</div>
+      <div class="cd">Vista panorámica: de huevo a deidad en 6 etapas y 30 fases. Estética
+      "Pokémon moderno" (el arte final lo hará un ilustrador).</div>
+      <span class="tag">Gamificación</span>
+    </a>
+  </div>
+
+  <h2>📊 Dónde estamos (resumen honesto)</h2>
+  <div class="status">
+    <div class="row"><b>✅ Hecho</b><div><strong>El plano completo del producto.</strong> <span>Visión y decisiones cerradas (D1–D7), propuesta de valor, especificación del MVP pantalla a pantalla, modelo de datos completo (multi-clínica), sistema de avatar de 30 fases con sentido clínico, sistema de diseño con la estética medida al milímetro.</span></div></div>
+    <div class="row"><b>✅ Hecho</b><div><strong>Los prototipos navegables</strong> <span>que estás viendo: el flujo del paciente y el panel de la clínica, con datos de ejemplo realistas.</span></div></div>
+    <div class="row"><b>✅ Hecho</b><div><strong>El paquete de negocio:</strong> <span>pitch deck, one-pager, proyecciones (3 escenarios), modelo de precios (planes 150–250 €/mes por clínica), análisis de competencia, riesgos, KPIs, plan go-to-market, plan de piloto (10 semanas) y borrador RGPD.</span></div></div>
+    <div class="row"><b>🔜 Siguiente</b><div><strong>Contratar el equipo de desarrollo</strong> <span>(el dossier para pedir presupuestos está listo) y cerrar la primera clínica piloto. El esqueleto técnico (Flutter + Supabase) ya está montado para que arranquen sin ambigüedad.</span></div></div>
+    <div class="row"><b>⚠️ Claro</b><div><strong>Esto no es la app programada todavía</strong> <span>— es el boceto fundacional: diseño, prototipo y plan. Lo que permite pedir presupuestos serios, enseñar a inversores y empezar a construir sin tirar dinero.</span></div></div>
+  </div>
+
+  <p class="foot">Anti Frágil · Boceto MVP v1.5 · Avatares = placeholders (arte final: ilustrador humano)<br>
+  Repo: github.com/javivilamarcos17/Human-Potential · rama feat/boceto-mvp</p>
+
+</div>
+</body>
+</html>
