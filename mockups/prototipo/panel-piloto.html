@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Frágil · Panel del Piloto — datos vivos</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* Panel del profesional para el PILOTO: lee piloto_eventos (migración 0007) y pinta
+     semáforos reales. La clave se guarda SOLO en este navegador (localStorage). */
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--af-bg);min-height:100vh;font-family:var(--af-font-texto);color:var(--af-texto);padding:30px 4vw}
+  .aurora{position:fixed;inset:0;overflow:hidden;filter:blur(80px);opacity:.4;z-index:0}
+  .aurora i{position:absolute;border-radius:50%}
+  .aurora i:nth-child(1){width:500px;height:500px;left:-150px;top:-120px;background:#103a5c}
+  .aurora i:nth-child(2){width:420px;height:420px;right:-140px;bottom:-100px;background:#0d4a45}
+  .wrap{position:relative;z-index:1;max-width:980px;margin:0 auto}
+  h1{font-family:var(--af-font-display);font-weight:900;font-size:26px}
+  .sub{color:var(--af-texto-suave);font-size:13.5px;margin-top:4px}
+  .panel{background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-l);backdrop-filter:blur(var(--af-blur-cristal));padding:18px;margin-top:16px}
+  input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.3);color:var(--af-texto);font-size:14px;margin-top:8px}
+  button{font-family:var(--af-font-display);font-weight:800;font-size:14px;color:#062018;background:linear-gradient(135deg,var(--af-primario),var(--af-primario-osc));border:0;border-radius:12px;padding:12px 22px;cursor:pointer;margin-top:12px}
+  .fila{display:flex;align-items:center;gap:14px;background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-m);padding:14px 16px;margin-top:10px}
+  .sem{width:14px;height:14px;border-radius:50%;flex:0 0 14px}
+  .rojo{background:var(--af-rojo);box-shadow:0 0 12px var(--af-rojo)}
+  .ambar{background:var(--af-ambar)}
+  .verde{background:var(--af-verde-ok)}
+  .nom{font-weight:700;font-size:15px}
+  .det{color:var(--af-texto-suave);font-size:12.5px;margin-top:2px;line-height:1.5}
+  .tagc{font-size:11px;color:var(--af-agua);font-weight:700}
+  .kpis{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+  .kpi{flex:1;min-width:140px;background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-m);padding:14px;text-align:center}
+  .kpi b{display:block;font-family:var(--af-font-display);font-weight:900;font-size:26px}
+  .kpi s{text-decoration:none;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--af-texto-suave)}
+  a{color:var(--af-texto-suave)}
+</style>
+</head>
+<body>
+<div class="aurora"><i></i><i></i></div>
+<div class="wrap">
+  <h1>Panel del Piloto · <span style="color:var(--af-primario)">datos vivos</span></h1>
+  <div class="sub">Lo que tus pacientes registran en la app, aquí, al refrescar. <a href="../demo.html">← hub</a></div>
+
+  <div class="panel" id="setup">
+    <b>Conexión (solo la primera vez)</b>
+    <div class="sub">Pega la URL del proyecto y la <b>service_role key</b> (Settings → API).
+    ⚠ Se guarda SOLO en este navegador — usa este panel únicamente en TU ordenador.</div>
+    <input id="c-url" placeholder="https://xxxx.supabase.co">
+    <input id="c-key" placeholder="service_role key (eyJ...)" type="password">
+    <button onclick="conectar()">Conectar</button>
+  </div>
+
+  <div id="dash" style="display:none">
+    <div class="kpis">
+      <div class="kpi"><b id="k-pac">0</b><s>pacientes</s></div>
+      <div class="kpi"><b id="k-jor">0</b><s>jornadas (7d)</s></div>
+      <div class="kpi"><b id="k-dolor">–</b><s>dolor medio (7d)</s></div>
+      <div class="kpi"><b id="k-alertas" style="color:var(--af-rojo)">0</b><s>alertas rojas (7d)</s></div>
+    </div>
+    <div class="panel" style="padding:10px 16px"><b>Pacientes</b> <span class="sub">(rojo primero — toca refrescar para actualizar)</span></div>
+    <div id="lista"></div>
+    <button onclick="cargar()">↻ Refrescar</button>
+    <button onclick="localStorage.removeItem('af_panel');location.reload()" style="background:none;border:1px solid var(--af-line);color:var(--af-texto-suave)">Desconectar</button>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+let CFG=JSON.parse(localStorage.getItem('af_panel')||'null');
+function conectar(){
+  CFG={url:$('c-url').value.trim().replace(/\/$/,''),key:$('c-key').value.trim()};
+  if(!CFG.url||!CFG.key){alert('Faltan datos');return;}
+  localStorage.setItem('af_panel',JSON.stringify(CFG));cargar();
+}
+async function cargar(){
+  try{
+    const r=await fetch(CFG.url+'/rest/v1/piloto_eventos?select=*&order=creado_en.desc&limit=800',
+      {headers:{apikey:CFG.key,Authorization:'Bearer '+CFG.key}});
+    if(!r.ok)throw new Error('HTTP '+r.status+' — ¿clave correcta? ¿migración 0007 aplicada?');
+    const ev=await r.json();
+    $('setup').style.display='none';$('dash').style.display='block';
+    pintar(ev);
+  }catch(e){alert('No se pudo conectar: '+e.message);}
+}
+function pintar(ev){
+  const hace7=Date.now()-7*86400000;
+  const recientes=ev.filter(e=>new Date(e.creado_en)>hace7);
+  // agrupar por paciente (dispositivo)
+  const P={};
+  ev.forEach(e=>{
+    const k=e.dispositivo_id;
+    P[k]=P[k]||{nombre:e.nombre||'(sin nombre)',centro:e.centro,jornadas:[],alertas:0,ult:null,vit:null};
+    if(e.nombre)P[k].nombre=e.nombre;
+    if(e.tipo==='jornada')P[k].jornadas.push(e);
+    if(e.tipo==='alerta_dolor'&&new Date(e.creado_en)>hace7)P[k].alertas++;
+    if(e.tipo==='alta'&&e.payload.vitalidad_provisional)P[k].vit=e.payload.vitalidad_provisional;
+    if(e.tipo==='prueba_eclosion'&&e.payload.vitalidad)P[k].vit=e.payload.vitalidad;
+    if(!P[k].ult||e.creado_en>P[k].ult)P[k].ult=e.creado_en;
+  });
+  const pacs=Object.values(P);
+  const jor7=recientes.filter(e=>e.tipo==='jornada');
+  $('k-pac').textContent=pacs.length;
+  $('k-jor').textContent=jor7.length;
+  $('k-dolor').textContent=jor7.length?(jor7.reduce((t,e)=>t+(e.payload.dolor||0),0)/jor7.length).toFixed(1):'–';
+  $('k-alertas').textContent=recientes.filter(e=>e.tipo==='alerta_dolor').length;
+  // semáforo por paciente: rojo = alerta 7d o dolor≥8 reciente; ámbar = >3 días sin actividad; verde resto
+  pacs.forEach(p=>{
+    const ultJ=p.jornadas[0], dias=p.ult?Math.round((Date.now()-new Date(p.ult))/86400000):99;
+    p.estado=(p.alertas>0||(ultJ&&ultJ.payload.dolor>=8))?'rojo':dias>3?'ambar':'verde';
+    p.dias=dias; p.ultJ=ultJ;
+  });
+  pacs.sort((a,b)=>({rojo:0,ambar:1,verde:2}[a.estado])-({rojo:0,ambar:1,verde:2}[b.estado]));
+  $('lista').innerHTML=pacs.map(p=>{
+    const j=p.ultJ?p.ultJ.payload:{};
+    return `<div class="fila"><div class="sem ${p.estado}"></div>
+      <div style="flex:1"><div class="nom">${p.nombre} ${p.centro?`<span class="tagc">· ${p.centro}</span>`:''}</div>
+      <div class="det">${p.ultJ?`Última jornada: dolor ${j.dolor}/10 · RPE ${j.rpe} · racha ${j.racha}d · fase ${j.fase}${j.sospechosa?' · ⚠ sesión exprés':''}${j.molestia?' · ⚠ molestia nueva':''}`:'Sin jornadas aún'}
+      ${p.vit?` · Vitalidad ${p.vit}/100`:''} · hace ${p.dias===0?'hoy':p.dias+'d'}</div></div></div>`;
+  }).join('')||'<div class="panel sub">Aún sin datos — cuando un paciente use la app, aparecerá aquí.</div>';
+}
+if(CFG)cargar();
+</script>
+</body>
+</html>
