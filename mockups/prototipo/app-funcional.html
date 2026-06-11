@@ -419,8 +419,26 @@ const save=()=>localStorage.setItem(K,JSON.stringify(S));
 /* ════ AVATAR SVG por etapa (placeholder D5) ════ */
 function avatarSvg(fase){
   const et=etapaDe(fase);
-  const G='<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9BE8F7"/><stop offset="1" stop-color="#2E86C1"/></linearGradient><linearGradient id="g2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#2E86C1"/><stop offset="1" stop-color="#5BD0E8"/></linearGradient></defs>';
-  const ojos=(x1,x2,y,r=4)=>`<circle cx="${x1}" cy="${y}" r="${r}" fill="#06283C"/><circle cx="${x2}" cy="${y}" r="${r}" fill="#06283C"/><circle cx="${x1+1.5}" cy="${y-1.5}" r="1.4" fill="#fff"/><circle cx="${x2+1.5}" cy="${y-1.5}" r="1.4" fill="#fff"/>`;
+  /* LÍNEA EVOLUTIVA (D5 revisada): la estética nace de tu valoración inicial.
+     Brote: tierno — paleta clara, ojos grandes. Atlas: equilibrado. Apex: atlético — paleta intensa, ojos afilados. */
+  const lin=S.aud<=40?'brote':S.aud<=70?'atlas':'apex';
+  /* 5 ELEMENTOS (decisión del dueño 2026-06-12) — la app los asigna sola en el alta */
+  const ELEM={
+    agua:  ['#9BE8F7','#2E86C1','#5BD0E8'],
+    fuego: ['#FFC371','#C0392B','#FF7E5F'],
+    rayo:  ['#FFF3A0','#B7950B','#F4D03F'],
+    hierba:['#A8E6A1','#1E8449','#58D68D'],
+    roca:  ['#D7C4A3','#7D6608','#B7950B']};
+  const elemento=S.elemento||'agua';
+  const [cA,cB,cC]=ELEM[elemento]||ELEM.agua;
+  // La línea modula la intensidad: Brote más claro y tierno, Apex más oscuro e intenso
+  const FILT={brote:'saturate(.75) brightness(1.18)',atlas:'',apex:'saturate(1.25) brightness(.88)'}[lin];
+  const G=`<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${cA}"/><stop offset="1" stop-color="${cB}"/></linearGradient><linearGradient id="g2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="${cB}"/><stop offset="1" stop-color="${cC}"/></linearGradient></defs>`;
+  const ojos=(x1,x2,y,r=4)=>{
+    if(lin==='apex') return `<path d="M${x1-r-1} ${y}l${r+2} ${-r+1} ${r} ${r-1}z" fill="#06283C"/><path d="M${x2-r+1} ${y}l${r} ${-r+1} ${r+2} ${r-1}z" fill="#06283C"/><circle cx="${x1+1}" cy="${y-1.5}" r="1.3" fill="#fff"/><circle cx="${x2+2}" cy="${y-1.5}" r="1.3" fill="#fff"/>`;
+    const rr=lin==='brote'?r+1.6:r;
+    return `<circle cx="${x1}" cy="${y}" r="${rr}" fill="#06283C"/><circle cx="${x2}" cy="${y}" r="${rr}" fill="#06283C"/><circle cx="${x1+1.5}" cy="${y-1.7}" r="${lin==='brote'?2.1:1.4}" fill="#fff"/><circle cx="${x2+1.5}" cy="${y-1.7}" r="${lin==='brote'?2.1:1.4}" fill="#fff"/>`;
+  };
   let b='';
   if(et==='Huevo'){
     const casc='<path d="M75 16C50 44 42 68 47 92a28 28 0 0 0 56 0c5-24-3-48-28-76z" fill="url(#g)"/>';
@@ -484,7 +502,7 @@ function avatarSvg(fase){
     if(sub>=5) extra+=`<circle cx="75" cy="84" r="58" fill="none" stroke="rgba(244,196,48,.5)" stroke-width="2"><animate attributeName="stroke-opacity" values=".25;.8;.25" dur="3s" repeatCount="indefinite"/></circle>`;
     if(sub>=6) extra+=`<path d="M75 22l4 7h-8z" fill="#F4C430"/><path d="M55 26l-3-9M95 26l3-9" stroke="#F4C430" stroke-width="2.5" stroke-linecap="round"/>`;
   } else if(fase>=2) extra+=`<circle cx="75" cy="90" r="44" fill="none" stroke="rgba(91,208,232,.3)" stroke-width="1.5" stroke-dasharray="2 8"/>`;
-  return `<svg width="150" height="150" viewBox="0 0 150 150" fill="none">${G}${b}${extra}</svg>`;
+  return `<svg width="150" height="150" viewBox="0 0 150 150" fill="none" style="filter:${FILT}">${G}${b}${extra}</svg>`;
 }
 
 /* ════ UI ════ */
@@ -504,7 +522,8 @@ function pintar(){
     $('saludo').innerHTML=`Kael se aletargó esperándote… pero <b style="color:var(--af-primario)">nunca se fue</b>. Hoy con 5 minutos vuelve a brillar, ${CONFIG.paciente}.`;
     $('btn-empezar').textContent='Despertar a Kael · rutina de regreso';
   } else $('btn-empezar').textContent='Empezar mi jornada';
-  $('chip-fase').textContent=`Fase ${f} · ${etapaDe(f)} · Nivel ${pr.nivel} · ${lineaDe(S.aud)}`;
+  const EMO={agua:'💧',fuego:'🔥',rayo:'⚡',hierba:'🌿',roca:'🪨'};
+  $('chip-fase').textContent=`${EMO[S.elemento||'agua']} ${(S.elemento||'agua').toUpperCase()} · Fase ${f} · ${etapaDe(f)} · Nv ${pr.nivel} · ${lineaDe(S.aud)}`;
   $('st-racha').textContent=S.racha; $('st-sesiones').textContent=S.ses; $('st-xp').textContent=S.xp;
   $('xp-detalle').textContent=`Nivel ${pr.nivel} · ${pr.dentro}/${pr.coste} XP`;
   $('xp-fill').style.width=Math.min(100,Math.round(pr.dentro/pr.coste*100))+'%';
@@ -703,6 +722,15 @@ function altaSubmit(){
         c=Math.round(+$('a-c').textContent*20/7);                  // 7 días → 20 puntos
   const cod=$('a-centro').value.trim().toUpperCase();
   S.perfil={nombre:n,zona:$('a-zona').value,centro:CONFIG.centros[cod]?cod:null}; S.aud=f+a+m+c;
+  // Sombrero Seleccionador digital: el elemento nace de tu cuerpo, no de un menú
+  S.bloques={f:f,a:a,m:m,c:c};
+  const mx=Math.max(f/30,a/30,m/20,c/20);
+  S.elemento= (m/20>=mx)?'agua'        // domina movilidad → fluidez
+            : (f/30>=mx)?'roca'        // domina fuerza → solidez
+            : (a/30>=mx)?'rayo'        // domina aeróbico → velocidad
+            : (c/20>=mx)?'hierba'      // domina constancia → crecimiento
+            : 'fuego';
+  if(S.aud<25) S.elemento='fuego';     // empezar muy abajo = la chispa que va a arder
   CONFIG.paciente=n; CONFIG.zona=S.perfil.zona; save();
   if(cod&&!CONFIG.centros[cod]) alert('Código de centro no reconocido — entras en modo individual (puedes vincularte después).');
   sync('alta',{zona:S.perfil.zona,vitalidad_provisional:S.aud,centro_intentado:cod||null});
