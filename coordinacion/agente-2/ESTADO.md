@@ -11,4 +11,5 @@
 ✅ 2026-06-10 — Riesgos y mitigaciones (5 categorías, 20 riesgos, mapa de calor) — docs/RIESGOS_Y_MITIGACIONES.md
 ✅ 2026-06-11 — KPIs de negocio (norte estrella + 17 KPIs + cuadro de mando) — docs/KPIS_NEGOCIO.md
 ✅ 2026-06-11 — Modelo de precios (clínica + paciente + Descuento Sudado + FAQ ventas) — docs/MODELO_PRECIOS.md
-✅ 2026-06-11 — Plan go-to-market (ICP, 3 fases, proceso 6 pasos, argumentos, métricas) — docs/PLAN_GO_TO_MARKET.md
+✅ 2026-06-11 — Plan go-to-market B2B2C (ICP, 3 fases, proceso 6 pasos, métricas) — docs/PLAN_GO_TO_MARKET.md
+✅ 2026-06-11 — Privacidad y RGPD (inventario datos, roles controller/processor, DPA, RLS, derechos, checklist legal) — docs/PRIVACIDAD_RGPD.md
