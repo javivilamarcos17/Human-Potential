@@ -164,6 +164,7 @@
       </div>
       <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
       <div class="toolbar">
+        <div class="tool" onclick="verPC()">🗃 PC</div>
         <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
         <div class="tool" onclick="verProgreso()">📈 Mi progreso</div>
         <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
@@ -184,6 +185,14 @@
       </div>
       <button class="cta" onclick="registrarPrueba()">Registrar mi marca real</button>
       <button class="sec" onclick="ir('home')">Hoy no — mañana sigue aquí</button>
+    </div>
+
+    <!-- PC: tu colección de formas conquistadas -->
+    <div class="scr" id="pc">
+      <div class="h1">🗃 PC</div>
+      <div class="sub">Cada forma que conquistas se guarda aquí para siempre. Al cerrar la temporada, tu Guardián completo se archivará en el PC y empezarás una nueva historia.</div>
+      <div id="pc-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"></div>
+      <button class="cta" onclick="ir('home')">Volver</button>
     </div>
 
     <!-- MI PROGRESO -->
@@ -430,7 +439,8 @@ function avatarSvg(fase){
     hierba:['#A8E6A1','#1E8449','#58D68D'],
     roca:  ['#D7C4A3','#7D6608','#B7950B']};
   const elemento=S.elemento||'agua';
-  const [cA,cB,cC]=ELEM[elemento]||ELEM.agua;
+  // SUSPENSE: el huevo no revela su elemento — paleta neutra nacarada hasta la eclosión
+  const [cA,cB,cC]=et==='Huevo'?['#E8E3D8','#8A8FA8','#CFC9BC']:(ELEM[elemento]||ELEM.agua);
   // La línea modula la intensidad: Brote más claro y tierno, Apex más oscuro e intenso
   const FILT={brote:'saturate(.75) brightness(1.18)',atlas:'',apex:'saturate(1.25) brightness(.88)'}[lin];
   const G=`<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${cA}"/><stop offset="1" stop-color="${cB}"/></linearGradient><linearGradient id="g2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="${cB}"/><stop offset="1" stop-color="${cC}"/></linearGradient></defs>`;
@@ -523,7 +533,8 @@ function pintar(){
     $('btn-empezar').textContent='Despertar a Kael · rutina de regreso';
   } else $('btn-empezar').textContent='Empezar mi jornada';
   const EMO={agua:'💧',fuego:'🔥',rayo:'⚡',hierba:'🌿',roca:'🪨'};
-  $('chip-fase').textContent=`${EMO[S.elemento||'agua']} ${(S.elemento||'agua').toUpperCase()} · Fase ${f} · ${etapaDe(f)} · Nv ${pr.nivel} · ${lineaDe(S.aud)}`;
+  const elTxt=etapaDe(f)==='Huevo'?'❔ ¿Qué habrá dentro?':`${EMO[S.elemento||'agua']} ${(S.elemento||'agua').toUpperCase()}`;
+  $('chip-fase').textContent=`${elTxt} · Fase ${f} · ${etapaDe(f)} · Nv ${pr.nivel} · ${lineaDe(S.aud)}`;
   $('st-racha').textContent=S.racha; $('st-sesiones').textContent=S.ses; $('st-xp').textContent=S.xp;
   $('xp-detalle').textContent=`Nivel ${pr.nivel} · ${pr.dentro}/${pr.coste} XP`;
   $('xp-fill').style.width=Math.min(100,Math.round(pr.dentro/pr.coste*100))+'%';
@@ -702,9 +713,18 @@ function terminarJornada(){
   const evo=$('evo-aviso');
   if(faseAhora>faseAntes){evo.style.display='block';evo.innerHTML=`✨ <b>¡Kael ha evolucionado!</b> Fase ${faseAntes} → <b>Fase ${faseAhora} (${etapaDe(faseAhora)})</b>. Esto no lo regala la app: lo has ganado tú.`;
     $('celebra-ava').innerHTML=avatarSvg(faseAhora);
-    $('celebra-txt').textContent=etapaDe(faseAhora)!==etapaDe(faseAntes)
+    const eclosion=etapaDe(faseAntes)==='Huevo'&&etapaDe(faseAhora)!=='Huevo';
+    $('celebra-txt').textContent=eclosion
+      ?`🥚→ ¡ECLOSIÓN! Tu elemento es… ${({agua:'💧 AGUA',fuego:'🔥 FUEGO',rayo:'⚡ RAYO',hierba:'🌿 HIERBA',roca:'🪨 ROCA'})[S.elemento||'agua']}. Tu cuerpo lo eligió, ${CONFIG.paciente} — y ahora crece contigo.`
+      :etapaDe(faseAhora)!==etapaDe(faseAntes)
       ?`${etapaDe(faseAntes)} → ${etapaDe(faseAhora)}. Una etapa entera conquistada, ${CONFIG.paciente}.`
       :`Fase ${faseAhora} de 30 · ${etapaDe(faseAhora)}. Lo has sudado tú.`;
+    // PC: cada forma de etapa conquistada se archiva en tu colección
+    if(etapaDe(faseAhora)!==etapaDe(faseAntes)){
+      S.pc=S.pc||[];
+      S.pc.push({fase:faseAhora,etapa:etapaDe(faseAhora),elemento:S.elemento,aud:S.aud,fecha:hoyISO()});
+      save();
+    }
     $('celebra').style.display='block';}
   else evo.style.display='none';
   document.querySelectorAll('.ej').forEach(e=>e.classList.remove('ok'));$('btn-rutina').disabled=true;$('molestia').checked=false;
@@ -736,6 +756,20 @@ function altaSubmit(){
   sync('alta',{zona:S.perfil.zona,vitalidad_provisional:S.aud,centro_intentado:cod||null});
   alert(`Tu Vitalidad inicial: ${S.aud}/100\n(Fuerza ${f}/30 · Aeróbico ${a}/30 · Movilidad ${m}/20 · Constancia ${c}/20)\n\nTu huevo ya late. Las pruebas reales de tu primera semana afinarán este número — y de ahí nacerá tu Guardián.`);
   pintar(); ir('home');
+}
+function verPC(){
+  const col=S.pc||[];
+  $('pc-grid').innerHTML=col.length?col.map(it=>{
+    const guardAud=S.aud, guardEl=S.elemento;        // render con los datos de la captura
+    S.aud=it.aud; S.elemento=it.elemento;
+    const svg=avatarSvg(it.fase).replace('width="150" height="150"','width="110" height="110"');
+    S.aud=guardAud; S.elemento=guardEl;
+    return `<div style="background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-m);padding:10px;text-align:center">
+      ${svg}<div style="font-weight:700;font-size:13px;margin-top:4px">${it.etapa}</div>
+      <div class="sub" style="font-size:11px">Fase ${it.fase} · ${it.fecha}</div></div>`;
+  }).join('')
+  :'<div class="sub" style="grid-column:1/3;text-align:center;padding:20px">Aún vacío. Tu primera forma se archivará aquí cuando tu huevo eclosione. 🥚</div>';
+  ir('pc');
 }
 function verProgreso(){
   const u=S.hist.slice(-14);
