@@ -77,7 +77,13 @@
       "Bash(git commit -m 'feat\\(copy\\): copy del panel de clinica B2B \\(semaforos, ficha, alertas\\) *)",
       "PowerShell(git add docs/GUION_DEMO_CLINICAS.md coordinacion/agente-2/ESTADO.md)",
       "PowerShell(git commit -m \"docs: guion demo clinicas \\(4 partes, cierres por reaccion, errores a evitar\\)\")",
-      "Bash(git commit -m 'feat\\(copy\\): copy de anamnesis con banderas rojas y transicion a tests *)"
+      "Bash(git commit -m 'feat\\(copy\\): copy de anamnesis con banderas rojas y transicion a tests *)",
+      "PowerShell(git add docs/ONBOARDING_CLINICA.md coordinacion/agente-2/ESTADO.md)",
+      "PowerShell(git commit -m \"docs: onboarding clinica nueva \\(semana 0-4, criterios activacion, senales peligro\\)\")",
+      "Bash(git commit -m 'feat\\(copy\\): plantillas de email transaccional y relacional *)",
+      "Bash(git commit -m 'feat\\(copy\\): ficha App Store y Google Play *)",
+      "PowerShell(git add docs/FAQ_PACIENTES.md coordinacion/agente-2/ESTADO.md)",
+      "PowerShell(git commit -m \"docs: FAQ pacientes \\(tono empatia clinica, primeros pasos, guardian, triaje, privacidad\\)\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\jabiv\\Desktop\\Human Potential\\docs\\diseño"

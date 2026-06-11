@@ -8,7 +8,16 @@
 > Persona canónica: Javi · MovePlus · Dra. Elena Ruiz · Kael (Agua).
 
 ## ▶ EN CURSO
-- **Crea `docs/diseño/copy-panel-clinica.md`** — los textos del panel del fisio (lado B2B):
+- **Crea `docs/diseño/lexico-marca.md`** — el diccionario oficial de términos de la marca:
+  Guardián, Auditoría de Vitalidad, Descuento Sudado, Código de Honor, Sombrero Seleccionador,
+  Tarjeta Épica, Retos Maestros, la Trinidad, arquetipos, nombres de las 6 etapas mayores...
+  Para cada término: nombre EXACTO oficial (con mayúsculas definidas), qué es en una frase,
+  cómo se usa en la app y qué NO llamarlo (sinónimos prohibidos). Revisa tus 6 copys ya
+  entregados y anota al final cualquier inconsistencia de nombres que detectes entre ellos.
+  Es la herramienta para que TODO el producto hable igual. SOLO ese archivo.
+
+## ⬜ ARCHIVADO (ya entregadas)
+- **`docs/diseño/copy-panel-clinica.md`** — los textos del panel del fisio (lado B2B):
   etiquetas y descripciones de los semáforos (rojo/ámbar/verde), textos de la ficha del
   paciente, avisos de alerta ("Javi reportó una molestia nueva tras la sesión de hoy"),
   estados vacíos del panel y tooltips. Profesional y claro (el lector es un sanitario, no
