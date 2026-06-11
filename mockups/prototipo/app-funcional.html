@@ -462,9 +462,9 @@ function pintar(){
   document.querySelectorAll('.cfg-fisio').forEach(e=>e.textContent=CONFIG.fisio);
   document.querySelectorAll('.cfg-clinica').forEach(e=>e.textContent=CONFIG.clinica);
   document.querySelectorAll('.cfg-zona').forEach(e=>e.textContent=CONFIG.zona);
-  const pr=pruebaPendiente(), ec=$('eclosion');
-  if(pr){ec.style.display='block';
-    $('ec-sub').textContent='Prueba '+(S.pruebasHechas.length+1)+'/'+CONFIG.pruebas.length+' · '+pr.titulo+' · +15 XP — toca para hacerla';}
+  const prx=pruebaPendiente(), ec=$('eclosion');
+  if(prx){ec.style.display='block';
+    $('ec-sub').textContent='Prueba '+(S.pruebasHechas.length+1)+'/'+CONFIG.pruebas.length+' · '+prx.titulo+' · +15 XP — toca para hacerla';}
   else if(S.pruebasHechas&&S.pruebasHechas.length>=CONFIG.pruebas.length){ec.style.display='none';}
   else ec.style.display='none';
   // Bloque del centro (B2B2C): sus actividades dentro de la app del cliente
