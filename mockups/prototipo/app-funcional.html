@@ -273,7 +273,8 @@
     <div style="margin-top:120px;animation:resp 3s ease-in-out infinite" id="celebra-ava"></div>
     <div style="font-family:var(--af-font-display);font-weight:900;font-size:30px;color:#F4C430;margin-top:14px">¡EVOLUCIÓN!</div>
     <div id="celebra-txt" style="color:var(--af-texto);font-size:15px;margin-top:8px;padding:0 30px;line-height:1.5"></div>
-    <div style="color:var(--af-texto-suave);font-size:12px;margin-top:22px">toca para continuar</div>
+    <button onclick="event.stopPropagation();tarjetaEpica()" style="margin-top:18px;font-family:var(--af-font-display);font-weight:800;font-size:14px;color:#062018;background:linear-gradient(135deg,#F4C430,#E0A800);border:0;border-radius:12px;padding:12px 22px;cursor:pointer">🎴 Compartir este momento</button>
+    <div style="color:var(--af-texto-suave);font-size:12px;margin-top:14px">toca fuera para continuar</div>
   </div>
 </div>
 <script>
@@ -462,9 +463,20 @@ function avatarSvg(fase){
 /* ════ UI ════ */
 const $=id=>document.getElementById(id);
 function ir(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');}
+function diasSinVenir(){
+  if(!S.ultDia) return 0;
+  return Math.max(0,Math.round((new Date(hoyISO())-new Date(S.ultDia))/86400000)-1);
+}
 function pintar(){
   const p={...S}, f=faseDesde(p), pr=progresoNivel(S.xp);
+  const gap=diasSinVenir();
+  // Re-enganche sin culpa: el Guardián se aletarga, nunca muere — y te recibe, no te riñe
   $('ava-svg').innerHTML=avatarSvg(f);
+  $('ava-svg').style.filter=gap>=2?'grayscale(.75) brightness(.65)':'';
+  if(gap>=2&&!S.hechoHoy){
+    $('saludo').innerHTML=`Kael se aletargó esperándote… pero <b style="color:var(--af-primario)">nunca se fue</b>. Hoy con 5 minutos vuelve a brillar, ${CONFIG.paciente}.`;
+    $('btn-empezar').textContent='Despertar a Kael · rutina de regreso';
+  } else $('btn-empezar').textContent='Empezar mi jornada';
   $('chip-fase').textContent=`Fase ${f} · ${etapaDe(f)} · Nivel ${pr.nivel} · ${lineaDe(S.aud)}`;
   $('st-racha').textContent=S.racha; $('st-sesiones').textContent=S.ses; $('st-xp').textContent=S.xp;
   $('xp-detalle').textContent=`Nivel ${pr.nivel} · ${pr.dentro}/${pr.coste} XP`;
@@ -473,7 +485,7 @@ function pintar(){
   const hecho=S.hechoHoy && S.ultDia===hoyISO();
   $('hecho-hoy').style.display=hecho?'block':'none';
   $('btn-empezar').style.display=hecho?'none':'block';
-  $('saludo').textContent=hecho?`Hasta mañana, ${CONFIG.paciente}.`:(S.racha>0?`${S.racha} días seguidos, ${CONFIG.paciente}. Kael lo nota.`:`Tu Guardián te espera, ${CONFIG.paciente}.`);
+  if(gap<2||hecho) $('saludo').textContent=hecho?`Hasta mañana, ${CONFIG.paciente}.`:(S.racha>0?`${S.racha} días seguidos, ${CONFIG.paciente}. Kael lo nota.`:`Tu Guardián te espera, ${CONFIG.paciente}.`);
   document.querySelectorAll('.cfg-nombre').forEach(e=>e.textContent=CONFIG.paciente);
   document.querySelectorAll('.cfg-fisio').forEach(e=>e.textContent=CONFIG.fisio);
   document.querySelectorAll('.cfg-clinica').forEach(e=>e.textContent=CONFIG.clinica);
@@ -518,6 +530,8 @@ function decidirRutina(){
   // dolor medio no baja en 14 días → estancamiento
   const v=S.hist.slice(-14), estancado=v.length>=14 && med(v.slice(-7).map(x=>x.d))>=med(v.slice(0,7).map(x=>x.d));
 
+  if(diasSinVenir()>=2) return {pack:CONFIG.packSuave, titulo:'Rutina de regreso',
+    motivo:`${diasSinVenir()} días fuera no borran lo construido. Hoy solo despertamos el cuerpo — mañana seguimos donde lo dejaste.`, vender:false};
   if(S.dolorHoy>=8) return {pack:CONFIG.packSuave, titulo:'Rutina suave de hoy',
     motivo:`Dolor alto hoy. Bajamos la carga para proteger tu ${CONFIG.zona} — moverse suave también es avanzar.`, vender:true};
   if(molestiaAyer) return {pack:CONFIG.packSuave, titulo:'Rutina suave de hoy',
@@ -569,7 +583,10 @@ function cerrarTriaje(){
   const dec=decidirRutina();
   // El día a día manda: la rutina se recorta al tiempo real disponible
   const min=S.tiempoHoy||15, nEj=min<=5?Math.min(2,dec.pack.ejercicios.length):min<=15?Math.min(3,dec.pack.ejercicios.length):dec.pack.ejercicios.length;
-  const pack={nombre:dec.pack.nombre,ejercicios:dec.pack.ejercicios.slice(0,nEj)};
+  // Variedad: el punto de partida rota cada día — la misma semana nunca se repite igual
+  const rot=new Date(hoyISO()).getDate()%dec.pack.ejercicios.length;
+  const rotados=dec.pack.ejercicios.slice(rot).concat(dec.pack.ejercicios.slice(0,rot));
+  const pack={nombre:dec.pack.nombre,ejercicios:rotados.slice(0,nEj)};
   if(nEj<dec.pack.ejercicios.length) dec.motivo=(dec.motivo?dec.motivo+' ':'')+`Versión de ${min} min: ${nEj} ejercicios esenciales — donde estés, sin material raro.`;
   $('rut-titulo').textContent=dec.titulo;
   $('rut-sub').innerHTML=(dec.motivo?`<span style="color:var(--af-agua)">🤖 ${dec.motivo}</span><br>`:'')
