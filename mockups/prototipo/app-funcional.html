@@ -156,6 +156,7 @@
       </div>
       <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
       <div class="toolbar">
+        <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
         <div class="tool" onclick="verProgreso()">📈 Mi progreso</div>
         <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
         <div class="tool" onclick="diaSiguiente()">⏭ Simular día</div>
@@ -564,6 +565,33 @@ function verProgreso(){
     (d1!==null?`<div class="fila"><span>${d2<d1?'✅ Tu dolor está BAJANDO':'Tu dolor aún no cede'}</span><b>${d1} → ${d2}</b></div>`:'')+
     (d1!==null&&d2>=d1?`<div class="fila"><span style="color:var(--af-dorado)">💆 Quizá unas manos expertas encuentren lo que falta → <a href="upselling.html" style="color:var(--af-dorado)">sesión presencial</a></span><b></b></div>`:'');
   ir('progreso');
+}
+async function tarjetaEpica(){
+  const f=faseDesde({...S}), niv=nivelDesdeXp(S.xp);
+  const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;const x=cv.getContext('2d');
+  const bg=x.createLinearGradient(0,0,0,1920);bg.addColorStop(0,'#0A1626');bg.addColorStop(.55,'#103a5c');bg.addColorStop(1,'#0d4a45');
+  x.fillStyle=bg;x.fillRect(0,0,1080,1920);
+  x.fillStyle='rgba(244,196,48,.12)';x.beginPath();x.arc(540,700,430,0,7);x.fill();
+  // avatar SVG -> imagen
+  const svg=avatarSvg(f).replace('width="150" height="150"','width="600" height="600"');
+  const img=new Image();img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svg)));
+  await new Promise(r=>img.onload=r);
+  x.drawImage(img,240,360,600,600);
+  x.textAlign='center';x.fillStyle='#F2F6FA';
+  x.font='900 92px Nunito,sans-serif';x.fillText(CONFIG.paciente.toUpperCase(),540,220);
+  x.fillStyle='#5BD0E8';x.font='700 52px Inter,sans-serif';x.fillText('Kael, el Fluido · '+etapaDe(f),540,300);
+  x.fillStyle='#F4C430';x.font='900 110px Nunito,sans-serif';x.fillText('NIVEL '+niv,540,1130);
+  x.fillStyle='#F2F6FA';x.font='700 58px Inter,sans-serif';x.fillText('🔥 '+S.racha+' días seguidos · '+S.ses+' sesiones',540,1240);
+  x.fillStyle='#8DA2B8';x.font='600 46px Inter,sans-serif';
+  x.fillText('Cada fase es una victoria real',540,1390);x.fillText('sobre mi propio cuerpo.',540,1455);
+  const c=miCentro();x.fillStyle='#2ECC8F';x.font='800 50px Nunito,sans-serif';
+  x.fillText('ANTI FRÁGIL'+(c?' × '+c.nombre.toUpperCase():''),540,1700);
+  if(S.perfil&&S.perfil.centro){x.fillStyle='#8DA2B8';x.font='600 40px Inter,sans-serif';x.fillText('Únete con mi código: '+S.perfil.centro,540,1775);}
+  cv.toBlob(async bl=>{
+    const file=new File([bl],'tarjeta-epica.png',{type:'image/png'});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Mi Guardián Anti Frágil'});return;}catch(e){}}
+    const a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='tarjeta-epica.png';a.click();
+  });
 }
 function enviarResumen(){
   const u=S.hist.slice(-7);
