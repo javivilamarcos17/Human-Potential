@@ -472,7 +472,19 @@ function avatarSvg(fase){
     <path d="M56 82l9 7 10-9 10 9 9-7" stroke="#F4C430" stroke-width="3" fill="none"/>
     <path d="M60 128l-9 22 14-9M90 128l9 22-14-9" fill="#2E86C1"/>
     <circle cx="75" cy="80" r="62" fill="none" stroke="#F4C430" stroke-width="2.5" opacity=".7"><animate attributeName="r" values="58;64;58" dur="4.5s" repeatCount="indefinite"/></circle>`;
-  return `<svg width="150" height="150" viewBox="0 0 150 150" fill="none">${G}${b}</svg>`;
+  // SUB-FASES: dentro de cada etapa, cada fase añade poder visible (el avatar cambia casi cada semana)
+  const ETI={'Huevo':1,'Cría':5,'Joven':10,'Guardián':14,'Alado':21,'Deidad':28};
+  const sub=fase-(ETI[et]||1);
+  let extra='';
+  if(et!=='Huevo'){
+    if(sub>=1) extra+=`<circle cx="75" cy="84" r="50" fill="none" stroke="rgba(91,208,232,.35)" stroke-width="1.5" stroke-dasharray="3 10"/>`;
+    if(sub>=2) extra+=`<path d="M60 100l6 4 9-5 9 5 6-4" stroke="#9BE8F7" stroke-width="2.5" fill="none" opacity=".9"/>`;
+    if(sub>=3) extra+=`<g fill="#9BE8F7"><circle cx="32" cy="50" r="2.5"><animate attributeName="cy" values="50;40;50" dur="3.2s" repeatCount="indefinite"/></circle><circle cx="118" cy="60" r="2"><animate attributeName="cy" values="60;48;60" dur="2.7s" repeatCount="indefinite"/></circle><circle cx="48" cy="120" r="2"><animate attributeName="cy" values="120;108;120" dur="3.8s" repeatCount="indefinite"/></circle></g>`;
+    if(sub>=4) extra+=`<path d="M48 36l-8-10M102 36l8-10" stroke="#F4C430" stroke-width="3" stroke-linecap="round"/>`;
+    if(sub>=5) extra+=`<circle cx="75" cy="84" r="58" fill="none" stroke="rgba(244,196,48,.5)" stroke-width="2"><animate attributeName="stroke-opacity" values=".25;.8;.25" dur="3s" repeatCount="indefinite"/></circle>`;
+    if(sub>=6) extra+=`<path d="M75 22l4 7h-8z" fill="#F4C430"/><path d="M55 26l-3-9M95 26l3-9" stroke="#F4C430" stroke-width="2.5" stroke-linecap="round"/>`;
+  } else if(fase>=2) extra+=`<circle cx="75" cy="90" r="44" fill="none" stroke="rgba(91,208,232,.3)" stroke-width="1.5" stroke-dasharray="2 8"/>`;
+  return `<svg width="150" height="150" viewBox="0 0 150 150" fill="none">${G}${b}${extra}</svg>`;
 }
 
 /* ════ UI ════ */
@@ -546,6 +558,12 @@ function decidirRutina(){
   // dolor medio no baja en 14 días → estancamiento
   const v=S.hist.slice(-14), estancado=v.length>=14 && med(v.slice(-7).map(x=>x.d))>=med(v.slice(0,7).map(x=>x.d));
 
+  // El guía sanitario escucha tu vida: lo que respondes cambia lo que te propone
+  const vida=(S.vida&&S.vida[hoyISO()])||{};
+  if(vida.sueno&&vida.sueno.indexOf('Mal')>=0) return {pack:CONFIG.packSuave, titulo:'Hoy, regenerar',
+    motivo:'Dormiste mal — forzar hoy sería robarle a mañana. Movilidad suave y a recuperar: el descanso también entrena.', vender:false};
+  if(vida.estres&&vida.estres.indexOf('Alto')>=0) return {pack:CONFIG.packSuave, titulo:'Hoy, soltar tensión',
+    motivo:'Estrés alto. Esta rutina baja revoluciones: respira en cada ejercicio — tu espalda y tu cabeza lo agradecerán.', vender:false};
   if(diasSinVenir()>=2) return {pack:CONFIG.packSuave, titulo:'Rutina de regreso',
     motivo:`${diasSinVenir()} días fuera no borran lo construido. Hoy solo despertamos el cuerpo — mañana seguimos donde lo dejaste.`, vender:false};
   if(S.dolorHoy>=8) return {pack:CONFIG.packSuave, titulo:'Rutina suave de hoy',
