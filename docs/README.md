@@ -9,6 +9,7 @@
 - [ROADMAP.md](ROADMAP.md) — plan de creación por fases y sprints.
 
 ## 🎨 Diseño de producto (`diseño/`)
+- ⭐ [arquitectura-modular.md](diseño/arquitectura-modular.md) — **el Esquema Maestro del MVP (D8-D11): registro dual, Temporadas, QR presencial, low-tech, servicios del centro.**
 - ⭐ [experiencia-usuario.md](diseño/experiencia-usuario.md) — **UX/visual/personalización: la prioridad #1 del MVP.**
 - ⭐ [personalizacion-y-detalles.md](diseño/personalizacion-y-detalles.md) — autoridad clínica + máxima personalización.
 - [onboarding-registro.md](diseño/onboarding-registro.md) — embudo de entrada.

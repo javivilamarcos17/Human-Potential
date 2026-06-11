@@ -10,6 +10,13 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Esquema Maestro modular (D8-D11) + ráfaga final de agentes (2026-06-11)
+- **Decisiones D8-D11** (SYSTEM_VISION §7): registro dual B2C/B2B2C (Código de Centro, ej. LIDOMARE26), gamificación por **Temporadas** (Season 0 simple + Vitrina de Trofeos), bifurcación diaria **presencial (QR en recepción)/casa**, módulo clínico low-tech con placeholders medibles. Detalle: `docs/diseño/arquitectura-modular.md` + **migración 0005** (incluye `servicios_centro` y equivalencias presencial↔casa para recomendar las actividades de Lidomare).
+- **Agente 1**: `moodboard-avatares.md` (estética "Pokémon moderno") + `mockups/prototipo/evolucion.html` (galería de evolución; QA pendiente).
+- **Agente 2 (track completo)**: CHECKLIST_LANZAMIENTO · GUION_DEMO_CLINICAS · ONBOARDING_CLINICA · FAQ_PACIENTES. En curso: AUDITORIA_COHERENCIA.
+- **Agente 3 (6 copys)**: microcopy-app · notificaciones · estados · tarjetas épicas · panel clínica · anamnesis · emails · ficha de tiendas. En curso: lexico-marca.
+- Relevo de organizador documentado en `coordinacion/TABLERO.md` (sección ⚡ RELEVO).
+
 ### Añadido — Sistema de diseño, prototipos premium y cierre del track de negocio (2026-06-11)
 - **Sistema de diseño**: `docs/diseño/sistema-diseno.md` + `mockups/prototipo/tokens.css` (tabla maestra de la estética; cambiarla en el futuro = un archivo) + tema Flutter espejo (`app_theme.dart`, paleta oscura premium).
 - **Listón visual oficial**: `mockups/prototipo/board-premium.html` (board del paciente con avatar SVG, aurora animada, cristal). Dirección de arte fijada: **"Pokémon moderno"**, arco huevo→tipado→mono→guerrero→épico.
