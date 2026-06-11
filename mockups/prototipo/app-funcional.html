@@ -212,6 +212,10 @@
         <input type="range" min="1" max="10" value="7" oninput="energia(this.value)">
         <div class="scale"><span>Agotado</span><span>A tope</span></div>
       </div>
+      <div class="panel" id="pd-panel">
+        <div class="sub" id="pd-q"></div>
+        <div class="toolbar" style="margin-top:8px" id="pd-ops"></div>
+      </div>
       <div class="panel">
         <div class="sub">¿Cuánto tiempo real tienes hoy?</div>
         <div class="toolbar" style="margin-top:8px">
@@ -293,6 +297,17 @@ const CONFIG = {
      jornada y prueba se guardará también en tu nube (tabla piloto_eventos, migración 0007).
      Vacío = la app funciona 100% local, como hasta ahora. */
   supabase: { url:'', anonKey:'' },
+  /* CONOCER AL CLIENTE: 1 micro-pregunta al día en el triaje (1 toque). Rota sola.
+     Cada respuesta construye su perfil de vida — la información es poder (y cuidado). */
+  preguntasDia: [
+    {id:'sueno',   q:'¿Cómo dormiste?',                 ops:['😴 Mal','😐 Regular','😊 Bien']},
+    {id:'sentado', q:'¿Cuántas horas pasarás sentado hoy?', ops:['<4h','4-8h','8h+']},
+    {id:'estres',  q:'¿Nivel de estrés hoy?',           ops:['🟢 Bajo','🟡 Medio','🔴 Alto']},
+    {id:'agua',    q:'¿Bebiste suficiente agua ayer?',  ops:['Sí','Más o menos','No']},
+    {id:'animo',   q:'¿Ánimo para hoy?',                ops:['💪 A tope','😐 Normal','😞 Flojo']},
+    {id:'comida',  q:'¿Cómo comiste ayer?',             ops:['🥗 Bien','😐 Normal','🍔 Mal']},
+    {id:'tiempo_libre', q:'¿Hoy es día de…?',           ops:['🏢 Trabajo','🏠 Casa','🌴 Libre']},
+  ],
   /* SEMANA DE ECLOSIÓN: 7 micro-pruebas reales (1/día) que afinan la Vitalidad
      provisional del alta. El Guardián nace del trabajo, no de un formulario.
      bloque: f(fuerza,0-30) a(aeróbico,0-30) m(movilidad,0-20) c(constancia,0-20) */
@@ -485,6 +500,7 @@ function pintar(){
   const hecho=S.hechoHoy && S.ultDia===hoyISO();
   $('hecho-hoy').style.display=hecho?'block':'none';
   $('btn-empezar').style.display=hecho?'none':'block';
+  pintarPreguntaDia();
   if(gap<2||hecho) $('saludo').textContent=hecho?`Hasta mañana, ${CONFIG.paciente}.`:(S.racha>0?`${S.racha} días seguidos, ${CONFIG.paciente}. Kael lo nota.`:`Tu Guardián te espera, ${CONFIG.paciente}.`);
   document.querySelectorAll('.cfg-nombre').forEach(e=>e.textContent=CONFIG.paciente);
   document.querySelectorAll('.cfg-fisio').forEach(e=>e.textContent=CONFIG.fisio);
@@ -575,6 +591,17 @@ function registrarPrueba(){
   const fin=S.pruebasHechas.length>=CONFIG.pruebas.length;
   alert((fin?'✨ SEMANA DE ECLOSION COMPLETADA.\n':'')+'Marca registrada: '+v+' '+pr.unidad+' → +15 XP.\nVitalidad afinada: '+S.aud+'/100'+(fin?'\n\nTu valoracion ya es REAL. Tu Guardian crece sobre cimientos verdaderos.':''));
   pintar(); ir('home');
+}
+function pintarPreguntaDia(){
+  const i=new Date(hoyISO()).getDate()%CONFIG.preguntasDia.length, pd=CONFIG.preguntasDia[i];
+  $('pd-q').textContent=pd.q;
+  $('pd-ops').innerHTML=pd.ops.map(o=>`<div class="tool" onclick="respDia('${pd.id}','${o.replace(/'/g,'')}',this)">${o}</div>`).join('');
+}
+function respDia(id,val,el){
+  S.vida=S.vida||{};S.vida[hoyISO()]={[id]:val};save();
+  el.parentNode.querySelectorAll('.tool').forEach(t=>{t.style.borderColor='';t.style.color='';});
+  el.style.borderColor='var(--af-primario)';el.style.color='var(--af-texto)';
+  sync('vida',{pregunta:id,respuesta:val});
 }
 function tiempo(el){S.tiempoHoy=+el.dataset.min;
   document.querySelectorAll('.t-tiempo').forEach(t=>{t.style.borderColor='';t.style.color='';});
