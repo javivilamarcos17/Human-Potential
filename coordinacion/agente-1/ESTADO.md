@@ -13,3 +13,4 @@
 ✅ 2026-06-11 — Moodboard avatares: briefing ilustrador 18 piezas (6 etapas × 3 arquetipos), paleta, sensaciones, sistema capas L1-L6, estado aletargado, legendario, checklist — docs/diseño/moodboard-avatares.md
 ✅ 2026-06-11 — Galería evolución Agua (V1 galería 6 etapas + V2 celebración Fa15→16 + V3 re-Auditoría wow 62→67), aurora, SVG avatar, partículas CSS — mockups/prototipo/evolucion.html
 ✅ 2026-06-11 — index.html elevado a v0.3 premium: aurora 4 screens, Kael SVG (S4+S8), halo rings, float, glassmorphism backdrop-filter, logo SVG — mockups/prototipo/index.html
+✅ 2026-06-11 — index.html v0.3 completado al listón: aurora en las 8 pantallas (aurora-warm S2/S5/S6/S7), Kael SVG completo (mejillas+armadura+gotas animadas), XP shine, av-glow-pulse, backdrop-filter cards, z-index CSS — mockups/prototipo/index.html

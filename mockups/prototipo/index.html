@@ -19,7 +19,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Anti Frágil · Prototipo v0.2</title>
+<title>Anti Frágil · Prototipo v0.3</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════
@@ -165,12 +165,23 @@ body{
   border-radius:18px;padding:20px;
 }
 /* ── aurora background (dark screens) ── */
-.aurora-bg{position:absolute;inset:0;overflow:hidden;filter:blur(72px);opacity:.45;pointer-events:none;z-index:0}
+.aurora-bg{position:absolute;inset:0;overflow:hidden;filter:blur(72px);opacity:.55;pointer-events:none;z-index:0}
 .aurora-bg i{position:absolute;border-radius:50%}
 .aurora-bg i:nth-child(1){width:440px;height:440px;left:-140px;top:-90px;background:#0d3a5c;animation:afl 11s ease-in-out infinite}
 .aurora-bg i:nth-child(2){width:380px;height:380px;right:-130px;top:170px;background:#083a4a;animation:afl 14s ease-in-out infinite reverse}
 .aurora-bg i:nth-child(3){width:320px;height:320px;left:20px;bottom:-90px;background:#0d1f40;animation:afl 9s ease-in-out infinite}
 @keyframes afl{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.1)}}
+/* ── aurora warm (pantallas calido) ── */
+.aurora-warm{position:absolute;inset:0;overflow:hidden;filter:blur(90px);opacity:.16;pointer-events:none;z-index:0}
+.aurora-warm i{position:absolute;border-radius:50%}
+.aurora-warm i:nth-child(1){width:440px;height:440px;left:-160px;top:-100px;background:#0d5a3a;animation:afl 11s ease-in-out infinite}
+.aurora-warm i:nth-child(2){width:380px;height:380px;right:-130px;top:180px;background:#083a5a;animation:afl 14s ease-in-out infinite reverse}
+.aurora-warm i:nth-child(3){width:320px;height:320px;left:20px;bottom:-80px;background:#0d2a3a;animation:afl 9s ease-in-out infinite}
+/* ── glow pulse (avatar stage) ── */
+.av-glow-pulse{position:absolute;inset:28px;border-radius:50%;
+  background:radial-gradient(circle,rgba(91,208,232,.28) 0%,rgba(46,204,143,.10) 45%,transparent 70%);
+  animation:avpulse 4.5s ease-in-out infinite;pointer-events:none;}
+@keyframes avpulse{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
 /* ── avatar float ── */
 .av-float{animation:avfl 5s ease-in-out infinite}
 @keyframes avfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
@@ -289,8 +300,8 @@ input[type=range]::-webkit-slider-thumb{
 .score-big .pts{font-size:20px;font-weight:700;color:var(--gris);margin-left:4px;}
 .score-context{font-size:13px;color:var(--gris);text-align:right;line-height:1.5;}
 .audit-list{padding:0 28px;display:flex;flex-direction:column;gap:12px;}
-.ab{background:#fff;border-radius:16px;padding:18px 20px;
-    box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.ab{background:rgba(255,255,255,.88);border-radius:16px;padding:18px 20px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);backdrop-filter:blur(6px);}
 .ab-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
 .ab-left{}
 .ab-name{font-size:14px;font-weight:600;color:var(--azul);}
@@ -420,7 +431,14 @@ input[type=range]::-webkit-slider-thumb{
   height:100%;
   background:linear-gradient(90deg,var(--verde),var(--verde-d));
   border-radius:4px;transition:width 1.2s ease;
+  overflow:hidden;position:relative;
 }
+.xp-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);
+  animation:xpshine 2.8s ease-in-out infinite;
+}
+@keyframes xpshine{0%{transform:translateX(-110%)}60%,100%{transform:translateX(110%)}}
 .xp-next{font-size:12px;color:var(--gris);margin-top:5px;text-align:right;}
 
 /* Dolor trend mini-widget */
@@ -479,8 +497,8 @@ input[type=range]::-webkit-slider-thumb{
 #s5 .hdr{padding:20px 28px 0;}
 #s5 .h2{color:var(--azul);}
 .triaje-body{padding:0 28px;display:flex;flex-direction:column;gap:16px;flex:1;}
-.t-card{background:#fff;border-radius:20px;padding:22px;
-        box-shadow:0 2px 12px rgba(0,0,0,.07);}
+.t-card{background:rgba(255,255,255,.88);border-radius:20px;padding:22px;
+        box-shadow:0 2px 12px rgba(0,0,0,.07);backdrop-filter:blur(6px);}
 .t-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
 .t-name{font-size:15px;font-weight:600;color:var(--azul);margin-bottom:3px;}
 .t-hint{font-size:13px;color:var(--gris);}
@@ -566,8 +584,8 @@ input[type=range]::-webkit-slider-thumb{
 #s7 .hdr{padding:20px 28px 0;}
 #s7 .h2{color:var(--azul);}
 .rpe-body{padding:0 28px;display:flex;flex-direction:column;gap:14px;flex:1;}
-.rpe-card{background:#fff;border-radius:20px;padding:22px;
-          box-shadow:0 2px 12px rgba(0,0,0,.07);}
+.rpe-card{background:rgba(255,255,255,.88);border-radius:20px;padding:22px;
+          box-shadow:0 2px 12px rgba(0,0,0,.07);backdrop-filter:blur(6px);}
 .rpe-label{font-size:15px;font-weight:600;color:var(--azul);margin-bottom:3px;}
 .rpe-hint{font-size:13px;color:var(--gris);margin-bottom:14px;}
 .rpe-grid{
@@ -747,6 +765,7 @@ input[type=range]::-webkit-slider-thumb{
          S2 · AUDITORÍA DE VITALIDAD
     ═══════════════════════════════════════════════ -->
     <div class="screen" id="s2">
+      <div class="aurora-warm"><i></i><i></i><i></i></div>
       <div class="hdr">
         <button class="back back-dark" onclick="go(1)">←</button>
         <h2 class="h2">Auditoría de Vitalidad</h2>
@@ -920,6 +939,7 @@ input[type=range]::-webkit-slider-thumb{
 
         <div class="av-glow">
           <div class="av-ring-wrap">
+            <div class="av-glow-pulse"></div>
             <div class="av-box av-float" style="font-size:0">
               <!-- Kael, el Fluido — placeholder SVG (arte final: ilustrador humano, D5) -->
               <svg width="118" height="118" viewBox="0 0 168 168" fill="none">
@@ -943,6 +963,12 @@ input[type=range]::-webkit-slider-thumb{
                 <circle cx="65" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
                 <circle cx="109" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
                 <path d="M74 100 Q84 110 94 100" stroke="#0B2438" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+                <ellipse cx="52" cy="94" rx="6.5" ry="4.5" fill="#FF9DB0" opacity=".55"/>
+                <ellipse cx="116" cy="94" rx="6.5" ry="4.5" fill="#FF9DB0" opacity=".55"/>
+                <path d="M46 128 C58 142 110 142 122 128 C116 146 102 152 84 152 C66 152 52 146 46 128 Z" fill="#1E5F8C" opacity=".85"/>
+                <circle cx="84" cy="140" r="6" fill="#F4C430"/>
+                <circle cx="20" cy="40" r="4" fill="#7FDCEF" opacity=".7"><animate attributeName="cy" values="40;30;40" dur="3.4s" repeatCount="indefinite"/></circle>
+                <circle cx="150" cy="50" r="3" fill="#7FDCEF" opacity=".6"><animate attributeName="cy" values="50;42;50" dur="2.8s" repeatCount="indefinite"/></circle>
               </svg>
               <div class="av-phase-tag">Fase 16 · Guardián Pleno</div>
             </div>
@@ -1024,6 +1050,7 @@ input[type=range]::-webkit-slider-thumb{
          S5 · TRIAJE DIARIO
     ═══════════════════════════════════════════════ -->
     <div class="screen" id="s5">
+      <div class="aurora-warm"><i></i><i></i><i></i></div>
       <div class="hdr">
         <button class="back back-dark" onclick="go(4)">←</button>
         <h2 class="h2">Triaje de hoy</h2>
@@ -1088,6 +1115,7 @@ input[type=range]::-webkit-slider-thumb{
          S6 · RUTINA — Pack Lumbares fase 1
     ═══════════════════════════════════════════════ -->
     <div class="screen" id="s6">
+      <div class="aurora-warm"><i></i><i></i><i></i></div>
       <div class="hdr">
         <button class="back back-dark" onclick="go(5)">←</button>
         <h2 class="h2">Tu rutina de hoy</h2>
@@ -1136,6 +1164,7 @@ input[type=range]::-webkit-slider-thumb{
          S7 · FEEDBACK RPE
     ═══════════════════════════════════════════════ -->
     <div class="screen" id="s7">
+      <div class="aurora-warm"><i></i><i></i><i></i></div>
       <div class="hdr">
         <button class="back back-dark" onclick="go(6)">←</button>
         <h2 class="h2">¿Cómo fue, Javi?</h2>
@@ -1225,6 +1254,12 @@ input[type=range]::-webkit-slider-thumb{
             <circle cx="65" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
             <circle cx="109" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
             <path d="M74 100 Q84 110 94 100" stroke="#0B2438" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+            <ellipse cx="52" cy="94" rx="6.5" ry="4.5" fill="#FF9DB0" opacity=".55"/>
+            <ellipse cx="116" cy="94" rx="6.5" ry="4.5" fill="#FF9DB0" opacity=".55"/>
+            <path d="M46 128 C58 142 110 142 122 128 C116 146 102 152 84 152 C66 152 52 146 46 128 Z" fill="#1E5F8C" opacity=".85"/>
+            <circle cx="84" cy="140" r="6" fill="#F4C430"/>
+            <circle cx="20" cy="40" r="4" fill="#7FDCEF" opacity=".7"><animate attributeName="cy" values="40;30;40" dur="3.4s" repeatCount="indefinite"/></circle>
+            <circle cx="150" cy="50" r="3" fill="#7FDCEF" opacity=".6"><animate attributeName="cy" values="50;42;50" dur="2.8s" repeatCount="indefinite"/></circle>
           </svg>
         </div>
       </div>
