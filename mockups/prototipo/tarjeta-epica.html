@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!-- Anti Frágil — TARJETA ÉPICA (formato vertical 9:16 para Instagram/TikTok)
+     El motor viral: el paciente comparte SU logro real. Persona canónica: Javi · Kael fase 16. -->
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Frágil · Tarjeta Épica</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{min-height:100vh;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center;
+    background:var(--af-bg);font-family:var(--af-font-texto);padding:24px}
+  .hint{font-size:12px;color:var(--af-texto-suave);letter-spacing:.4px}
+  .hint b{color:var(--af-primario)}
+
+  /* tarjeta 9:16 */
+  .tarjeta{width:340px;height:604px;border-radius:28px;position:relative;overflow:hidden;
+    background:linear-gradient(170deg,#0D2B45 0%,#0A1626 55%,#081020 100%);
+    box-shadow:0 50px 100px rgba(0,0,0,.7),0 0 0 1px var(--af-line)}
+  .aurora{position:absolute;inset:0;filter:blur(60px);opacity:.6}
+  .aurora i{position:absolute;border-radius:50%}
+  .aurora i:nth-child(1){width:300px;height:300px;left:-90px;top:-60px;background:rgba(91,208,232,.35);animation:fl 9s ease-in-out infinite}
+  .aurora i:nth-child(2){width:260px;height:260px;right:-80px;bottom:60px;background:rgba(46,204,143,.28);animation:fl 11s ease-in-out infinite reverse}
+  @keyframes fl{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-16px)}}
+
+  .in{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;padding:28px 24px}
+  .marca{display:flex;align-items:center;gap:8px;font-family:var(--af-font-display);font-weight:900;
+    font-size:15px;color:var(--af-texto);letter-spacing:.3px}
+  .marca i{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--af-primario),var(--af-primario-osc));font-style:normal;font-size:14px}
+
+  .logro{margin-top:18px;text-align:center}
+  .logro-chip{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;
+    color:var(--af-dorado);background:rgba(244,196,48,.1);border:1px solid rgba(244,196,48,.35);
+    border-radius:20px;padding:6px 16px}
+
+  .escena{position:relative;width:230px;height:230px;margin:18px 0 6px;display:flex;align-items:center;justify-content:center}
+  .escena::before{content:'';position:absolute;inset:14px;border-radius:50%;
+    background:radial-gradient(circle,rgba(91,208,232,.3) 0%,transparent 65%);animation:pulse 4.5s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
+  .anillo{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(91,208,232,.25);animation:spin 22s linear infinite}
+  .anillo.b{inset:16px;border-style:dashed;animation:spin 15s linear infinite reverse;border-color:rgba(244,196,48,.18)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .ava{position:relative;z-index:2;animation:float 5.2s ease-in-out infinite;filter:drop-shadow(0 16px 26px rgba(13,74,107,.6))}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+  .nivel{font-family:var(--af-font-display);font-weight:900;font-size:30px;color:var(--af-texto);
+    letter-spacing:-.4px;text-align:center;line-height:1.15}
+  .nivel small{display:block;font-size:13px;font-weight:700;color:var(--af-agua);letter-spacing:1px;margin-top:4px}
+
+  .frase{margin-top:14px;text-align:center;font-size:15px;line-height:1.6;color:var(--af-texto-suave);max-width:260px}
+  .frase b{color:var(--af-texto)}
+
+  .stats{display:flex;gap:8px;margin-top:18px}
+  .st{background:rgba(255,255,255,.06);border:1px solid var(--af-line);border-radius:14px;
+    padding:9px 14px;text-align:center;backdrop-filter:blur(8px)}
+  .st b{display:block;font-family:var(--af-font-display);font-weight:900;font-size:17px;color:var(--af-primario)}
+  .st.oro b{color:var(--af-dorado)}
+  .st s{text-decoration:none;font-size:9.5px;letter-spacing:.8px;color:var(--af-texto-suave);text-transform:uppercase}
+
+  .pie{margin-top:auto;display:flex;align-items:center;justify-content:space-between;width:100%}
+  .codigo{font-size:11px;color:var(--af-texto-suave)}
+  .codigo b{color:var(--af-primario);font-weight:700}
+  .qr{width:38px;height:38px;border-radius:9px;background:repeating-conic-gradient(#fff 0% 25%,#0A1626 0% 50%) 0/9.5px 9.5px;opacity:.85}
+
+  .btn{display:flex;gap:10px}
+  .btn button{font-family:var(--af-font-texto);font-size:13.5px;font-weight:700;cursor:pointer;
+    border-radius:var(--af-radio-m);padding:13px 22px;transition:transform var(--af-t-rapida)}
+  .btn button:active{transform:scale(.96)}
+  .b1{border:none;background:var(--af-primario);color:#06281C;box-shadow:var(--af-sombra-flotante)}
+  .b2{background:transparent;border:1.5px solid var(--af-line);color:var(--af-texto-suave)}
+</style>
+</head>
+<body>
+
+<p class="hint">Tarjeta Épica · lo que <b>Javi comparte</b> en Instagram/TikTok cuando logra un hito</p>
+
+<div class="tarjeta">
+  <div class="aurora"><i></i><i></i></div>
+  <div class="in">
+
+    <div class="marca"><i>🛡️</i> ANTI FRÁGIL</div>
+
+    <div class="logro"><span class="logro-chip">⚜️ Nueva evolución desbloqueada</span></div>
+
+    <div class="escena">
+      <div class="anillo"></div><div class="anillo b"></div>
+      <!-- Kael (placeholder SVG — arte final: ilustrador humano) -->
+      <svg class="ava" width="150" height="150" viewBox="0 0 168 168" fill="none">
+        <defs>
+          <linearGradient id="c" x1="40" y1="20" x2="128" y2="150">
+            <stop offset="0" stop-color="#9BE8F7"/><stop offset=".55" stop-color="#4FBFE0"/><stop offset="1" stop-color="#2E86C1"/>
+          </linearGradient>
+          <linearGradient id="p" x1="84" y1="70" x2="84" y2="140">
+            <stop offset="0" stop-color="#E8FBFF"/><stop offset="1" stop-color="#BDEDF8"/>
+          </linearGradient>
+        </defs>
+        <path d="M38 96 C18 88 12 64 24 50 C28 64 38 70 50 72 Z" fill="#5BB8DC"/>
+        <path d="M84 18 C126 18 148 52 148 90 C148 128 122 152 84 152 C46 152 20 128 20 90 C20 52 42 18 84 18 Z" fill="url(#c)"/>
+        <ellipse cx="84" cy="106" rx="38" ry="42" fill="url(#p)" opacity=".9"/>
+        <path d="M84 6 C90 14 102 16 100 28 C94 24 88 24 84 26 C80 24 74 24 68 28 C66 16 78 14 84 6 Z" fill="#BFF0FA"/>
+        <circle cx="62" cy="78" r="11" fill="#0B2438"/><circle cx="106" cy="78" r="11" fill="#0B2438"/>
+        <circle cx="65.5" cy="74.5" r="4" fill="#fff"/><circle cx="109.5" cy="74.5" r="4" fill="#fff"/>
+        <path d="M74 100 Q84 110 94 100" stroke="#0B2438" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+        <path d="M46 128 C58 142 110 142 122 128 C116 146 102 152 84 152 C66 152 52 146 46 128 Z" fill="#1E5F8C" opacity=".85"/>
+        <circle cx="84" cy="140" r="6" fill="#F4C430"/>
+      </svg>
+    </div>
+
+    <div class="nivel">Kael, el Fluido<small>FASE 16 · GUARDIÁN PLENO</small></div>
+
+    <p class="frase"><b>24 días sin fallar.</b><br>Mi dolor de espalda bajó de 7 a 3.<br>Esto es ser antifrágil.</p>
+
+    <div class="stats">
+      <div class="st oro"><b>24</b><s>racha</s></div>
+      <div class="st"><b>50</b><s>nivel</s></div>
+      <div class="st"><b>−4</b><s>dolor</s></div>
+    </div>
+
+    <div class="pie">
+      <div class="codigo">Únete con mi código<br><b>JAVI-AF-2026</b> · descuento para los dos</div>
+      <div class="qr"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="btn">
+  <button class="b1">Compartir en Instagram →</button>
+  <button class="b2">Guardar imagen</button>
+</div>
+
+</body>
+</html>
