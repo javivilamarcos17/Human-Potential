@@ -1,42 +1,35 @@
 # Cola de tareas — Agente 3 · TRACK CONTENIDO & VOZ (copy)
 
 > Lo escribe SOLO el organizador. Tú (agente) solo LEES esto y haces la tarea ▶ EN CURSO.
-> 🔁 MODO RÁFAGA: cuando termines una tarea, NO pares — haz git pull y encadena la siguiente
-> de la COLA (en orden) hasta vaciarla. Confirma CADA tarea en ESTADO.md + push antes de seguir.
+> 🔁 MODO RÁFAGA: termina una tarea → confirma en ESTADO.md + push → encadena la siguiente.
 > ⚠️ GITHUB = javivilamarcos17, SIEMPRE. NO PREGUNTES NUNCA POR LA CUENTA.
 > Tono siempre: empatía clínica, cero culpa, variables {nombre} {fisio} {clinica} {racha}.
 > Persona canónica: Javi · MovePlus · Dra. Elena Ruiz · Kael (Agua).
 
 ## ▶ EN CURSO
-- **Crea `docs/diseño/lexico-marca.md`** — el diccionario oficial de términos de la marca:
-  Guardián, Auditoría de Vitalidad, Descuento Sudado, Código de Honor, Sombrero Seleccionador,
-  Tarjeta Épica, Retos Maestros, la Trinidad, arquetipos, nombres de las 6 etapas mayores...
-  Para cada término: nombre EXACTO oficial (con mayúsculas definidas), qué es en una frase,
-  cómo se usa en la app y qué NO llamarlo (sinónimos prohibidos). Revisa tus 6 copys ya
-  entregados y anota al final cualquier inconsistencia de nombres que detectes entre ellos.
-  Es la herramienta para que TODO el producto hable igual. SOLO ese archivo.
+- **Aplica las correcciones I1-I5 de tu `docs/diseño/lexico-marca.md` a tus propios copys.**
+  El organizador ha revisado el léxico y APRUEBA estas decisiones — ejecútalas tal cual:
+  1. **I1 — "Aire" → "Viento"** en `copy-tarjetas-epicas.md` (renombrar toda la sección).
+  2. **I2 — Fuego NO es MVP:** mueve las frases de Fuego de `copy-tarjetas-epicas.md` y
+     cualquier mención en `microcopy-app.md` a una sección final claramente marcada
+     "🔮 VISIÓN NORTE (Fase 2/3 — NO usar en MVP)" dentro del mismo archivo. No las borres.
+  3. **I3 — Nombres inventados:** "Gaia la Firme" y "Zeph el Veloz" → sustituir por
+     "[Guardián Tierra — nombre PENDIENTE de aprobación del dueño]" y
+     "[Guardián Viento — nombre PENDIENTE de aprobación del dueño]". "Ignis" se va con
+     Fuego a Visión Norte. Solo Kael el Fluido es oficial.
+  4. **I4 — Criterio XP:** revisa `microcopy-app.md`, `copy-notificaciones.md` y
+     `copy-estados.md`: "XP" solo en UI compacta (barras, contadores); "Puntos de
+     Vitalidad" en textos explicativos. Ajusta donde no cumpla.
+  5. **I5 — "Gaia y yo" → "Mi Guardián y yo"** en la frase de Tierra Fase 16.
+  Archivos que SÍ puedes editar (son tuyos): copy-tarjetas-epicas, microcopy-app,
+  copy-notificaciones, copy-estados. Confirma en ESTADO.md qué cambiaste en cada uno.
 
-## ⬜ ARCHIVADO (ya entregadas)
-- **`docs/diseño/copy-panel-clinica.md`** — los textos del panel del fisio (lado B2B):
-  etiquetas y descripciones de los semáforos (rojo/ámbar/verde), textos de la ficha del
-  paciente, avisos de alerta ("Javi reportó una molestia nueva tras la sesión de hoy"),
-  estados vacíos del panel y tooltips. Profesional y claro (el lector es un sanitario, no
-  un paciente). Contexto: `docs/diseño/panel-clinica.md`. SOLO ese archivo.
+## ⬜ COLA
+- (Tras esto, track de copy al día. El organizador decidirá si hay más.)
 
-## ⬜ COLA (en orden)
-1. **`docs/diseño/copy-anamnesis.md`** — las preguntas del cuestionario inicial (anamnesis)
-   redactadas con calidez y sencillez (nada de jerga médica), agrupadas como en
-   `docs/diseño/auditoria-vitalidad.md` §2, con las opciones de respuesta. Incluye los textos
-   de bandera roja ("avisaremos a tu clínica para que lo revise contigo").
-2. **`docs/diseño/copy-emails.md`** — plantillas de email: invitación con Código de Honor
-   (la envía la clínica), bienvenida tras el alta, resumen semanal de progreso al paciente,
-   y resumen semanal de actividad a la clínica. Con variables.
-3. **`docs/diseño/copy-tiendas.md`** — ficha para App Store / Google Play: nombre, subtítulo,
-   descripción corta y larga, y 5 bullets de beneficios. Orientada al paciente (B2C) pero
-   mencionando la prescripción clínica.
-
-## ✅ Hecho: microcopy-app · copy-notificaciones · copy-estados · copy-tarjetas-epicas
+## ✅ Hecho: microcopy-app · copy-notificaciones · copy-estados · copy-tarjetas-epicas ·
+## copy-panel-clinica · copy-anamnesis · copy-emails · copy-tiendas · lexico-marca
 
 ## Reglas
-- Solo creas el archivo asignado + tu `ESTADO.md`. No toques CHANGELOG ni archivos de otros.
-- Rama `feat/boceto-mvp`. Antes de push: `git pull --rebase`. Calidad: filtro de `docs/REVISION_CRITICA.md`.
+- Solo editas TUS archivos de copy + tu `ESTADO.md`. No toques CHANGELOG ni archivos de otros.
+- Rama `feat/boceto-mvp`. Antes de push: `git pull --rebase`. Filtro: `docs/REVISION_CRITICA.md`.
