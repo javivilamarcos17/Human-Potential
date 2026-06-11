@@ -156,11 +156,22 @@
       </div>
       <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
       <div class="toolbar">
+        <div class="tool" onclick="verProgreso()">📈 Mi progreso</div>
         <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
         <div class="tool" onclick="diaSiguiente()">⏭ Simular día</div>
         <div class="tool" onclick="reset()">↺ Reiniciar</div>
       </div>
       <a class="volver" href="../demo.html">← Hub de demo</a>
+    </div>
+
+    <!-- MI PROGRESO -->
+    <div class="scr" id="progreso">
+      <div class="h1">Tu cuerpo, en datos</div>
+      <div class="sub">Dolor (rojo) y energía (azul) — últimos 14 días</div>
+      <div class="panel"><svg id="graf" width="100%" height="120" viewBox="0 0 320 120"></svg>
+        <div class="scale"><span id="g-ini"></span><span>hoy</span></div></div>
+      <div class="panel desg" id="prog-resumen"></div>
+      <button class="cta" onclick="ir('home')">Volver con mi Guardián</button>
     </div>
 
     <!-- TRIAJE -->
@@ -516,6 +527,25 @@ function altaSubmit(){
   if(cod&&!CONFIG.centros[cod]) alert('Código de centro no reconocido — entras en modo individual (puedes vincularte después).');
   alert(`Tu Vitalidad inicial: ${S.aud}/100\n(Fuerza ${f}/30 · Aeróbico ${a}/30 · Movilidad ${m}/20 · Constancia ${c}/20)\n\nDe aquí nace tu Guardián. Solo puede mejorar contigo.`);
   pintar(); ir('home');
+}
+function verProgreso(){
+  const u=S.hist.slice(-14);
+  if(!u.length){alert('Completa tu primera jornada y aquí verás tu evolución.');return;}
+  const W=320,H=110,n=u.length,dx=n>1?W/(n-1):0;
+  const pts=k=>u.map((x,i)=>`${Math.round(i*dx)},${Math.round(H-x[k]/10*H)}`).join(' ');
+  $('graf').innerHTML=
+    `<polyline points="${pts('d')}" fill="none" stroke="#E53935" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`+
+    `<polyline points="${pts('e')}" fill="none" stroke="#5BD0E8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>`;
+  $('g-ini').textContent=u[0].f;
+  const med=a=>(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1);
+  const mitad=Math.floor(n/2), d1=n>=6?med(u.slice(0,mitad).map(x=>x.d)):null, d2=n>=6?med(u.slice(mitad).map(x=>x.d)):null;
+  $('prog-resumen').innerHTML=
+    `<div class="fila"><span>Dolor medio</span><b>${med(u.map(x=>x.d))}/10</b></div>`+
+    `<div class="fila"><span>Energía media</span><b>${med(u.map(x=>x.e))}/10</b></div>`+
+    `<div class="fila"><span>Jornadas completadas</span><b>${S.ses}</b></div>`+
+    (d1!==null?`<div class="fila"><span>${d2<d1?'✅ Tu dolor está BAJANDO':'Tu dolor aún no cede'}</span><b>${d1} → ${d2}</b></div>`:'')+
+    (d1!==null&&d2>=d1?`<div class="fila"><span style="color:var(--af-dorado)">💆 Quizá unas manos expertas encuentren lo que falta → <a href="upselling.html" style="color:var(--af-dorado)">sesión presencial</a></span><b></b></div>`:'');
+  ir('progreso');
 }
 function enviarResumen(){
   const u=S.hist.slice(-7);
