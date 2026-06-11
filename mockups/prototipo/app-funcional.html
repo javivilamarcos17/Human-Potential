@@ -158,6 +158,10 @@
         <div style="font-family:var(--af-font-display);font-weight:800;font-size:15px;color:var(--af-dorado)" id="ec-titulo">🥚 Semana de Eclosión</div>
         <div class="sub" id="ec-sub"></div>
       </div>
+      <div id="season-fin" style="display:none;margin-top:14px;background:linear-gradient(135deg,rgba(244,196,48,.2),rgba(46,204,143,.12));border:2px solid var(--af-dorado);border-radius:var(--af-radio-l);padding:16px;cursor:pointer;text-align:center" onclick="cerrarSeason()">
+        <div style="font-family:var(--af-font-display);font-weight:900;font-size:17px;color:var(--af-dorado)">👑 DEIDAD ALCANZADA</div>
+        <div class="sub">Tu Guardián ha llegado a la cima. Toca para sellarlo en el PC con sus estadísticas de por vida y empezar una nueva temporada — el siguiente huevo heredará su aura.</div>
+      </div>
       <div id="centro-bloque" style="display:none">
         <div class="xprow" style="margin-top:14px"><span id="centro-titulo" style="font-weight:700;color:var(--af-dorado)"></span></div>
         <div id="centro-lista"></div>
@@ -511,7 +515,11 @@ function avatarSvg(fase){
     if(sub>=4) extra+=`<path d="M48 36l-8-10M102 36l8-10" stroke="#F4C430" stroke-width="3" stroke-linecap="round"/>`;
     if(sub>=5) extra+=`<circle cx="75" cy="84" r="58" fill="none" stroke="rgba(244,196,48,.5)" stroke-width="2"><animate attributeName="stroke-opacity" values=".25;.8;.25" dur="3s" repeatCount="indefinite"/></circle>`;
     if(sub>=6) extra+=`<path d="M75 22l4 7h-8z" fill="#F4C430"/><path d="M55 26l-3-9M95 26l3-9" stroke="#F4C430" stroke-width="2.5" stroke-linecap="round"/>`;
-  } else if(fase>=2) extra+=`<circle cx="75" cy="90" r="44" fill="none" stroke="rgba(91,208,232,.3)" stroke-width="1.5" stroke-dasharray="2 8"/>`;
+  } else {
+    if(fase>=2) extra+=`<circle cx="75" cy="90" r="44" fill="none" stroke="rgba(91,208,232,.3)" stroke-width="1.5" stroke-dasharray="2 8"/>`;
+    // Herencia de temporada: el huevo nuevo lleva el aura del Guardián sellado
+    if(S.legado&&ELEM[S.legado]) extra+=`<circle cx="75" cy="88" r="52" fill="none" stroke="${ELEM[S.legado][2]}" stroke-width="2" opacity=".55" stroke-dasharray="8 6"><animate attributeName="stroke-opacity" values=".3;.8;.3" dur="3.5s" repeatCount="indefinite"/></circle>`;
+  }
   return `<svg width="150" height="150" viewBox="0 0 150 150" fill="none" style="filter:${FILT}">${G}${b}${extra}</svg>`;
 }
 
@@ -548,6 +556,7 @@ function pintar(){
   document.querySelectorAll('.cfg-fisio').forEach(e=>e.textContent=CONFIG.fisio);
   document.querySelectorAll('.cfg-clinica').forEach(e=>e.textContent=CONFIG.clinica);
   document.querySelectorAll('.cfg-zona').forEach(e=>e.textContent=CONFIG.zona);
+  $('season-fin').style.display=(f>=30)?'block':'none';
   const prx=pruebaPendiente(), ec=$('eclosion');
   if(prx){ec.style.display='block';
     $('ec-sub').textContent='Prueba '+(S.pruebasHechas.length+1)+'/'+CONFIG.pruebas.length+' · '+prx.titulo+' · +15 XP — toca para hacerla';}
@@ -690,6 +699,7 @@ function terminarJornada(){
   // racha real por calendario (espejo de la regla Dart)
   const hoy=hoyISO(), ayer=S.fechaSim?prevISO(S.fechaSim):prevISO(new Date().toISOString().slice(0,10));
   S.racha=(S.ultDia===ayer)?S.racha+1:1;
+  S.rachaMax=Math.max(S.rachaMax||0,S.racha);
   const bonus=Math.min(S.racha*XP.porDiaRacha,XP.topeBonus);
   const ganada=XP.triaje+XP.rutina+XP.feedback+bonus;
   const faseAntes=faseDesde({...S});
@@ -758,6 +768,19 @@ function altaSubmit(){
   pintar(); ir('home');
 }
 const SEASONS=['Season 0 · El Despertar','Season 1 · La Forja','Season 2 · El Ascenso'];
+function cerrarSeason(){
+  if(!confirm('¿Sellar a tu Guardián en el PC y empezar nueva temporada? Su forma y sus números quedan guardados para siempre.'))return;
+  S.pc=S.pc||[];
+  S.pc.push({fase:30,etapa:'Deidad 👑 SELLO FINAL',elemento:S.elemento,aud:S.aud,fecha:hoyISO(),season:S.season||0,
+             stats:{xp:S.xp,sesiones:S.ses,rachaMax:S.rachaMax||S.racha}});
+  // Herencia: el nuevo huevo lleva el aura del elemento anterior
+  S.legado=S.elemento;
+  S.season=(S.season||0)+1;
+  S.xp=0;S.ses=0;S.racha=0;S.hechoHoy=false;S.elemento=null;S.pruebasHechas=[];
+  sync('season_cerrada',{season:S.season-1,stats:S.pc[S.pc.length-1].stats});
+  save();pintar();
+  alert('🥚 Una nueva historia comienza. Tu nuevo huevo brilla con el aura de tu antiguo Guardián — y nadie sabe aún qué hay dentro.');
+}
 function verPC(){
   const col=S.pc||[];
   // Agrupado por temporada: cuando existan más seasons, cada una tendrá su estantería
