@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Frágil · Upselling — el puente a tu clínica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* Upselling (A12) · Banner empático tras dolor alto o estancamiento.
+     Tono: cuidado, no venta. El CTA lleva fuera de la app (web/WhatsApp de la clínica). */
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#060d18;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:var(--af-font-texto);padding:24px}
+  .phone{position:relative;width:390px;min-height:780px;background:var(--af-bg);border-radius:46px;border:1px solid var(--af-line);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .aurora{position:absolute;inset:0;overflow:hidden;filter:blur(70px);opacity:.55}
+  .aurora i{position:absolute;border-radius:50%}
+  .aurora i:nth-child(1){width:420px;height:420px;left:-130px;top:-90px;background:#3a1d34;animation:fl 11s ease-in-out infinite}
+  .aurora i:nth-child(2){width:360px;height:360px;right:-120px;top:180px;background:#103a5c;animation:fl 13s ease-in-out infinite reverse}
+  .aurora i:nth-child(3){width:300px;height:300px;left:40px;bottom:-80px;background:#0d4a45;animation:fl 9s ease-in-out infinite}
+  @keyframes fl{0%,100%{transform:translate(0,0)}50%{transform:translate(26px,-18px)}}
+  .sbar{position:relative;display:flex;justify-content:space-between;padding:18px 28px 0;color:var(--af-texto-suave);font-size:13px;z-index:2}
+  .content{position:relative;z-index:2;padding:14px 22px 26px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .back{width:38px;height:38px;border-radius:50%;background:var(--af-panel);border:1px solid var(--af-line);display:flex;align-items:center;justify-content:center;color:var(--af-texto);text-decoration:none;font-size:17px;transition:var(--af-t-rapida)}
+  .back:hover{background:rgba(255,255,255,.12)}
+  .titulo{font-family:var(--af-font-display);font-weight:900;font-size:22px;color:var(--af-texto)}
+  .sub{font-size:13px;color:var(--af-texto-suave)}
+
+  /* contexto: el triaje que dispara el banner */
+  .ctx{background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-l);backdrop-filter:blur(var(--af-blur-cristal));padding:16px;margin-bottom:14px}
+  .ctx .lbl{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--af-texto-suave);margin-bottom:8px}
+  .dolor{display:flex;align-items:center;gap:12px}
+  .dolor .num{font-family:var(--af-font-display);font-weight:900;font-size:44px;color:var(--af-rojo);animation:lat 2.2s ease-in-out infinite}
+  @keyframes lat{0%,100%{opacity:1}50%{opacity:.65}}
+  .dolor .tx{font-size:13px;color:var(--af-texto-suave);line-height:1.5}
+  .dolor .tx b{color:var(--af-texto)}
+
+  /* EL BANNER (la pieza A12) */
+  .banner{position:relative;background:linear-gradient(135deg,rgba(46,204,143,.14),rgba(91,208,232,.10));border:1.5px solid rgba(46,204,143,.35);border-radius:var(--af-radio-xl);backdrop-filter:blur(var(--af-blur-cristal));padding:22px 18px;text-align:center;margin-bottom:14px;overflow:hidden;animation:in .5s ease both}
+  @keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .banner::after{content:"";position:absolute;top:-60%;left:-30%;width:55%;height:220%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.07),transparent);animation:sweep 3.2s ease-in-out infinite}
+  @keyframes sweep{0%{transform:translateX(-120%)}60%,100%{transform:translateX(460%)}}
+  .manos{width:64px;height:64px;margin:0 auto 10px;animation:resp 5.2s ease-in-out infinite}
+  @keyframes resp{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .banner .t1{font-family:var(--af-font-display);font-weight:900;font-size:20px;color:var(--af-texto);line-height:1.3;margin-bottom:8px}
+  .banner .t2{font-size:13.5px;color:var(--af-texto-suave);line-height:1.55;max-width:300px;margin:0 auto 16px}
+  .banner .t2 b{color:var(--af-texto)}
+  .cta{display:block;text-decoration:none;font-family:var(--af-font-display);font-weight:800;font-size:15px;color:#062018;background:linear-gradient(135deg,var(--af-primario),var(--af-primario-osc));border-radius:var(--af-radio-m);padding:14px;box-shadow:var(--af-sombra-flotante);transition:var(--af-t-rapida);margin-bottom:9px}
+  .cta:hover{transform:translateY(-2px)}
+  .cta-sec{display:block;text-decoration:none;font-size:13px;font-weight:600;color:var(--af-texto-suave);padding:8px;transition:var(--af-t-rapida)}
+  .cta-sec:hover{color:var(--af-texto)}
+
+  .firma{display:flex;align-items:center;gap:10px;background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-m);backdrop-filter:blur(var(--af-blur-cristal));padding:12px 14px;margin-bottom:14px}
+  .firma .foto{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#2E86C1,#5BD0E8);display:flex;align-items:center;justify-content:center;font-family:var(--af-font-display);font-weight:800;color:#fff;font-size:14px}
+  .firma .tx{font-size:12px;color:var(--af-texto-suave);line-height:1.45}
+  .firma .tx b{color:var(--af-texto);font-size:13px}
+  .nota{text-align:center;font-size:11px;color:var(--af-texto-suave);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="aurora"><i></i><i></i><i></i></div>
+  <div class="sbar"><b>9:41</b><span>WIFI ▮▮▮</span></div>
+  <div class="content">
+
+    <div class="top">
+      <a class="back" href="index.html" title="Volver">←</a>
+      <div>
+        <div class="titulo">Un momento, Javi</div>
+        <div class="sub">Tu Guardián ha notado algo</div>
+      </div>
+    </div>
+
+    <div class="ctx">
+      <div class="lbl">Tu triaje de hoy</div>
+      <div class="dolor">
+        <div class="num">8</div>
+        <div class="tx"><b>Dolor alto en tu zona lumbar</b> — segundo día seguido.
+        Hemos avisado a la Dra. Elena Ruiz y tu rutina de hoy se ha adaptado sola.</div>
+      </div>
+    </div>
+
+    <div class="banner">
+      <svg class="manos" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="29" fill="rgba(46,204,143,.12)" stroke="#2ECC8F" stroke-width="2"/>
+        <path d="M20 34c4-3 7-3 10 0l4 4M44 30c-4-2-7-1-9 1" stroke="#2ECC8F" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M24 26a8 8 0 0 1 16 0c0 5-4 8-8 12-4-4-8-7-8-12z" fill="#2ECC8F" opacity=".85"/>
+      </svg>
+      <div class="t1">Hay días que se trabajan<br>mejor a cuatro manos</div>
+      <div class="t2">Cuando el dolor sube dos días seguidos, una <b>sesión presencial con tu
+      fisio</b> suele ser el atajo: ajusta lo que ningún vídeo puede ajustar. <b>MovePlus</b>
+      te guarda hueco esta semana.</div>
+      <a class="cta" href="#" onclick="return false" title="En la app real abre WhatsApp/web de la clínica">📅 Reservar con la Dra. Elena Ruiz</a>
+      <a class="cta-sec" href="index.html">Hoy no — seguir con mi rutina suave</a>
+    </div>
+
+    <div class="firma">
+      <div class="foto">ER</div>
+      <div class="tx"><b>Dra. Elena Ruiz · MovePlus</b><br>
+      "Javi, si el dolor sigue así mañana, llámanos. Para eso estamos."</div>
+    </div>
+
+    <div class="nota">La reserva ocurre fuera de la app (web/WhatsApp de la clínica — D6).<br>
+    Este banner solo aparece con dolor alto o estancamiento: nunca como publicidad.</div>
+  </div>
+</div>
+</body>
+</html>
