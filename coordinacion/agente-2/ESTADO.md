@@ -15,4 +15,5 @@
 ✅ 2026-06-11 — Privacidad y RGPD — docs/PRIVACIDAD_RGPD.md
 ✅ 2026-06-11 — Checklist lanzamiento piloto — docs/CHECKLIST_LANZAMIENTO.md
 ✅ 2026-06-11 — Guion demo clínicas — docs/GUION_DEMO_CLINICAS.md
-✅ 2026-06-11 — Onboarding clínica nueva (semana 0-4, criterios activación, señales peligro) — docs/ONBOARDING_CLINICA.md
+✅ 2026-06-11 — Onboarding clínica nueva — docs/ONBOARDING_CLINICA.md
+✅ 2026-06-11 — FAQ pacientes (tono empatía clínica, 6 bloques) — docs/FAQ_PACIENTES.md
