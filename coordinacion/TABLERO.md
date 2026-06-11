@@ -1,6 +1,15 @@
 # 📋 TABLERO — visión global (lo mantiene el organizador)
 
-> Quién hace qué y en qué estado. Actualizado: 2026-06-11.
+> Quién hace qué y en qué estado. Actualizado: 2026-06-11 (relevo de organizador).
+
+## ⚡ RELEVO — estado exacto para el nuevo organizador
+- A1 (visual): entregó moodboard + evolucion.html. Pendiente en su cola: v0.3 premium de index.html + monedero.html. REVISAR evolucion.html contra el listón (board-premium.html) antes de dar por buena.
+- A2 (negocio): TODO entregado. EN CURSO: docs/AUDITORIA_COHERENCIA.md (informe de incoherencias cruzadas). Al recibirlo: revisar y aplicar correcciones.
+- A3 (copy): 6 copys entregados. EN CURSO: docs/diseño/lexico-marca.md.
+- Novedad mayor: Esquema Maestro modular D8-D11 (SYSTEM_VISION §7 + diseño/arquitectura-modular.md + migración 0005). Lidomare = partner real.
+- Servidor demo: arrancar con `python -m http.server 8080` en la carpeta del proyecto → mockups/demo.html.
+- Vigía: bucle de `git fetch` en background para detectar pushes de agentes (rearmar tras cada push propio).
+- PR abierto: feat/boceto-mvp → master (merge SOLO con aprobación del dueño).
 
 | Agente | Track | Tarea en curso | Estado |
 |--------|-------|----------------|--------|
