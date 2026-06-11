@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Anti Frágil — Prototipo Navegable v0.2
+  Anti Frágil — Prototipo Navegable v0.3 (Premium Visual)
   ─────────────────────────────────────────────────────────────────────────────
   Paciente demo : Javi Paciente  (javi@paciente.test)
   Profesional   : Dra. Elena Ruiz (fisio · MovePlus)
@@ -157,12 +157,29 @@ body{
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:20px;padding:20px;
+  backdrop-filter:blur(10px);
 }
 .card-light{
   background:#fff;
   box-shadow:0 2px 12px rgba(0,0,0,.07);
   border-radius:18px;padding:20px;
 }
+/* ── aurora background (dark screens) ── */
+.aurora-bg{position:absolute;inset:0;overflow:hidden;filter:blur(72px);opacity:.45;pointer-events:none;z-index:0}
+.aurora-bg i{position:absolute;border-radius:50%}
+.aurora-bg i:nth-child(1){width:440px;height:440px;left:-140px;top:-90px;background:#0d3a5c;animation:afl 11s ease-in-out infinite}
+.aurora-bg i:nth-child(2){width:380px;height:380px;right:-130px;top:170px;background:#083a4a;animation:afl 14s ease-in-out infinite reverse}
+.aurora-bg i:nth-child(3){width:320px;height:320px;left:20px;bottom:-90px;background:#0d1f40;animation:afl 9s ease-in-out infinite}
+@keyframes afl{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.1)}}
+/* ── avatar float ── */
+.av-float{animation:avfl 5s ease-in-out infinite}
+@keyframes avfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+/* ── halo rings around avatar ── */
+.av-ring-wrap{position:relative;width:148px;height:148px;display:flex;align-items:center;justify-content:center}
+.av-ring-wrap::before,.av-ring-wrap::after{content:'';position:absolute;border-radius:50%;pointer-events:none}
+.av-ring-wrap::before{inset:-16px;border:1.5px solid rgba(91,208,232,.18);animation:hspin 24s linear infinite}
+.av-ring-wrap::after{inset:-28px;border:1px dashed rgba(91,208,232,.1);animation:hspin 17s linear infinite reverse}
+@keyframes hspin{to{transform:rotate(360deg)}}
 
 /* ═══════════════════════════════════════════════════════
    SHARED: BACK BUTTON
@@ -677,7 +694,7 @@ input[type=range]::-webkit-slider-thumb{
 
 <div class="proto-label">
   <div class="dot"></div>
-  <strong>Anti Frágil</strong> &nbsp;·&nbsp; Prototipo Navegable v0.2
+  <strong>Anti Frágil</strong> &nbsp;·&nbsp; Prototipo Navegable v0.3 · Premium Visual
   &nbsp;·&nbsp; Javi · Dra. Elena Ruiz · Guardián Pleno N.50
 </div>
 
@@ -697,8 +714,15 @@ input[type=range]::-webkit-slider-thumb{
          S1 · ONBOARDING — Código de Honor
     ═══════════════════════════════════════════════ -->
     <div class="screen active" id="s1">
+      <div class="aurora-bg"><i></i><i></i><i></i></div>
 
-      <div class="logo-box">🛡️</div>
+      <div class="logo-box" style="position:relative;z-index:1">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <path d="M24 4 L42 12 L42 28 C42 38 33 44 24 46 C15 44 6 38 6 28 L6 12 Z" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M24 10 L38 17 L38 28 C38 35 31 40 24 42 C17 40 10 35 10 28 L10 17 Z" fill="rgba(46,204,143,.2)"/>
+          <path d="M18 24 L22 28 L30 20" stroke="#2ECC8F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <h1 class="h1" style="color:#fff;margin-bottom:8px;">Anti Frágil</h1>
       <p class="tagline">Tu equipo de salud, en el bolsillo.<br>Tu progreso, hecho un juego que engancha.</p>
 
@@ -805,7 +829,8 @@ input[type=range]::-webkit-slider-thumb{
          S3 · SOMBRERO SELECCIONADOR
     ═══════════════════════════════════════════════ -->
     <div class="screen" id="s3">
-      <div class="hdr">
+      <div class="aurora-bg"><i></i><i></i><i></i></div>
+      <div class="hdr" style="position:relative;z-index:1">
         <button class="back back-light" onclick="go(2)">←</button>
         <h2 class="h2">Tu Guardián nace hoy</h2>
         <p class="sub" style="margin-bottom:14px;">
@@ -825,7 +850,7 @@ input[type=range]::-webkit-slider-thumb{
         </div>
       </div>
 
-      <div class="guardian-list">
+      <div class="guardian-list" style="position:relative;z-index:1">
 
         <div class="gc" onclick="go(4)">
           <div class="gc-inner">
@@ -865,7 +890,7 @@ input[type=range]::-webkit-slider-thumb{
 
       </div>
 
-      <p class="choose-note">
+      <p class="choose-note" style="position:relative;z-index:1">
         Toca el que sientas más tuyo.<br>
         Esta elección te acompañará en todo tu viaje antifrágil.
       </p>
@@ -875,8 +900,9 @@ input[type=range]::-webkit-slider-thumb{
          S4 · DASHBOARD
     ═══════════════════════════════════════════════ -->
     <div class="screen" id="s4">
+      <div class="aurora-bg"><i></i><i></i><i></i></div>
 
-      <div class="dash-top">
+      <div class="dash-top" style="position:relative;z-index:1">
         <div>
           <div class="dash-hi">Buenas, de nuevo,</div>
           <div class="dash-name">Javi</div>
@@ -890,12 +916,36 @@ input[type=range]::-webkit-slider-thumb{
         </div>
       </div>
 
-      <div class="avatar-stage">
+      <div class="avatar-stage" style="position:relative;z-index:1">
 
         <div class="av-glow">
-          <div class="av-box">
-            🛡️
-            <div class="av-phase-tag">Fase 16 · Guardián Pleno</div>
+          <div class="av-ring-wrap">
+            <div class="av-box av-float" style="font-size:0">
+              <!-- Kael, el Fluido — placeholder SVG (arte final: ilustrador humano, D5) -->
+              <svg width="118" height="118" viewBox="0 0 168 168" fill="none">
+                <defs>
+                  <linearGradient id="kc4" x1="40" y1="20" x2="128" y2="150"><stop offset="0" stop-color="#9BE8F7"/><stop offset=".55" stop-color="#4FBFE0"/><stop offset="1" stop-color="#2E86C1"/></linearGradient>
+                  <linearGradient id="kp4" x1="84" y1="70" x2="84" y2="140"><stop offset="0" stop-color="#E8FBFF"/><stop offset="1" stop-color="#BDEDF8"/></linearGradient>
+                  <linearGradient id="ka4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FDCEF"/><stop offset="1" stop-color="#3D9BD4"/></linearGradient>
+                  <radialGradient id="kaura4" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(91,208,232,.18)"/><stop offset="1" stop-color="rgba(91,208,232,0)"/></radialGradient>
+                </defs>
+                <ellipse cx="84" cy="84" rx="84" ry="84" fill="url(#kaura4)"/>
+                <path d="M38 96 C18 88 12 64 24 50 C28 64 38 70 50 72 Z" fill="url(#ka4)"/>
+                <path d="M84 18 C126 18 148 52 148 90 C148 128 122 152 84 152 C46 152 20 128 20 90 C20 52 42 18 84 18 Z" fill="url(#kc4)"/>
+                <ellipse cx="84" cy="106" rx="38" ry="42" fill="url(#kp4)" opacity=".9"/>
+                <path d="M84 6 C90 14 102 16 100 28 C94 24 88 24 84 26 C80 24 74 24 68 28 C66 16 78 14 84 6 Z" fill="#BFF0FA"/>
+                <path d="M22 86 C8 92 6 108 16 118 C18 106 26 100 36 98 Z" fill="url(#ka4)"/>
+                <path d="M146 86 C160 92 162 108 152 118 C150 106 142 100 132 98 Z" fill="url(#ka4)"/>
+                <circle cx="62" cy="78" r="11" fill="#0B2438"/>
+                <circle cx="106" cy="78" r="11" fill="#0B2438"/>
+                <circle cx="65.5" cy="74.5" r="4" fill="#fff"/>
+                <circle cx="109.5" cy="74.5" r="4" fill="#fff"/>
+                <circle cx="65" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
+                <circle cx="109" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
+                <path d="M74 100 Q84 110 94 100" stroke="#0B2438" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+              </svg>
+              <div class="av-phase-tag">Fase 16 · Guardián Pleno</div>
+            </div>
           </div>
         </div>
 
@@ -937,7 +987,7 @@ input[type=range]::-webkit-slider-thumb{
 
       </div>
 
-      <div class="dash-actions">
+      <div class="dash-actions" style="position:relative;z-index:1">
 
         <button class="action main" onclick="go(5)">
           <div class="act-icon">⚡</div>
@@ -1152,12 +1202,34 @@ input[type=range]::-webkit-slider-thumb{
          S8 · RECOMPENSA
     ═══════════════════════════════════════════════ -->
     <div class="screen" id="s8">
+      <div class="aurora-bg"><i></i><i></i><i></i></div>
 
-      <div class="cel-ring">
-        <div class="cel-av">🛡️✨</div>
+      <div class="cel-ring" style="position:relative;z-index:1">
+        <div class="cel-av av-float" style="font-size:0;display:flex;align-items:center;justify-content:center">
+          <svg width="96" height="96" viewBox="0 0 168 168" fill="none">
+            <defs>
+              <linearGradient id="kc8" x1="40" y1="20" x2="128" y2="150"><stop offset="0" stop-color="#9BE8F7"/><stop offset=".55" stop-color="#4FBFE0"/><stop offset="1" stop-color="#2E86C1"/></linearGradient>
+              <linearGradient id="kp8" x1="84" y1="70" x2="84" y2="140"><stop offset="0" stop-color="#E8FBFF"/><stop offset="1" stop-color="#BDEDF8"/></linearGradient>
+              <linearGradient id="ka8" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FDCEF"/><stop offset="1" stop-color="#3D9BD4"/></linearGradient>
+            </defs>
+            <path d="M38 96 C18 88 12 64 24 50 C28 64 38 70 50 72 Z" fill="url(#ka8)"/>
+            <path d="M84 18 C126 18 148 52 148 90 C148 128 122 152 84 152 C46 152 20 128 20 90 C20 52 42 18 84 18 Z" fill="url(#kc8)"/>
+            <ellipse cx="84" cy="106" rx="38" ry="42" fill="url(#kp8)" opacity=".9"/>
+            <path d="M84 6 C90 14 102 16 100 28 C94 24 88 24 84 26 C80 24 74 24 68 28 C66 16 78 14 84 6 Z" fill="#BFF0FA"/>
+            <path d="M22 86 C8 92 6 108 16 118 C18 106 26 100 36 98 Z" fill="url(#ka8)"/>
+            <path d="M146 86 C160 92 162 108 152 118 C150 106 142 100 132 98 Z" fill="url(#ka8)"/>
+            <circle cx="62" cy="78" r="11" fill="#0B2438"/>
+            <circle cx="106" cy="78" r="11" fill="#0B2438"/>
+            <circle cx="65.5" cy="74.5" r="4" fill="#fff"/>
+            <circle cx="109.5" cy="74.5" r="4" fill="#fff"/>
+            <circle cx="65" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
+            <circle cx="109" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
+            <path d="M74 100 Q84 110 94 100" stroke="#0B2438" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
       </div>
 
-      <h2 class="rew-title">¡Lo lograste hoy, Javi!</h2>
+      <h2 class="rew-title" style="position:relative;z-index:1">¡Lo lograste hoy, Javi!</h2>
       <p class="rew-sub">
         Kael, el Fluido, lo ha sentido. Esto no es suerte ni motivación: es
         <strong style="color:#fff">24 días de constancia real</strong>.
