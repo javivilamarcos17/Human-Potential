@@ -288,6 +288,10 @@ const CONFIG = {
   clinica:  'MovePlus',
   zona:     'zona lumbar',
   whatsappFisio: '',   // ej. '34600111222' — activa el envío real de alertas y resúmenes
+  /* SUPABASE (opcional): pega aquí la URL y la anon key de tu proyecto y cada alta,
+     jornada y prueba se guardará también en tu nube (tabla piloto_eventos, migración 0007).
+     Vacío = la app funciona 100% local, como hasta ahora. */
+  supabase: { url:'', anonKey:'' },
   /* SEMANA DE ECLOSIÓN: 7 micro-pruebas reales (1/día) que afinan la Vitalidad
      provisional del alta. El Guardián nace del trabajo, no de un formulario.
      bloque: f(fuerza,0-30) a(aeróbico,0-30) m(movilidad,0-20) c(constancia,0-20) */
@@ -378,6 +382,18 @@ const lineaDe=aud=>aud<=40?'Línea Brote 🌱':aud<=70?'Línea Atlas 🛡️':'L
 
 /* ════ ESTADO PERSISTENTE ════ */
 const K='af_mvp_v1';
+/* Sincronización con Supabase: fire-and-forget, nunca bloquea la app */
+function sync(tipo,payload){
+  const sb=CONFIG.supabase;
+  if(!sb||!sb.url||!sb.anonKey) return;
+  try{
+    S.dispId=S.dispId||(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2));
+    fetch(sb.url.replace(/\/$/,'')+'/rest/v1/piloto_eventos',{method:'POST',
+      headers:{'Content-Type':'application/json','apikey':sb.anonKey,'Authorization':'Bearer '+sb.anonKey,'Prefer':'return=minimal'},
+      body:JSON.stringify({dispositivo_id:S.dispId,nombre:(S.perfil&&S.perfil.nombre)||null,
+        centro:(S.perfil&&S.perfil.centro)||null,tipo,payload})}).catch(()=>{});
+  }catch(e){}
+}
 const hoyISO=()=>S.fechaSim || new Date().toISOString().slice(0,10);
 let S=JSON.parse(localStorage.getItem(K)||'null')||{
   xp:0, ses:0, racha:0, ultDia:null, reaud:0, retos:0, mejora:0, aud:62, fechaSim:null, hechoHoy:false, dolorHoy:3, hist:[]};
@@ -540,7 +556,8 @@ function registrarPrueba(){
   const est={f:10,a:10,m:13,c:6};                          // pesos por defecto si falta algún bloque
   S.aud=Math.min(100,['f','a','m','c'].reduce((t,k)=>t+(S.bloques[k]!=null?S.bloques[k]:est[k]),0));
   S.pruebasHechas.push({f:hoyISO(),v,pts});
-  S.xp+=15; save();                                         // XP por prueba real
+  S.xp+=15; save();
+  sync('prueba_eclosion',{prueba:S.pruebasHechas.length,titulo:pr.titulo,marca:v,puntos:pts,vitalidad:S.aud});                                         // XP por prueba real
   const fin=S.pruebasHechas.length>=CONFIG.pruebas.length;
   alert((fin?'✨ SEMANA DE ECLOSION COMPLETADA.\n':'')+'Marca registrada: '+v+' '+pr.unidad+' → +15 XP.\nVitalidad afinada: '+S.aud+'/100'+(fin?'\n\nTu valoracion ya es REAL. Tu Guardian crece sobre cimientos verdaderos.':''));
   pintar(); ir('home');
@@ -590,6 +607,8 @@ function terminarJornada(){
   const sospechosa=durMin<(window._nEj||3)&&rpeHoy>=7;
   S.hist.push({f:hoy,d:S.dolorHoy,e:+$('v-energia').textContent,r:rpeHoy,m:$('molestia').checked,t:durMin,s:sospechosa});
   if(S.hist.length>30)S.hist.shift();
+  sync('jornada',{dolor:S.dolorHoy,energia:+$('v-energia').textContent,rpe:rpeHoy,molestia:$('molestia').checked,duracion_min:durMin,sospechosa,racha:S.racha,xp:S.xp,fase:faseDesde({...S})});
+  if(S.dolorHoy>=8) sync('alerta_dolor',{dolor:S.dolorHoy,zona:CONFIG.zona});
   save();
   const faseAhora=faseDesde({...S});
   $('xp-ganada').textContent='+'+ganada+' XP';
@@ -624,6 +643,7 @@ function altaSubmit(){
   S.perfil={nombre:n,zona:$('a-zona').value,centro:CONFIG.centros[cod]?cod:null}; S.aud=f+a+m+c;
   CONFIG.paciente=n; CONFIG.zona=S.perfil.zona; save();
   if(cod&&!CONFIG.centros[cod]) alert('Código de centro no reconocido — entras en modo individual (puedes vincularte después).');
+  sync('alta',{zona:S.perfil.zona,vitalidad_provisional:S.aud,centro_intentado:cod||null});
   alert(`Tu Vitalidad inicial: ${S.aud}/100\n(Fuerza ${f}/30 · Aeróbico ${a}/30 · Movilidad ${m}/20 · Constancia ${c}/20)\n\nTu huevo ya late. Las pruebas reales de tu primera semana afinarán este número — y de ahí nacerá tu Guardián.`);
   pintar(); ir('home');
 }

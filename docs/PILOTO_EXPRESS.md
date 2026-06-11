@@ -85,3 +85,17 @@ Opción B — enviar el archivo HTML por WhatsApp/email (funciona offline, menos
 *Siguiente nivel: conectar este mismo HTML a Supabase (login + triaje guardado en la
 nube + semáforo real) es un paso intermedio barato antes del Flutter completo. Pedirlo
 cuando el exprés valide el enganche.*
+
+---
+
+## Conectar a Supabase (datos en tu nube, 15 min, gratis)
+
+1. Crea cuenta en supabase.com → "New project" → **región EU (Frankfurt)** → espera 2 min.
+2. En el panel: SQL Editor → pega el contenido de `supabase/migrations/0007_piloto_express.sql` → Run.
+3. En Settings → API copia la **URL** y la **anon public key**.
+4. Pégalas en el CONFIG de `app-funcional.html`: `supabase: { url:'https://xxxx.supabase.co', anonKey:'eyJ...' }`.
+5. Listo: cada alta, jornada diaria, prueba de eclosión y alerta de dolor de TODOS los
+   pacientes aparece en Table Editor → `piloto_eventos` (con qué dispositivo, qué centro y cuándo).
+
+Seguridad: la clave pública solo permite ESCRIBIR en ese buzón — nadie puede leer los
+datos sin tu acceso de administrador. Si no pegas las claves, todo sigue 100% local.
