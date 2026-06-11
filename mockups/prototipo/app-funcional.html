@@ -535,7 +535,7 @@ function terminarJornada(){
   ir('premio');
 }
 function prevISO(iso){const d=new Date(iso);d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
-function diaSiguiente(){const d=new Date(hoyISO());d.setDate(d.getDate()+1);S.fechaSim=d.toISOString().slice(0,10);S.hechoHoy=false;save();pintar();}
+function diaSiguiente(){try{const d=new Date(hoyISO());d.setDate(d.getDate()+1);S.fechaSim=d.toISOString().slice(0,10);S.hechoHoy=false;save();pintar();}catch(err){alert('Error: '+err.message+'. Pulsa Reiniciar.');}}
 function reset(){localStorage.removeItem(K);location.reload();}
 function altaSubmit(){
   const n=$('a-nombre').value.trim(); if(!n){alert('Dinos tu nombre 🙂');return;}
@@ -548,7 +548,7 @@ function altaSubmit(){
   S.perfil={nombre:n,zona:$('a-zona').value,centro:CONFIG.centros[cod]?cod:null}; S.aud=f+a+m+c;
   CONFIG.paciente=n; CONFIG.zona=S.perfil.zona; save();
   if(cod&&!CONFIG.centros[cod]) alert('Código de centro no reconocido — entras en modo individual (puedes vincularte después).');
-  alert(`Tu Vitalidad inicial: ${S.aud}/100\n(Fuerza ${f}/30 · Aeróbico ${a}/30 · Movilidad ${m}/20 · Constancia ${c}/20)\n\nDe aquí nace tu Guardián. Solo puede mejorar contigo.`);
+  alert(`Tu Vitalidad inicial: ${S.aud}/100\n(Fuerza ${f}/30 · Aeróbico ${a}/30 · Movilidad ${m}/20 · Constancia ${c}/20)\n\nTu huevo ya late. Las pruebas reales de tu primera semana afinarán este número — y de ahí nacerá tu Guardián.`);
   pintar(); ir('home');
 }
 function verProgreso(){
