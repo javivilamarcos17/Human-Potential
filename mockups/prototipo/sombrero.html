@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Frágil · Sombrero Seleccionador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* Sombrero Seleccionador (A3) · D3: el algoritmo asigna familia; el paciente elige 1 de 3.
+     Solo "Kael, el Fluido" es nombre oficial (léxico); los otros dos son provisionales. */
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#060d18;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:var(--af-font-texto);padding:24px}
+  .phone{position:relative;width:390px;min-height:820px;background:var(--af-bg);border-radius:46px;border:1px solid var(--af-line);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .aurora{position:absolute;inset:0;overflow:hidden;filter:blur(70px);opacity:.6}
+  .aurora i{position:absolute;border-radius:50%}
+  .aurora i:nth-child(1){width:430px;height:430px;left:-130px;top:-100px;background:#0b3d56;animation:fl 11s ease-in-out infinite}
+  .aurora i:nth-child(2){width:370px;height:370px;right:-120px;top:200px;background:#0d4a45;animation:fl 13s ease-in-out infinite reverse}
+  .aurora i:nth-child(3){width:300px;height:300px;left:50px;bottom:-90px;background:#123150;animation:fl 9s ease-in-out infinite}
+  @keyframes fl{0%,100%{transform:translate(0,0)}50%{transform:translate(26px,-18px)}}
+  .sbar{position:relative;display:flex;justify-content:space-between;padding:18px 28px 0;color:var(--af-texto-suave);font-size:13px;z-index:2}
+  .content{position:relative;z-index:2;padding:10px 22px 26px;text-align:center}
+
+  /* FASE 1 — revelación del arquetipo */
+  .reveal{animation:in .5s ease both}
+  @keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .eyebrow{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--af-texto-suave);margin:14px 0 6px}
+  .h1{font-family:var(--af-font-display);font-weight:900;font-size:28px;color:var(--af-texto);line-height:1.2}
+  .h1 .agua{color:var(--af-agua)}
+  .porque{margin:14px auto 0;max-width:300px;background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-m);backdrop-filter:blur(var(--af-blur-cristal));padding:13px 16px;font-size:13px;color:var(--af-texto-suave);text-align:left;line-height:1.5}
+  .porque b{color:var(--af-texto)}
+  .sello{width:118px;height:118px;margin:18px auto 6px;position:relative;animation:resp 5.2s ease-in-out infinite}
+  @keyframes resp{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .sello .halo{position:absolute;inset:-16px;border-radius:50%;background:radial-gradient(circle,rgba(91,208,232,.30),transparent 65%);animation:pulso 4.5s ease-in-out infinite}
+  @keyframes pulso{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.12);opacity:1}}
+
+  /* FASE 2 — elegir 1 de 3 */
+  .cards{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+  .gcard{position:relative;display:flex;align-items:center;gap:14px;text-align:left;background:var(--af-panel);border:1.5px solid var(--af-line);border-radius:var(--af-radio-l);backdrop-filter:blur(var(--af-blur-cristal));padding:14px 16px;cursor:pointer;transition:var(--af-t-rapida)}
+  .gcard:hover{background:rgba(255,255,255,.09);transform:translateY(-2px)}
+  .gcard.sel{border-color:var(--af-agua);box-shadow:0 10px 28px rgba(91,208,232,.25)}
+  .gcard.sel::after{content:"✓";position:absolute;top:10px;right:14px;width:24px;height:24px;border-radius:50%;background:var(--af-agua);color:#062430;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .gcard svg{flex:0 0 64px;animation:resp 5.2s ease-in-out infinite}
+  .gcard .nom{font-family:var(--af-font-display);font-weight:800;font-size:17px;color:var(--af-texto)}
+  .gcard .rasgo{font-size:12px;color:var(--af-agua);font-weight:600;margin:1px 0 3px}
+  .gcard .des{font-size:12px;color:var(--af-texto-suave);line-height:1.45}
+  .nota-prov{font-size:10px;color:var(--af-texto-suave);opacity:.7}
+
+  .cta{display:block;width:100%;border:0;font-family:var(--af-font-display);font-weight:800;font-size:15px;color:#062018;background:linear-gradient(135deg,var(--af-primario),var(--af-primario-osc));border-radius:var(--af-radio-m);padding:15px;box-shadow:var(--af-sombra-flotante);cursor:pointer;transition:var(--af-t-rapida);margin-top:16px;opacity:.45;pointer-events:none}
+  .cta.on{opacity:1;pointer-events:auto}
+  .cta.on:hover{transform:translateY(-2px)}
+  .pie{margin-top:10px;font-size:11px;color:var(--af-texto-suave)}
+  .volver{color:var(--af-texto-suave);font-size:12px;text-decoration:none;display:inline-block;margin-top:8px}
+  .volver:hover{color:var(--af-texto)}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="aurora"><i></i><i></i><i></i></div>
+  <div class="sbar"><b>9:41</b><span>WIFI ▮▮▮</span></div>
+  <div class="content">
+
+    <div class="reveal">
+      <div class="sello">
+        <div class="halo"></div>
+        <svg width="118" height="118" viewBox="0 0 118 118" fill="none">
+          <circle cx="59" cy="59" r="52" fill="rgba(91,208,232,.10)" stroke="#5BD0E8" stroke-width="2.5"/>
+          <path d="M59 26c12 16 20 26 20 37a20 20 0 1 1-40 0c0-11 8-21 20-37z" fill="url(#gota)"/>
+          <ellipse cx="52" cy="58" rx="5" ry="8" fill="rgba(255,255,255,.55)"/>
+          <defs><linearGradient id="gota" x1="40" y1="30" x2="78" y2="98"><stop offset="0" stop-color="#9BE8F7"/><stop offset=".6" stop-color="#4FBFE0"/><stop offset="1" stop-color="#2E86C1"/></linearGradient></defs>
+        </svg>
+      </div>
+      <div class="eyebrow">El Sombrero Seleccionador ha hablado</div>
+      <div class="h1">Javi, tu familia es<br><span class="agua">AGUA</span></div>
+      <div class="porque">
+        Tu Auditoría (62/100) dice mucho de ti: <b>buena movilidad</b>, una zona lumbar
+        que pide <b>fluidez antes que impacto</b>, y constancia por construir.
+        El Agua no choca contra la roca: la rodea. Como tú vas a rodear tu dolor.
+      </div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:18px">Elige a tu Guardián · 1 de 3</div>
+
+    <div class="cards">
+      <div class="gcard" onclick="elegir(this)">
+        <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+          <circle cx="32" cy="34" r="22" fill="url(#k1)"/>
+          <circle cx="25" cy="30" r="3.5" fill="#0A2A3C"/><circle cx="39" cy="30" r="3.5" fill="#0A2A3C"/>
+          <path d="M26 40c3 3 9 3 12 0" stroke="#0A2A3C" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M32 6c5 7 8 11 8 16a8 8 0 1 1-16 0c0-5 3-9 8-16z" fill="#9BE8F7"/>
+          <defs><linearGradient id="k1" x1="12" y1="14" x2="50" y2="56"><stop offset="0" stop-color="#9BE8F7"/><stop offset="1" stop-color="#2E86C1"/></linearGradient></defs>
+        </svg>
+        <div>
+          <div class="nom">Kael, el Fluido</div>
+          <div class="rasgo">Calma que avanza</div>
+          <div class="des">Paciente y constante. Crece contigo aunque el día sea malo: se adapta, nunca te juzga.</div>
+        </div>
+      </div>
+
+      <div class="gcard" onclick="elegir(this)">
+        <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+          <path d="M32 8C18 18 14 30 18 42a16 16 0 0 0 28 0c4-12 0-24-14-34z" fill="url(#k2)"/>
+          <circle cx="26" cy="34" r="3.5" fill="#0A2A3C"/><circle cx="38" cy="34" r="3.5" fill="#0A2A3C"/>
+          <path d="M27 44c3 2 7 2 10 0" stroke="#0A2A3C" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M14 26c-3 5-3 10 0 14M50 26c3 5 3 10 0 14" stroke="#5BD0E8" stroke-width="2.5" stroke-linecap="round"/>
+          <defs><linearGradient id="k2" x1="14" y1="12" x2="50" y2="56"><stop offset="0" stop-color="#BDEDF8"/><stop offset="1" stop-color="#3D9BD4"/></linearGradient></defs>
+        </svg>
+        <div>
+          <div class="nom">Brisa, la Marea <span class="nota-prov">(nombre provisional)</span></div>
+          <div class="rasgo">Fuerza que vuelve</div>
+          <div class="des">Sube y baja, pero siempre regresa. Para quien ha abandonado antes y esta vez quiere volver distinto.</div>
+        </div>
+      </div>
+
+      <div class="gcard" onclick="elegir(this)">
+        <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+          <path d="M10 38c8-16 22-22 44-18-4 18-16 28-32 26l-6 8c-2-6-2-11-6-16z" fill="url(#k3)"/>
+          <circle cx="38" cy="30" r="3.5" fill="#0A2A3C"/>
+          <path d="M20 34c6 2 12 2 18-2" stroke="#0A2A3C" stroke-width="2.5" stroke-linecap="round"/>
+          <defs><linearGradient id="k3" x1="10" y1="20" x2="54" y2="48"><stop offset="0" stop-color="#7FDCEF"/><stop offset="1" stop-color="#2E86C1"/></linearGradient></defs>
+        </svg>
+        <div>
+          <div class="nom">Suru, el Torrente <span class="nota-prov">(nombre provisional)</span></div>
+          <div class="rasgo">Ímpetu con dirección</div>
+          <div class="des">Energía a raudales que necesita cauce. Para quien quiere ir fuerte sin volver a lesionarse.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="cta" id="cta" onclick="location.href='index.html'">Vincular mi Guardián</button>
+    <div class="pie">El arte final lo hará un ilustrador humano (D5). Estos son placeholders.</div>
+    <a class="volver" href="../demo.html">← Volver al hub de demo</a>
+  </div>
+</div>
+<script>
+  function elegir(card){
+    document.querySelectorAll('.gcard').forEach(function(c){c.classList.remove('sel')});
+    card.classList.add('sel');
+    var cta=document.getElementById('cta');
+    cta.classList.add('on');
+    cta.textContent='Vincular a '+card.querySelector('.nom').firstChild.textContent.split(',')[0]+' ✓';
+  }
+</script>
+</body>
+</html>
