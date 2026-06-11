@@ -585,7 +585,10 @@ function terminarJornada(){
   const ganada=XP.triaje+XP.rutina+XP.feedback+bonus;
   const faseAntes=faseDesde({...S});
   S.xp+=ganada; S.ses+=1; S.ultDia=hoy; S.hechoHoy=true;
-  S.hist.push({f:hoy,d:S.dolorHoy,e:+$('v-energia').textContent,r:+$('v-rpe').textContent,m:$('molestia').checked});
+  // Coherencia: sesión muy corta + esfuerzo declarado alto = marca para el profesional
+  const durMin=Math.round((Date.now()-(window._t0||Date.now()))/60000), rpeHoy=+$('v-rpe').textContent;
+  const sospechosa=durMin<(window._nEj||3)&&rpeHoy>=7;
+  S.hist.push({f:hoy,d:S.dolorHoy,e:+$('v-energia').textContent,r:rpeHoy,m:$('molestia').checked,t:durMin,s:sospechosa});
   if(S.hist.length>30)S.hist.shift();
   save();
   const faseAhora=faseDesde({...S});
@@ -677,7 +680,7 @@ function enviarResumen(){
   const txt=`Anti Frágil — resumen de ${CONFIG.paciente} (últimos ${u.length} días)\n`+
     `Racha: ${S.racha} días · Sesiones totales: ${S.ses} · Nivel ${nivelDesdeXp(S.xp)}\n`+
     `Dolor medio: ${med(u.map(x=>x.d))}/10 · Energía media: ${med(u.map(x=>x.e))}/10 · RPE medio: ${med(u.map(x=>x.r))}\n`+
-    u.map(x=>`${x.f}: dolor ${x.d}, energía ${x.e}, RPE ${x.r}${x.m?' ⚠ molestia nueva':''}`).join('\n');
+    u.map(x=>`${x.f}: dolor ${x.d}, energía ${x.e}, RPE ${x.r}${x.t!=null?' ('+x.t+' min)':''}${x.m?' ⚠ molestia nueva':''}${x.s?' ⚠ sesión exprés (revisar)':''}`).join('\n');
   if(waDestino()) window.open("https://wa.me/"+waDestino()+'?text='+encodeURIComponent(txt));
   else{navigator.clipboard&&navigator.clipboard.writeText(txt);alert('Resumen copiado al portapapeles (configura whatsappFisio en CONFIG para envío directo):\n\n'+txt);}
 }
