@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<!--
+  Anti Frágil — Galería de Evolución · prototipo v1
+  ───────────────────────────────────────────────────────────────────
+  Persona: Javi · Kael el Fluido · Agua · Fase 16 Guardián Pleno · Nv.50 · Racha 24d
+  Vistas:
+    V1 · Galería  — 6 etapas mayores, sub-fases, estado actual
+    V2 · Evolución — celebración Fa15→Fa16
+    V3 · Re-Auditoría — pantalla "wow" 62→67 (+5)
+  Listón visual: aurora animada, SVG avatar, backdrop-filter, microanimaciones
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anti Frágil · Evolución de Kael</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── tokens ──────────────────────────────────── */
+:root {
+  --bg:#08111E; --p:rgba(255,255,255,.055); --line:rgba(255,255,255,.09);
+  --verde:#2ECC8F; --agua:#5BD0E8; --agua2:#2E86C1; --agua3:#0097A7;
+  --dorado:#F4C430; --rojo:#E53935;
+  --txt:#F2F6FA; --mut:#8DA2B8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  font-family:'Inter',sans-serif;background:#04080F;padding:24px;
+}
+
+/* ── carcasa ─────────────────────────────────── */
+.phone{
+  width:393px;height:852px;border-radius:52px;position:relative;overflow:hidden;
+  background:var(--bg);
+  box-shadow:0 70px 140px rgba(0,0,0,.8),0 0 0 1.5px rgba(255,255,255,.07);
+  flex-shrink:0;
+}
+
+/* ── aurora ──────────────────────────────────── */
+.aurora{position:absolute;inset:0;overflow:hidden;filter:blur(72px);opacity:.5;pointer-events:none;z-index:0}
+.aurora i{position:absolute;border-radius:50%}
+.aurora i:nth-child(1){width:440px;height:440px;left:-140px;top:-100px;background:#0d3a5c;animation:fl 11s ease-in-out infinite}
+.aurora i:nth-child(2){width:380px;height:380px;right:-130px;top:180px;background:#083a4a;animation:fl 14s ease-in-out infinite reverse}
+.aurora i:nth-child(3){width:320px;height:320px;left:30px;bottom:-100px;background:#0d1f40;animation:fl 9s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.1)}}
+
+/* ── vistas ──────────────────────────────────── */
+.view{position:absolute;inset:0;display:none;overflow-y:auto;scrollbar-width:none;z-index:1}
+.view.active{display:block}
+.view::-webkit-scrollbar{display:none}
+
+/* ── status bar ──────────────────────────────── */
+.sbar{
+  position:absolute;top:0;left:0;right:0;height:48px;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;padding:0 32px;
+}
+.sbar b{font-size:15px;color:#fff}
+.sbar span{font-size:11px;letter-spacing:1.5px;color:rgba(255,255,255,.6)}
+
+/* ─────────────────────────────────────────────
+   V1 · GALERÍA
+───────────────────────────────────────────── */
+.gal-content{padding:62px 20px 40px}
+.gal-header{margin-bottom:20px}
+.gal-back{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;color:var(--mut);cursor:pointer;margin-bottom:10px;
+}
+.gal-title{font-family:'Nunito';font-weight:900;font-size:22px;color:var(--txt);margin-bottom:3px}
+.gal-sub{font-size:13px;color:var(--mut)}
+.gal-sub b{color:var(--agua);font-weight:600}
+
+/* stage cards */
+.stage-list{display:flex;flex-direction:column;gap:10px}
+
+.scard{
+  border-radius:20px;background:var(--p);border:1px solid var(--line);
+  backdrop-filter:blur(12px);padding:14px 16px;
+  display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:border-color .2s,transform .15s;
+  position:relative;overflow:hidden;
+}
+.scard:hover{border-color:rgba(91,208,232,.3);transform:translateY(-1px)}
+.scard.current{
+  border-color:rgba(91,208,232,.45);
+  background:rgba(91,208,232,.07);
+}
+.scard.current::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(91,208,232,.06),transparent 60%);
+  pointer-events:none;
+}
+.scard.locked{opacity:.42;cursor:default}
+.scard.locked:hover{transform:none;border-color:var(--line)}
+
+/* mini avatar zone */
+.mini-ava{
+  width:64px;height:64px;flex-shrink:0;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.mini-glow{
+  position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle,rgba(91,208,232,.22) 0%,transparent 70%);
+}
+.mini-ava svg{position:relative;z-index:1}
+.mini-ava.locked svg{filter:saturate(.15) brightness(.5)}
+.mini-ava.float svg{animation:float 4.5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+/* card text */
+.scard-info{flex:1;min-width:0}
+.scard-arc{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mut);margin-bottom:2px}
+.scard-name{font-family:'Nunito';font-weight:900;font-size:16px;color:var(--txt)}
+.scard-name .stage-num{font-size:11px;color:var(--mut);font-weight:500;margin-left:4px}
+
+/* sub-phase dots */
+.dots{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
+.dot{width:8px;height:8px;border-radius:50%}
+.dot.done{background:var(--agua);box-shadow:0 0 5px rgba(91,208,232,.5)}
+.dot.current-dot{background:var(--dorado);box-shadow:0 0 6px rgba(244,196,48,.6);animation:dotpulse 2s ease-in-out infinite}
+@keyframes dotpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+.dot.open{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.15)}
+.dot.locked-dot{background:rgba(255,255,255,.07)}
+
+/* "aquí estás" badge */
+.here-badge{
+  position:absolute;top:10px;right:12px;
+  background:rgba(244,196,48,.15);border:1px solid rgba(244,196,48,.35);
+  color:var(--dorado);font-size:9.5px;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;
+  padding:3px 9px;border-radius:8px;
+  backdrop-filter:blur(6px);
+}
+
+/* legend */
+.legend{
+  margin-top:16px;padding:13px 16px;border-radius:16px;
+  background:var(--p);border:1px solid var(--line);
+  backdrop-filter:blur(8px);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mut)}
+
+/* ─────────────────────────────────────────────
+   V2 · EVOLUCIÓN — CELEBRACIÓN
+───────────────────────────────────────────── */
+#v-evo{background:var(--bg)}
+.evo-content{
+  padding:56px 22px 36px;
+  display:flex;flex-direction:column;align-items:center;
+  min-height:852px;
+  position:relative;
+}
+
+/* partículas CSS */
+.particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.p{position:absolute;border-radius:50%;opacity:0;animation:pfloat linear infinite}
+@keyframes pfloat{
+  0%{transform:translateY(900px) scale(0);opacity:0}
+  10%{opacity:.7}
+  90%{opacity:.5}
+  100%{transform:translateY(-60px) scale(1.2) rotate(360deg);opacity:0}
+}
+/* golden ring flash */
+.flash-ring{
+  position:absolute;top:200px;left:50%;transform:translateX(-50%);
+  width:260px;height:260px;border-radius:50%;
+  border:2px solid rgba(244,196,48,.5);
+  animation:ringpulse 2.2s ease-out infinite;
+}
+@keyframes ringpulse{0%{transform:translateX(-50%) scale(.7);opacity:.8}100%{transform:translateX(-50%) scale(1.4);opacity:0}}
+
+/* avatar escenario */
+.evo-stage{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;
+  margin-top:40px;
+}
+.evo-halo{
+  width:220px;height:220px;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.evo-halo::before,.evo-halo::after{content:'';position:absolute;border-radius:50%}
+.evo-halo::before{inset:0;border:1.5px solid rgba(91,208,232,.3);animation:spin 20s linear infinite}
+.evo-halo::after{inset:20px;border:1px dashed rgba(91,208,232,.18);animation:spin 14s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.evo-glow{
+  position:absolute;inset:20px;border-radius:50%;
+  background:radial-gradient(circle,rgba(91,208,232,.35) 0%,rgba(46,204,143,.12) 50%,transparent 70%);
+  animation:epulse 2.5s ease-in-out infinite;
+}
+@keyframes epulse{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+.evo-ava{position:relative;z-index:2;animation:efloat 4s ease-in-out infinite;filter:drop-shadow(0 16px 32px rgba(13,80,130,.7))}
+@keyframes efloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+/* fase transition */
+.fase-from{
+  font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;
+  margin-top:14px;text-align:center;
+}
+.fase-arrow{font-size:20px;color:var(--dorado);margin:2px 0;text-align:center}
+.fase-new{
+  font-family:'Nunito';font-weight:900;font-size:26px;color:var(--dorado);
+  text-align:center;text-shadow:0 0 30px rgba(244,196,48,.5);
+  margin-bottom:2px;
+}
+.evo-title{
+  font-family:'Nunito';font-weight:900;font-size:28px;color:var(--txt);
+  text-align:center;margin-top:14px;line-height:1.15;
+}
+.evo-sub{font-size:13.5px;color:var(--mut);text-align:center;line-height:1.6;margin-top:8px}
+.evo-sub b{color:var(--agua)}
+
+/* xp pill */
+.xp-pill{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(244,196,48,.12);border:1px solid rgba(244,196,48,.3);
+  color:var(--dorado);font-size:14px;font-weight:700;
+  padding:10px 20px;border-radius:24px;margin-top:20px;
+  backdrop-filter:blur(8px);
+}
+
+/* CTA */
+.evo-cta{
+  width:100%;max-width:320px;
+  background:linear-gradient(135deg,rgba(46,204,143,.95),rgba(36,166,116,.95));
+  border:none;border-radius:18px;padding:16px;margin-top:24px;
+  font-family:'Nunito';font-weight:900;font-size:16px;color:#06281c;
+  cursor:pointer;
+  box-shadow:0 14px 34px rgba(46,204,143,.3);
+  transition:transform .15s,box-shadow .15s;
+}
+.evo-cta:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(46,204,143,.4)}
+
+/* back link */
+.back-link{
+  font-size:12px;color:var(--mut);cursor:pointer;margin-top:14px;
+  display:inline-flex;align-items:center;gap:4px;
+}
+
+/* ─────────────────────────────────────────────
+   V3 · RE-AUDITORÍA WOW
+───────────────────────────────────────────── */
+#v-audit{background:var(--bg)}
+.audit-content{padding:56px 22px 40px;position:relative;z-index:1}
+
+.audit-header{text-align:center;margin-bottom:24px}
+.audit-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(46,204,143,.1);border:1px solid rgba(46,204,143,.3);
+  color:var(--verde);font-size:11px;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;padding:5px 14px;border-radius:12px;
+  margin-bottom:12px;
+}
+.audit-title{font-family:'Nunito';font-weight:900;font-size:24px;color:var(--txt);margin-bottom:4px}
+.audit-sub{font-size:13px;color:var(--mut)}
+
+/* score comparison */
+.score-cmp{
+  display:flex;align-items:center;justify-content:center;gap:0;
+  background:var(--p);border:1px solid var(--line);
+  border-radius:24px;padding:22px 16px;margin-bottom:20px;
+  backdrop-filter:blur(12px);
+  position:relative;overflow:hidden;
+}
+.score-cmp::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(46,204,143,.06),transparent 60%);
+}
+.score-old{text-align:center;flex:1;position:relative;z-index:1}
+.score-old .n{font-family:'Nunito';font-weight:900;font-size:52px;color:rgba(255,255,255,.3);line-height:1}
+.score-old .lbl{font-size:11px;color:var(--mut);margin-top:2px}
+.score-arrow{
+  font-family:'Nunito';font-weight:900;font-size:28px;
+  color:var(--verde);padding:0 8px;position:relative;z-index:1;
+  text-shadow:0 0 20px rgba(46,204,143,.5);
+}
+.score-new{text-align:center;flex:1;position:relative;z-index:1}
+.score-new .n{font-family:'Nunito';font-weight:900;font-size:66px;color:var(--verde);line-height:1;text-shadow:0 0 30px rgba(46,204,143,.4);animation:scaleIn .5s ease-out}
+@keyframes scaleIn{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.score-new .lbl{font-size:11px;color:var(--mut);margin-top:2px}
+
+.delta-pill{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  background:rgba(46,204,143,.12);border:1px solid rgba(46,204,143,.3);
+  color:var(--verde);font-family:'Nunito';font-weight:900;font-size:17px;
+  padding:10px 20px;border-radius:16px;margin-bottom:20px;
+  backdrop-filter:blur(6px);
+}
+
+/* blocks */
+.blocks{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+.block{
+  background:var(--p);border:1px solid var(--line);
+  border-radius:16px;padding:13px 16px;
+  backdrop-filter:blur(10px);
+}
+.block-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.block-name{font-size:13px;font-weight:600;color:var(--txt)}
+.block-score{font-family:'Nunito';font-weight:800;font-size:15px}
+.block-score.up{color:var(--verde)}
+.block-score.same{color:var(--mut)}
+.bar-track{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--agua2),var(--agua));position:relative;overflow:hidden}
+.bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);animation:shine 2.5s ease-in-out infinite}
+@keyframes shine{0%{transform:translateX(-120%)}70%,100%{transform:translateX(120%)}}
+.block-delta{font-size:11px;color:var(--verde);font-weight:600;margin-top:5px}
+
+/* kael reaction */
+.kael-row{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(91,208,232,.07);border:1px solid rgba(91,208,232,.2);
+  border-radius:20px;padding:14px 16px;margin-bottom:20px;
+  backdrop-filter:blur(8px);
+}
+.kael-mini{animation:float 4s ease-in-out infinite;flex-shrink:0}
+.kael-msg{font-size:13px;color:var(--txt);line-height:1.55}
+.kael-msg b{color:var(--agua);font-weight:600}
+
+/* CTA back */
+.audit-cta{
+  width:100%;background:linear-gradient(135deg,rgba(46,204,143,.95),rgba(36,166,116,.95));
+  border:none;border-radius:18px;padding:15px;
+  font-family:'Nunito';font-weight:900;font-size:15px;color:#06281c;
+  cursor:pointer;box-shadow:0 12px 28px rgba(46,204,143,.28);
+  transition:transform .15s;
+}
+.audit-cta:hover{transform:translateY(-2px)}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="aurora"><i></i><i></i><i></i></div>
+
+  <!-- ═══════════════════════════════════════
+       V1 · GALERÍA DE EVOLUCIÓN
+  ═══════════════════════════════════════ -->
+  <div class="view active" id="v-gal">
+    <div class="sbar"><b>9:41</b><span>WIFI ▮▮▮</span></div>
+    <div class="gal-content">
+
+      <div class="gal-header">
+        <div class="gal-back">← Volver al Dashboard</div>
+        <div class="gal-title">El viaje de Kael</div>
+        <div class="gal-sub">Arquetipo <b>Agua · El Fluido</b> · Fase 16 de 30</div>
+      </div>
+
+      <div class="stage-list">
+
+        <!-- HUEVO — completado -->
+        <div class="scard" onclick="void(0)">
+          <div class="mini-ava float">
+            <div class="mini-glow"></div>
+            <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+              <defs>
+                <radialGradient id="h1" cx="40%" cy="35%" r="60%">
+                  <stop offset="0" stop-color="#9BE8F7" stop-opacity=".9"/>
+                  <stop offset="1" stop-color="#062033"/>
+                </radialGradient>
+              </defs>
+              <ellipse cx="27" cy="28" rx="20" ry="23" fill="url(#h1)"/>
+              <ellipse cx="27" cy="28" rx="20" ry="23" fill="none" stroke="rgba(91,208,232,.5)" stroke-width="1"/>
+              <!-- grieta luminosa -->
+              <path d="M22 20 L26 27 L23 32" stroke="rgba(155,232,247,.8)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <path d="M28 24 L32 30" stroke="rgba(155,232,247,.6)" stroke-width="1" stroke-linecap="round" fill="none"/>
+              <!-- brillo interno -->
+              <ellipse cx="22" cy="18" rx="5" ry="5" fill="rgba(155,232,247,.35)"/>
+            </svg>
+          </div>
+          <div class="scard-info">
+            <div class="scard-arc">Arco I · La Semilla</div>
+            <div class="scard-name">Huevo <span class="stage-num">4 fases</span></div>
+            <div class="dots">
+              <div class="dot done"></div><div class="dot done"></div>
+              <div class="dot done"></div><div class="dot done"></div>
+            </div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="rgba(46,204,143,.15)" stroke="rgba(46,204,143,.5)"/><path d="M5 8l2.5 2.5L11 5" stroke="#2ECC8F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <!-- CRÍA — completado -->
+        <div class="scard" onclick="void(0)">
+          <div class="mini-ava float">
+            <div class="mini-glow"></div>
+            <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+              <defs>
+                <linearGradient id="c1" x1="14" y1="10" x2="42" y2="48">
+                  <stop offset="0" stop-color="#7FDCEF"/><stop offset="1" stop-color="#2E86C1"/>
+                </linearGradient>
+              </defs>
+              <!-- cuerpo redondo -->
+              <ellipse cx="27" cy="30" rx="18" ry="17" fill="url(#c1)"/>
+              <!-- panza -->
+              <ellipse cx="27" cy="34" rx="12" ry="11" fill="rgba(232,251,255,.75)"/>
+              <!-- cabeza -->
+              <ellipse cx="27" cy="16" rx="13" ry="12" fill="url(#c1)"/>
+              <!-- ojos -->
+              <circle cx="22" cy="15" r="3.5" fill="#0B2438"/>
+              <circle cx="32" cy="15" r="3.5" fill="#0B2438"/>
+              <circle cx="23.2" cy="13.8" r="1.4" fill="#fff"/>
+              <circle cx="33.2" cy="13.8" r="1.4" fill="#fff"/>
+              <!-- aleta pequeña -->
+              <path d="M10 28 C5 26 4 34 10 36 C10 32 12 29 15 28 Z" fill="rgba(127,220,239,.7)"/>
+              <path d="M44 28 C49 26 50 34 44 36 C44 32 42 29 39 28 Z" fill="rgba(127,220,239,.7)"/>
+            </svg>
+          </div>
+          <div class="scard-info">
+            <div class="scard-arc">Arco I · La Semilla</div>
+            <div class="scard-name">Cría <span class="stage-num">5 fases</span></div>
+            <div class="dots">
+              <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div>
+              <div class="dot done"></div><div class="dot done"></div>
+            </div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="rgba(46,204,143,.15)" stroke="rgba(46,204,143,.5)"/><path d="M5 8l2.5 2.5L11 5" stroke="#2ECC8F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <!-- JOVEN — completado -->
+        <div class="scard" onclick="void(0)">
+          <div class="mini-ava float">
+            <div class="mini-glow"></div>
+            <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+              <defs>
+                <linearGradient id="j1" x1="12" y1="6" x2="44" y2="52">
+                  <stop offset="0" stop-color="#9BE8F7"/><stop offset=".5" stop-color="#4FBFE0"/><stop offset="1" stop-color="#2E86C1"/>
+                </linearGradient>
+                <linearGradient id="jp" x1="27" y1="24" x2="27" y2="50">
+                  <stop offset="0" stop-color="#E8FBFF"/><stop offset="1" stop-color="#BDEDF8"/>
+                </linearGradient>
+              </defs>
+              <!-- cola -->
+              <path d="M12 32 C4 28 4 20 10 16 C12 22 14 26 18 28 Z" fill="rgba(127,220,239,.7)"/>
+              <!-- cuerpo -->
+              <path d="M27 6 C44 6 50 20 50 30 C50 42 40 50 27 50 C14 50 4 42 4 30 C4 20 10 6 27 6 Z" fill="url(#j1)"/>
+              <!-- panza -->
+              <ellipse cx="27" cy="36" rx="14" ry="14" fill="url(#jp)" opacity=".9"/>
+              <!-- cresta -->
+              <path d="M27 2 C31 8 38 9 36 17 C32 14 28 14 27 16 C26 14 22 14 18 17 C16 9 23 8 27 2 Z" fill="rgba(191,240,250,.8)"/>
+              <!-- aletas -->
+              <path d="M5 28 C-2 32 -3 42 5 46 C6 38 10 32 15 30 Z" fill="rgba(127,220,239,.7)"/>
+              <path d="M49 28 C56 32 57 42 49 46 C48 38 44 32 39 30 Z" fill="rgba(127,220,239,.7)"/>
+              <!-- ojos -->
+              <circle cx="20" cy="26" r="4" fill="#0B2438"/>
+              <circle cx="34" cy="26" r="4" fill="#0B2438"/>
+              <circle cx="21.5" cy="24.5" r="1.6" fill="#fff"/>
+              <circle cx="35.5" cy="24.5" r="1.6" fill="#fff"/>
+            </svg>
+          </div>
+          <div class="scard-info">
+            <div class="scard-arc">Arco II · La Forja</div>
+            <div class="scard-name">Joven <span class="stage-num">4 fases</span></div>
+            <div class="dots">
+              <div class="dot done"></div><div class="dot done"></div>
+              <div class="dot done"></div><div class="dot done"></div>
+            </div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="rgba(46,204,143,.15)" stroke="rgba(46,204,143,.5)"/><path d="M5 8l2.5 2.5L11 5" stroke="#2ECC8F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <!-- GUARDIÁN — EN CURSO (clickable → V2) -->
+        <div class="scard current" onclick="showView('v-evo')">
+          <div class="here-badge">✦ Aquí estás</div>
+          <div class="mini-ava float">
+            <div class="mini-glow"></div>
+            <!-- Kael · Guardián Pleno · Fa16 (version reducida del board-premium) -->
+            <svg width="58" height="58" viewBox="0 0 168 168" fill="none">
+              <defs>
+                <linearGradient id="gc" x1="40" y1="20" x2="128" y2="150"><stop offset="0" stop-color="#9BE8F7"/><stop offset=".55" stop-color="#4FBFE0"/><stop offset="1" stop-color="#2E86C1"/></linearGradient>
+                <linearGradient id="gp" x1="84" y1="70" x2="84" y2="140"><stop offset="0" stop-color="#E8FBFF"/><stop offset="1" stop-color="#BDEDF8"/></linearGradient>
+                <linearGradient id="ga" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FDCEF"/><stop offset="1" stop-color="#3D9BD4"/></linearGradient>
+              </defs>
+              <path d="M38 96 C18 88 12 64 24 50 C28 64 38 70 50 72 Z" fill="url(#ga)"/>
+              <path d="M84 18 C126 18 148 52 148 90 C148 128 122 152 84 152 C46 152 20 128 20 90 C20 52 42 18 84 18 Z" fill="url(#gc)"/>
+              <ellipse cx="84" cy="106" rx="38" ry="42" fill="url(#gp)" opacity=".9"/>
+              <path d="M84 6 C90 14 102 16 100 28 C94 24 88 24 84 26 C80 24 74 24 68 28 C66 16 78 14 84 6 Z" fill="#BFF0FA"/>
+              <path d="M22 86 C8 92 6 108 16 118 C18 106 26 100 36 98 Z" fill="url(#ga)"/>
+              <path d="M146 86 C160 92 162 108 152 118 C150 106 142 100 132 98 Z" fill="url(#ga)"/>
+              <circle cx="62" cy="78" r="11" fill="#0B2438"/>
+              <circle cx="106" cy="78" r="11" fill="#0B2438"/>
+              <circle cx="65.5" cy="74.5" r="4" fill="#fff"/>
+              <circle cx="109.5" cy="74.5" r="4" fill="#fff"/>
+              <path d="M74 100 Q84 110 94 100" stroke="#0B2438" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <div class="scard-info">
+            <div class="scard-arc">Arco II · La Forja</div>
+            <div class="scard-name">Guardián <span class="stage-num">7 fases</span></div>
+            <div class="dots">
+              <!-- F14 F15 F16 done · F17-F20 open -->
+              <div class="dot done"></div><div class="dot done"></div>
+              <div class="dot current-dot"></div>
+              <div class="dot open"></div><div class="dot open"></div><div class="dot open"></div><div class="dot open"></div>
+            </div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="rgba(91,208,232,.7)" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+
+        <!-- ALADO — bloqueado -->
+        <div class="scard locked">
+          <div class="mini-ava locked">
+            <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+              <!-- Alado: Kael con aletas grandes como alas -->
+              <path d="M4 22 C-4 16 -2 6 6 4 C10 12 12 18 16 22 Z" fill="rgba(127,220,239,.4)"/>
+              <path d="M50 22 C58 16 56 6 48 4 C44 12 42 18 38 22 Z" fill="rgba(127,220,239,.4)"/>
+              <path d="M27 5 C44 5 50 18 50 28 C50 40 40 49 27 49 C14 49 4 40 4 28 C4 18 10 5 27 5 Z" fill="rgba(79,191,224,.3)"/>
+              <ellipse cx="27" cy="34" rx="13" ry="13" fill="rgba(232,251,255,.15)"/>
+              <path d="M27 1 C31 7 38 7 36 15 C32 12 28 13 27 14 C26 13 22 12 18 15 C16 7 23 7 27 1 Z" fill="rgba(191,240,250,.3)"/>
+              <circle cx="20" cy="26" r="3.5" fill="rgba(11,36,56,.5)"/>
+              <circle cx="34" cy="26" r="3.5" fill="rgba(11,36,56,.5)"/>
+            </svg>
+          </div>
+          <div class="scard-info">
+            <div class="scard-arc">Arco III · El Ascenso</div>
+            <div class="scard-name">Alado <span class="stage-num">7 fases</span></div>
+            <div class="dots">
+              <div class="dot locked-dot"></div><div class="dot locked-dot"></div><div class="dot locked-dot"></div>
+              <div class="dot locked-dot"></div><div class="dot locked-dot"></div><div class="dot locked-dot"></div><div class="dot locked-dot"></div>
+            </div>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="5" y="8" width="8" height="7" rx="2" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1.5"/><path d="M6 8V6a3 3 0 016 0v2" stroke="rgba(255,255,255,.25)" stroke-width="1.5" fill="none"/></svg>
+        </div>
+
+        <!-- DEIDAD — bloqueado -->
+        <div class="scard locked">
+          <div class="mini-ava locked">
+            <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+              <!-- Deidad: forma etérea, casi transparente -->
+              <ellipse cx="27" cy="27" rx="21" ry="23" fill="rgba(91,208,232,.12)" stroke="rgba(91,208,232,.2)" stroke-width="1"/>
+              <!-- forma interior translúcida -->
+              <path d="M27 8 C38 8 44 18 44 27 C44 38 36 46 27 46 C18 46 10 38 10 27 C10 18 16 8 27 8 Z" fill="rgba(91,208,232,.08)"/>
+              <!-- "ojos de deidad" apagados -->
+              <ellipse cx="20" cy="26" rx="3" ry="2" fill="rgba(91,208,232,.2)"/>
+              <ellipse cx="34" cy="26" rx="3" ry="2" fill="rgba(91,208,232,.2)"/>
+              <!-- corona -->
+              <path d="M20 12 L22 8 L27 11 L32 8 L34 12" stroke="rgba(244,196,48,.2)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="scard-info">
+            <div class="scard-arc">Arco IV · El Olimpo</div>
+            <div class="scard-name">Deidad <span class="stage-num">3 fases + Leg.</span></div>
+            <div class="dots">
+              <div class="dot locked-dot"></div><div class="dot locked-dot"></div>
+              <div class="dot locked-dot"></div><div class="dot locked-dot"></div>
+            </div>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="5" y="8" width="8" height="7" rx="2" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1.5"/><path d="M6 8V6a3 3 0 016 0v2" stroke="rgba(255,255,255,.25)" stroke-width="1.5" fill="none"/></svg>
+        </div>
+
+      </div><!-- /stage-list -->
+
+      <!-- leyenda -->
+      <div class="legend">
+        <div class="leg-item"><div class="dot done" style="width:8px;height:8px;border-radius:50%"></div> Completada</div>
+        <div class="leg-item"><div class="dot current-dot" style="width:8px;height:8px;border-radius:50%"></div> Actual</div>
+        <div class="leg-item"><div class="dot open" style="width:8px;height:8px;border-radius:50%"></div> Por desbloquear</div>
+      </div>
+
+    </div>
+  </div><!-- /v-gal -->
+
+  <!-- ═══════════════════════════════════════
+       V2 · MOMENTO EVOLUCIÓN — FA15→FA16
+  ═══════════════════════════════════════ -->
+  <div class="view" id="v-evo">
+    <div class="aurora"><i></i><i></i><i></i></div>
+    <div class="sbar"><b>9:41</b><span>WIFI ▮▮▮</span></div>
+
+    <!-- partículas CSS -->
+    <div class="particles" id="ptcls"></div>
+    <div class="flash-ring"></div>
+
+    <div class="evo-content">
+      <div class="evo-stage">
+
+        <div class="evo-halo">
+          <div class="evo-glow"></div>
+          <svg class="evo-ava" width="180" height="180" viewBox="0 0 168 168" fill="none">
+            <defs>
+              <linearGradient id="ec" x1="40" y1="20" x2="128" y2="150"><stop offset="0" stop-color="#9BE8F7"/><stop offset=".55" stop-color="#4FBFE0"/><stop offset="1" stop-color="#2E86C1"/></linearGradient>
+              <linearGradient id="ep" x1="84" y1="70" x2="84" y2="140"><stop offset="0" stop-color="#E8FBFF"/><stop offset="1" stop-color="#BDEDF8"/></linearGradient>
+              <linearGradient id="ea" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FDCEF"/><stop offset="1" stop-color="#3D9BD4"/></linearGradient>
+              <!-- aura dorada (novedad en FA16) -->
+              <radialGradient id="eaura" cx="50%" cy="50%" r="50%">
+                <stop offset="0" stop-color="rgba(244,196,48,.3)"/>
+                <stop offset="1" stop-color="rgba(244,196,48,0)"/>
+              </radialGradient>
+            </defs>
+            <!-- aura dorada FA16 -->
+            <ellipse cx="84" cy="84" rx="84" ry="84" fill="url(#eaura)"/>
+            <!-- cola -->
+            <path d="M38 96 C18 88 12 64 24 50 C28 64 38 70 50 72 Z" fill="url(#ea)"/>
+            <!-- cuerpo -->
+            <path d="M84 18 C126 18 148 52 148 90 C148 128 122 152 84 152 C46 152 20 128 20 90 C20 52 42 18 84 18 Z" fill="url(#ec)"/>
+            <!-- panza -->
+            <ellipse cx="84" cy="106" rx="38" ry="42" fill="url(#ep)" opacity=".9"/>
+            <!-- cresta -->
+            <path d="M84 6 C90 14 102 16 100 28 C94 24 88 24 84 26 C80 24 74 24 68 28 C66 16 78 14 84 6 Z" fill="#BFF0FA"/>
+            <!-- detalle FA16: marca de identidad en el pecho -->
+            <path d="M84 88 C84 88 78 82 78 76 C78 72 81 70 84 72 C87 70 90 72 90 76 C90 82 84 88 84 88 Z" fill="rgba(244,196,48,.7)" stroke="rgba(244,196,48,.4)" stroke-width="1"/>
+            <!-- aletas -->
+            <path d="M22 86 C8 92 6 108 16 118 C18 106 26 100 36 98 Z" fill="url(#ea)"/>
+            <path d="M146 86 C160 92 162 108 152 118 C150 106 142 100 132 98 Z" fill="url(#ea)"/>
+            <!-- ojos (serenos, fase alta) -->
+            <circle cx="62" cy="78" r="11" fill="#0B2438"/>
+            <circle cx="106" cy="78" r="11" fill="#0B2438"/>
+            <circle cx="65.5" cy="74.5" r="4" fill="#fff"/>
+            <circle cx="109.5" cy="74.5" r="4" fill="#fff"/>
+            <!-- iris agua brillante -->
+            <circle cx="65" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
+            <circle cx="109" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
+            <!-- sonrisa serena -->
+            <path d="M74 100 Q84 110 94 100" stroke="#0B2438" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+
+        <div class="fase-from">Guardián en Forja · Fase 15</div>
+        <div class="fase-arrow">↓</div>
+        <div class="fase-new">✦ Guardián Pleno · Fase 16</div>
+
+        <div class="evo-title">Kael ha evolucionado</div>
+        <div class="evo-sub">
+          Cuatro Retos Maestros superados.<br>
+          <b>Esto no es magia: eres tú.</b>
+        </div>
+
+        <div class="xp-pill">
+          ⚡ +850 Puntos de Vitalidad · Nivel 50
+        </div>
+
+        <button class="evo-cta" onclick="showView('v-audit')">
+          Ver mi nueva Auditoría →
+        </button>
+
+        <div class="back-link" onclick="showView('v-gal')">
+          ← Volver a la galería
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /v-evo -->
+
+  <!-- ═══════════════════════════════════════
+       V3 · RE-AUDITORÍA WOW — 62→67
+  ═══════════════════════════════════════ -->
+  <div class="view" id="v-audit">
+    <div class="aurora"><i></i><i></i><i></i></div>
+    <div class="sbar"><b>9:41</b><span>WIFI ▮▮▮</span></div>
+
+    <div class="audit-content">
+
+      <div class="audit-header">
+        <div class="audit-badge">✓ Re-Auditoría completada</div>
+        <div class="audit-title">Tu cuerpo ha cambiado</div>
+        <div class="audit-sub">Dra. Elena Ruiz · MovePlus · jun 2026</div>
+      </div>
+
+      <!-- score comparison -->
+      <div class="score-cmp">
+        <div class="score-old">
+          <div class="n">62</div>
+          <div class="lbl">Antes</div>
+        </div>
+        <div class="score-arrow">→</div>
+        <div class="score-new">
+          <div class="n">67</div>
+          <div class="lbl">Ahora</div>
+        </div>
+      </div>
+
+      <div class="delta-pill">
+        🌿 +5 puntos de Vitalidad
+      </div>
+
+      <!-- bloques -->
+      <div class="blocks">
+        <!-- Fuerza +2 -->
+        <div class="block">
+          <div class="block-top">
+            <span class="block-name">💪 Fuerza Base</span>
+            <span class="block-score up">20<small style="font-size:11px;color:var(--mut);font-weight:500">/30</small></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:67%"></div></div>
+          <div class="block-delta">↑ +2 puntos · 18 → 20</div>
+        </div>
+        <!-- Aeróbico +2 -->
+        <div class="block">
+          <div class="block-top">
+            <span class="block-name">🏃 Capacidad Aeróbica</span>
+            <span class="block-score up">18<small style="font-size:11px;color:var(--mut);font-weight:500">/30</small></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:60%"></div></div>
+          <div class="block-delta">↑ +2 puntos · 16 → 18</div>
+        </div>
+        <!-- Movilidad +1 -->
+        <div class="block">
+          <div class="block-top">
+            <span class="block-name">🧘 Movilidad / Dolor</span>
+            <span class="block-score up">13<small style="font-size:11px;color:var(--mut);font-weight:500">/20</small></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:65%"></div></div>
+          <div class="block-delta">↑ +1 punto · 12 → 13</div>
+        </div>
+        <!-- Constancia — igual -->
+        <div class="block">
+          <div class="block-top">
+            <span class="block-name">📅 Constancia / Hábitos</span>
+            <span class="block-score same">16<small style="font-size:11px;color:var(--mut);font-weight:500">/20</small></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+          <div class="block-delta" style="color:var(--mut)">↑ +2 puntos · 12 → 16 · 24 días de racha</div>
+        </div>
+      </div>
+
+      <!-- Kael reacciona -->
+      <div class="kael-row">
+        <svg class="kael-mini" width="52" height="52" viewBox="0 0 168 168" fill="none">
+          <defs>
+            <linearGradient id="kc" x1="40" y1="20" x2="128" y2="150"><stop offset="0" stop-color="#9BE8F7"/><stop offset=".55" stop-color="#4FBFE0"/><stop offset="1" stop-color="#2E86C1"/></linearGradient>
+            <linearGradient id="kp" x1="84" y1="70" x2="84" y2="140"><stop offset="0" stop-color="#E8FBFF"/><stop offset="1" stop-color="#BDEDF8"/></linearGradient>
+          </defs>
+          <path d="M84 18 C126 18 148 52 148 90 C148 128 122 152 84 152 C46 152 20 128 20 90 C20 52 42 18 84 18 Z" fill="url(#kc)"/>
+          <ellipse cx="84" cy="106" rx="38" ry="42" fill="url(#kp)" opacity=".9"/>
+          <circle cx="62" cy="78" r="11" fill="#0B2438"/>
+          <circle cx="106" cy="78" r="11" fill="#0B2438"/>
+          <circle cx="65.5" cy="74.5" r="4" fill="#fff"/>
+          <circle cx="109.5" cy="74.5" r="4" fill="#fff"/>
+          <circle cx="65" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
+          <circle cx="109" cy="75" r="2" fill="rgba(91,208,232,.9)"/>
+          <path d="M74 100 Q84 110 94 100" stroke="#0B2438" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="kael-msg">
+          <b>Kael lo nota.</b> El dolor bajó de 7 a 3,
+          la fuerza crece y la racha es real.
+          Este resultado no se fabrica: se construye.
+        </div>
+      </div>
+
+      <button class="audit-cta" onclick="showView('v-gal')">
+        ← Volver a mi evolución
+      </button>
+
+    </div>
+  </div><!-- /v-audit -->
+
+</div><!-- /phone -->
+
+<script>
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById(id).scrollTop=0;
+  if(id==='v-evo') spawnParticles();
+}
+function spawnParticles(){
+  const c=document.getElementById('ptcls');
+  c.innerHTML='';
+  const colors=['#5BD0E8','#F4C430','#2ECC8F','#80DEEA','#BFF0FA'];
+  for(let i=0;i<28;i++){
+    const p=document.createElement('div');
+    p.className='p';
+    const sz=4+Math.random()*8;
+    p.style.cssText=`
+      width:${sz}px;height:${sz}px;
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${2.5+Math.random()*3}s;
+      animation-delay:${Math.random()*2}s;
+    `;
+    c.appendChild(p);
+  }
+}
+</script>
+</body>
+</html>

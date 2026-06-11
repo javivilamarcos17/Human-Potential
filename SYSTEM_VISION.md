@@ -45,6 +45,10 @@ Claude, es imperativo que NO añadas ni sugieras programar estas funcionalidades
 | **D5** | **Arte de avatares: ilustrador humano** | El sistema deja *placeholders* intercambiables. Las ilustraciones finales (20 fases × familia) las hace un ilustrador humano, no IA. | 2026-06-10 |
 | **D6** | **Pagos siempre fuera de la app** | En el MVP no hay pasarela de pago in-app (ni Stripe in-app ni IAP). La app solo muestra saldos y descuentos visuales ("Descuento Sudado"). El cobro real ocurre en la web/recepción de la clínica. | 2026-06-10 |
 | **D7** | **Auditoría y tests configurables por profesional** | Lo estable es el marco (4 bloques, escala 0-100); el contenido (ejercicios, preguntas, umbrales, protocolos) lo especializa cada clínica/profesional vía plantillas editables. No hay un test único para todos. | 2026-06-10 · [diseño/auditoria-vitalidad.md](docs/diseño/auditoria-vitalidad.md) |
+| **D8** | **Registro dual B2C + B2B2C** | Vía abierta (email) y vía partner (Código de Centro, ej. LIDOMARE26) con personalización del centro y skin exclusiva. `clinica_id` pasa a opcional. | 2026-06-11 · [diseño/arquitectura-modular.md](docs/diseño/arquitectura-modular.md) |
+| **D9** | **Gamificación por Temporadas (arquitectura modular)** | Avatares estructurados por `season_id`. Season 0 lanza simple (3-4 formas); las 30 fases son el mapa al que se crece. Vitrina de Trofeos conserva avatares pasados. Skins de partner. | 2026-06-11 |
+| **D10** | **Bifurcación diaria presencial/casa + verificación QR** | El usuario elige cada día entrenar en el centro (escanea QR impreso en recepción → puntos verificados) o en casa (vídeo/PDF). Botón de honor solo como excepción marcada "no verificado". | 2026-06-11 |
+| **D11** | **Módulo clínico low-tech con placeholders medibles** | Pestañas Nutrición y Fisioterapia Avanzada con contenido estático curado + botones "Próximamente" que registran clics para validar interés antes de programar. | 2026-06-11 |
 
 ## 8. Auditoría de Vitalidad (puntuación 1–100)
 
