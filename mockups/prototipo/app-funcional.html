@@ -563,10 +563,20 @@ function cerrarTriaje(){
        <div class="t1">${e.nombre}</div><div class="t2">${e.detalle}</div></div>
        ${e.video?`<a href="${e.video}" target="_blank" onclick="event.stopPropagation()" style="font-size:12px;font-weight:700;color:var(--af-agua);text-decoration:none">▶ Ver</a>`:''}
      </div>`).join('');
+  window._t0=Date.now();window._nEj=pack.ejercicios.length;   // arranca el reloj de honestidad
   ir('rutina');
 }
-function marcar(el){el.classList.toggle('ok');
-  $('btn-rutina').disabled=document.querySelectorAll('.ej.ok').length<document.querySelectorAll('.ej').length;}
+function marcar(el){el.classList.toggle('ok');revisarRutina();}
+function revisarRutina(){
+  const todos=document.querySelectorAll('#rut-lista .ej.ok').length>=document.querySelectorAll('#rut-lista .ej').length;
+  const minimo=(window._nEj||3)*40000;                       // 40s por ejercicio: fricción honesta
+  const falta=Math.ceil((minimo-(Date.now()-(window._t0||0)))/1000);
+  const b=$('btn-rutina');
+  if(!todos){b.disabled=true;b.textContent='Completar rutina · +20 XP';return;}
+  if(falta>0){b.disabled=true;
+    b.textContent='Tu Guardián entrena contigo, no con clics · '+Math.floor(falta/60)+':'+String(falta%60).padStart(2,'0');
+    clearTimeout(window._tj);window._tj=setTimeout(revisarRutina,1000);return;}
+  b.disabled=false;b.textContent='Completar rutina · +20 XP';}
 function terminarJornada(){
   // racha real por calendario (espejo de la regla Dart)
   const hoy=hoyISO(), ayer=S.fechaSim?prevISO(S.fechaSim):prevISO(new Date().toISOString().slice(0,10));
