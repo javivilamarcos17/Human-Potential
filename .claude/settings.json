@@ -69,6 +69,9 @@
       "Bash(git credential-manager *)",
       "PowerShell(git add docs/PRIVACIDAD_RGPD.md coordinacion/agente-2/ESTADO.md)",
       "Bash(git commit -m 'feat\\(copy\\): copy de notificaciones push con tono empat\\\\xc3\\\\xada cl\\\\xc3\\\\xadnica *)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\jabiv\\Desktop\\Human Potential\\docs\\diseño"
     ]
   },
   "includeGitInstructions": true,

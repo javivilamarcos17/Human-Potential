@@ -7,16 +7,16 @@
 > `docs/REVISION_CRITICA.md` (coherencia con `ESPECIFICACION_MVP.md` y con el resto).
 
 ## ▶ EN CURSO
-- **Crea `docs/PRIVACIDAD_RGPD.md`** — borrador de privacidad/RGPD para datos sanitarios:
-  qué datos se recogen (dolor, triajes, vídeos de test), base legal, quién accede (aislamiento
-  por clínica/RLS), derechos del paciente, retención y anonimización futura (Instituto, Fase 3).
-  MARCA CLARO que es un borrador a validar por un abogado (no es asesoría legal). SOLO ese archivo.
+- **Crea `docs/CHECKLIST_LANZAMIENTO.md`** — lista de comprobación para lanzar el piloto, por
+  bloques con responsable y criterio de "hecho": técnico (RLS activa y verificada, builds,
+  tiendas/TestFlight), clínico (plantillas de auditoría, packs, vídeos grabados), legal
+  (integra las 10 acciones bloqueantes de tu `PRIVACIDAD_RGPD.md`) y comercial (clínica
+  piloto firmada, precios). SOLO ese archivo.
 
-## ⬜ COLA (en orden; no empieces hasta que pase a EN CURSO)
-1. **`docs/CHECKLIST_LANZAMIENTO.md`** — lista de comprobación para lanzar el piloto: técnico
-   (RLS, builds, tiendas), clínico (plantillas, packs, vídeos), legal y comercial.
+## ⬜ COLA
+- (Tras esta, tu track de negocio queda completo. El organizador decidirá si hay más.)
 
-## ✅ Hecho: PROYECCIONES · COMPETENCIA · RIESGOS · KPIS · MODELO_PRECIOS · GO_TO_MARKET
+## ✅ Hecho: PROYECCIONES · COMPETENCIA · RIESGOS · KPIS · MODELO_PRECIOS · GO_TO_MARKET · PRIVACIDAD_RGPD
 
 ## Reglas
 - Solo creas el archivo asignado + tu `ESTADO.md`. No toques CHANGELOG ni archivos de otros.
