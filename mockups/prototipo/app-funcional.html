@@ -124,6 +124,11 @@
         <div class="t-num" id="a-c" style="color:var(--af-primario);font-size:30px">2</div>
         <input type="range" min="0" max="7" value="2" oninput="$('a-c').textContent=this.value">
       </div>
+      <div class="panel">
+        <div class="sub">¿Tienes un código de tu centro? <span style="opacity:.6">(opcional)</span></div>
+        <input id="a-centro" placeholder="Ej.: LIDOMARE26" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px;text-transform:uppercase">
+        <div class="sub" style="margin-top:6px;font-size:11px">Con él, tu centro te acompaña: verá tu progreso y te propondrá sus actividades.</div>
+      </div>
       <button class="cta" onclick="altaSubmit()">Crear mi Guardián</button>
     </div>
 
@@ -145,6 +150,10 @@
         <div class="track"><div class="fill" id="xp-fill" style="width:0%"></div></div>
       </div>
       <div class="hecho-hoy" id="hecho-hoy" style="display:none">✓ Jornada de hoy completada. Kael descansa contigo.</div>
+      <div id="centro-bloque" style="display:none">
+        <div class="xprow" style="margin-top:14px"><span id="centro-titulo" style="font-weight:700;color:var(--af-dorado)"></span></div>
+        <div id="centro-lista"></div>
+      </div>
       <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
       <div class="toolbar">
         <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
@@ -169,6 +178,15 @@
         <div class="t-num" id="v-energia" style="color:var(--af-agua)">7</div>
         <input type="range" min="1" max="10" value="7" oninput="energia(this.value)">
         <div class="scale"><span>Agotado</span><span>A tope</span></div>
+      </div>
+      <div class="panel">
+        <div class="sub">¿Cuánto tiempo real tienes hoy?</div>
+        <div class="toolbar" style="margin-top:8px">
+          <div class="tool t-tiempo" data-min="5" onclick="tiempo(this)">⚡ 5 min</div>
+          <div class="tool t-tiempo" data-min="15" onclick="tiempo(this)" style="border-color:var(--af-primario);color:var(--af-texto)">🕒 15 min</div>
+          <div class="tool t-tiempo" data-min="30" onclick="tiempo(this)">💪 30 min</div>
+        </div>
+        <div class="sub" style="margin-top:8px;font-size:11px">Sin culpa: 5 minutos bien hechos también suman racha y XP. La rutina se amolda a ti.</div>
       </div>
       <div class="alerta-roja" id="alerta">
         <b>⚠ Aviso enviado a <span class="cfg-fisio">tu fisio</span> (<span class="cfg-clinica">tu clínica</span>).</b><br>
@@ -231,6 +249,20 @@ const CONFIG = {
   clinica:  'MovePlus',
   zona:     'zona lumbar',
   whatsappFisio: '',   // ej. '34600111222' — activa el envío real de alertas y resúmenes
+  /* CENTROS (B2B2C — D8): el centro reparte su código; el cliente entra gratis.
+     El centro recibe los datos (WhatsApp), pone su marca y ofrece sus actividades
+     DENTRO de la app del cliente (su canal de venta y conexión). Editable a mano: */
+  centros: {
+    'LIDOMARE26': {
+      nombre: 'Lidomare',
+      whatsapp: '',                       // los resúmenes y alertas del cliente van aquí
+      actividades: [
+        {nombre:'Pilates máquina',    detalle:'Complemento perfecto para tu espalda · mar/jue 19:00', cta:'Reservar plaza'},
+        {nombre:'Sala de fuerza guiada', detalle:'Tu pack de progresión, con supervisión · lun-vie',  cta:'Pedir info'},
+        {nombre:'Fisioterapia',       detalle:'Si el dolor no cede, valoración presencial',           cta:'Pedir cita'},
+      ]
+    }
+  },
   pack: {
     nombre: 'Pack Lumbar',
     ejercicios: [
@@ -330,11 +362,24 @@ function pintar(){
   document.querySelectorAll('.cfg-fisio').forEach(e=>e.textContent=CONFIG.fisio);
   document.querySelectorAll('.cfg-clinica').forEach(e=>e.textContent=CONFIG.clinica);
   document.querySelectorAll('.cfg-zona').forEach(e=>e.textContent=CONFIG.zona);
+  // Bloque del centro (B2B2C): sus actividades dentro de la app del cliente
+  const c=miCentro(), bl=$('centro-bloque');
+  if(c){bl.style.display='block';
+    $('centro-titulo').textContent=`${c.nombre} te propone`;
+    $('centro-lista').innerHTML=c.actividades.map(a=>
+      `<div class="ej" style="cursor:default"><div style="flex:1">
+         <div class="t1">${a.nombre}</div><div class="t2">${a.detalle}</div></div>
+         ${c.whatsapp?`<a href="https://wa.me/${c.whatsapp}?text=${encodeURIComponent('Hola, soy '+CONFIG.paciente+' (Anti Frágil). Me interesa: '+a.nombre)}" target="_blank" style="font-size:12px;font-weight:700;color:var(--af-dorado);text-decoration:none">${a.cta} →</a>`
+                     :`<span style="font-size:12px;font-weight:700;color:var(--af-dorado)">${a.cta} →</span>`}
+       </div>`).join('');
+  } else bl.style.display='none';
 }
+function miCentro(){return S.perfil&&S.perfil.centro?CONFIG.centros[S.perfil.centro]:null;}
+function waDestino(){const c=miCentro();return (c&&c.whatsapp)||CONFIG.whatsappFisio;}
 function dolor(v){const e=$('v-dolor');e.textContent=v;e.style.color=v>=8?'var(--af-rojo)':v>=5?'var(--af-ambar)':'var(--af-primario)';$('alerta').style.display=v>=8?'block':'none';S.dolorHoy=+v;
   const wa=$('wa-alerta');
-  if(v>=8 && CONFIG.whatsappFisio){wa.style.display='block';
-    wa.href='https://wa.me/'+CONFIG.whatsappFisio+'?text='+encodeURIComponent(`⚠ Anti Frágil — ${CONFIG.paciente}: dolor ${v}/10 en ${CONFIG.zona} hoy (${hoyISO()}). Rutina adaptada a suave.`);}
+  if(v>=8 && waDestino()){wa.style.display='block';
+    wa.href="https://wa.me/"+waDestino()+'?text='+encodeURIComponent(`⚠ Anti Frágil — ${CONFIG.paciente}: dolor ${v}/10 en ${CONFIG.zona} hoy (${hoyISO()}). Rutina adaptada a suave.`);}
   else wa.style.display='none';}
 function energia(v){$('v-energia').textContent=v;}
 /* ── MOTOR DE ADAPTACIÓN DIGITAL ─────────────────────────────────────────
@@ -362,8 +407,15 @@ function decidirRutina(){
     motivo:'Tu dolor lleva 2 semanas sin bajar. La app seguirá contigo — pero unas manos expertas podrían encontrar lo que falta.', vender:true};
   return {pack:CONFIG.pack, titulo:'Tu rutina de hoy', motivo:'', vender:false};
 }
+function tiempo(el){S.tiempoHoy=+el.dataset.min;
+  document.querySelectorAll('.t-tiempo').forEach(t=>{t.style.borderColor='';t.style.color='';});
+  el.style.borderColor='var(--af-primario)';el.style.color='var(--af-texto)';}
 function cerrarTriaje(){
-  const dec=decidirRutina(), pack=dec.pack;
+  const dec=decidirRutina();
+  // El día a día manda: la rutina se recorta al tiempo real disponible
+  const min=S.tiempoHoy||15, nEj=min<=5?Math.min(2,dec.pack.ejercicios.length):min<=15?Math.min(3,dec.pack.ejercicios.length):dec.pack.ejercicios.length;
+  const pack={nombre:dec.pack.nombre,ejercicios:dec.pack.ejercicios.slice(0,nEj)};
+  if(nEj<dec.pack.ejercicios.length) dec.motivo=(dec.motivo?dec.motivo+' ':'')+`Versión de ${min} min: ${nEj} ejercicios esenciales — donde estés, sin material raro.`;
   $('rut-titulo').textContent=dec.titulo;
   $('rut-sub').innerHTML=(dec.motivo?`<span style="color:var(--af-agua)">🤖 ${dec.motivo}</span><br>`:'')
     +`${pack.nombre} · plan digital Anti Frágil`
@@ -412,8 +464,10 @@ function altaSubmit(){
         a=Math.min(30,Math.round(+$('a-a').textContent/2)),        // 60 min → 30 puntos
         m=+$('a-m').value,
         c=Math.round(+$('a-c').textContent*20/7);                  // 7 días → 20 puntos
-  S.perfil={nombre:n,zona:$('a-zona').value}; S.aud=f+a+m+c;
+  const cod=$('a-centro').value.trim().toUpperCase();
+  S.perfil={nombre:n,zona:$('a-zona').value,centro:CONFIG.centros[cod]?cod:null}; S.aud=f+a+m+c;
   CONFIG.paciente=n; CONFIG.zona=S.perfil.zona; save();
+  if(cod&&!CONFIG.centros[cod]) alert('Código de centro no reconocido — entras en modo individual (puedes vincularte después).');
   alert(`Tu Vitalidad inicial: ${S.aud}/100\n(Fuerza ${f}/30 · Aeróbico ${a}/30 · Movilidad ${m}/20 · Constancia ${c}/20)\n\nDe aquí nace tu Guardián. Solo puede mejorar contigo.`);
   pintar(); ir('home');
 }
@@ -425,7 +479,7 @@ function enviarResumen(){
     `Racha: ${S.racha} días · Sesiones totales: ${S.ses} · Nivel ${nivelDesdeXp(S.xp)}\n`+
     `Dolor medio: ${med(u.map(x=>x.d))}/10 · Energía media: ${med(u.map(x=>x.e))}/10 · RPE medio: ${med(u.map(x=>x.r))}\n`+
     u.map(x=>`${x.f}: dolor ${x.d}, energía ${x.e}, RPE ${x.r}${x.m?' ⚠ molestia nueva':''}`).join('\n');
-  if(CONFIG.whatsappFisio) window.open('https://wa.me/'+CONFIG.whatsappFisio+'?text='+encodeURIComponent(txt));
+  if(waDestino()) window.open("https://wa.me/"+waDestino()+'?text='+encodeURIComponent(txt));
   else{navigator.clipboard&&navigator.clipboard.writeText(txt);alert('Resumen copiado al portapapeles (configura whatsappFisio en CONFIG para envío directo):\n\n'+txt);}
 }
 if(S.perfil){CONFIG.paciente=S.perfil.nombre;CONFIG.zona=S.perfil.zona;}
