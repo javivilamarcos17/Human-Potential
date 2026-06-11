@@ -93,6 +93,40 @@
   <div class="sbar"><b>9:41</b><span id="fecha-sim"></span></div>
   <div class="content">
 
+    <!-- ALTA EXPRÉS (solo primera vez) -->
+    <div class="scr" id="alta">
+      <div class="h1">Empecemos, de verdad</div>
+      <div class="sub">60 segundos. De aquí nace tu Guardián.</div>
+      <div class="panel">
+        <div class="sub">¿Cómo te llamas?</div>
+        <input id="a-nombre" placeholder="Tu nombre" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px">
+        <div class="sub" style="margin-top:12px">¿Dónde está tu molestia principal?</div>
+        <select id="a-zona" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px">
+          <option value="zona lumbar">Zona lumbar</option><option value="cervicales">Cervicales</option>
+          <option value="hombro">Hombro</option><option value="rodilla">Rodilla</option>
+          <option value="cadera">Cadera</option><option value="bienestar general">Ninguna — prevención</option>
+        </select>
+      </div>
+      <div class="panel">
+        <div class="sub">Mini-Auditoría de Vitalidad</div>
+        <div class="sub" style="margin-top:10px;color:var(--af-texto)">¿Cuántas sentadillas seguidas harías sin parar?</div>
+        <div class="t-num" id="a-f" style="color:var(--af-tierra);font-size:30px">10</div>
+        <input type="range" min="0" max="30" value="10" oninput="$('a-f').textContent=this.value">
+        <div class="sub" style="margin-top:8px;color:var(--af-texto)">¿Minutos andando rápido sin agotarte?</div>
+        <div class="t-num" id="a-a" style="color:var(--af-viento);font-size:30px">20</div>
+        <input type="range" min="0" max="60" value="20" oninput="$('a-a').textContent=this.value">
+        <div class="sub" style="margin-top:8px;color:var(--af-texto)">¿Te tocas los pies sin doblar rodillas?</div>
+        <select id="a-m" style="width:100%;margin-top:6px;padding:10px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto)">
+          <option value="20">Sí, fácil</option><option value="13" selected>Casi — me quedo cerca</option>
+          <option value="7">Lejos</option><option value="3">Con dolor</option>
+        </select>
+        <div class="sub" style="margin-top:10px;color:var(--af-texto)">¿Cuántos días a la semana haces algo de ejercicio?</div>
+        <div class="t-num" id="a-c" style="color:var(--af-primario);font-size:30px">2</div>
+        <input type="range" min="0" max="7" value="2" oninput="$('a-c').textContent=this.value">
+      </div>
+      <button class="cta" onclick="altaSubmit()">Crear mi Guardián</button>
+    </div>
+
     <!-- HOME -->
     <div class="scr on" id="home">
       <div class="stage">
@@ -371,6 +405,18 @@ function terminarJornada(){
 function prevISO(iso){const d=new Date(iso);d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
 function diaSiguiente(){const d=new Date(hoyISO());d.setDate(d.getDate()+1);S.fechaSim=d.toISOString().slice(0,10);S.hechoHoy=false;save();pintar();}
 function reset(){localStorage.removeItem(K);location.reload();}
+function altaSubmit(){
+  const n=$('a-nombre').value.trim(); if(!n){alert('Dinos tu nombre 🙂');return;}
+  // Score 0-100 con los pesos reales: fuerza 30 + aeróbico 30 + movilidad 20 + constancia 20
+  const f=Math.min(30,Math.round(+$('a-f').textContent)),          // 1 sentadilla ≈ 1 punto (tope 30)
+        a=Math.min(30,Math.round(+$('a-a').textContent/2)),        // 60 min → 30 puntos
+        m=+$('a-m').value,
+        c=Math.round(+$('a-c').textContent*20/7);                  // 7 días → 20 puntos
+  S.perfil={nombre:n,zona:$('a-zona').value}; S.aud=f+a+m+c;
+  CONFIG.paciente=n; CONFIG.zona=S.perfil.zona; save();
+  alert(`Tu Vitalidad inicial: ${S.aud}/100\n(Fuerza ${f}/30 · Aeróbico ${a}/30 · Movilidad ${m}/20 · Constancia ${c}/20)\n\nDe aquí nace tu Guardián. Solo puede mejorar contigo.`);
+  pintar(); ir('home');
+}
 function enviarResumen(){
   const u=S.hist.slice(-7);
   if(!u.length){alert('Aún no hay jornadas registradas.');return;}
@@ -382,7 +428,9 @@ function enviarResumen(){
   if(CONFIG.whatsappFisio) window.open('https://wa.me/'+CONFIG.whatsappFisio+'?text='+encodeURIComponent(txt));
   else{navigator.clipboard&&navigator.clipboard.writeText(txt);alert('Resumen copiado al portapapeles (configura whatsappFisio en CONFIG para envío directo):\n\n'+txt);}
 }
+if(S.perfil){CONFIG.paciente=S.perfil.nombre;CONFIG.zona=S.perfil.zona;}
 pintar();
+if(!S.perfil) ir('alta');
 </script>
 </body>
 </html>
