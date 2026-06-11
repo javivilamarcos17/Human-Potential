@@ -32,7 +32,16 @@
 - [ANALISIS_COMPETENCIA.md](ANALISIS_COMPETENCIA.md) — competidores y fosos defensivos.
 - [RIESGOS_Y_MITIGACIONES.md](RIESGOS_Y_MITIGACIONES.md) — riesgos del proyecto y cómo mitigarlos.
 - [KPIS_NEGOCIO.md](KPIS_NEGOCIO.md) — métrica norte estrella + 17 KPIs con metas y alarmas.
-- *(en curso: MODELO_PRECIOS, GO_TO_MARKET, PRIVACIDAD_RGPD, microcopy de la app)*
+- [MODELO_PRECIOS.md](MODELO_PRECIOS.md) — planes clínica (150-250€/mes) + Descuento Sudado.
+- [PLAN_GO_TO_MARKET.md](PLAN_GO_TO_MARKET.md) — captación de las primeras clínicas.
+- [PRIVACIDAD_RGPD.md](PRIVACIDAD_RGPD.md) — borrador legal (validar con abogado).
+- [CHECKLIST_LANZAMIENTO.md](CHECKLIST_LANZAMIENTO.md) — qué debe estar listo antes del piloto.
+- [GUION_DEMO_CLINICAS.md](GUION_DEMO_CLINICAS.md) — cómo hacer la demo de venta a una clínica.
+
+## ✍️ Contenido y voz (copy — `diseño/`)
+- [microcopy-app.md](diseño/microcopy-app.md) · [copy-notificaciones.md](diseño/copy-notificaciones.md) · [copy-estados.md](diseño/copy-estados.md) · [copy-tarjetas-epicas.md](diseño/copy-tarjetas-epicas.md) · [copy-panel-clinica.md](diseño/copy-panel-clinica.md) · [copy-anamnesis.md](diseño/copy-anamnesis.md)
+- [moodboard-avatares.md](diseño/moodboard-avatares.md) — guía de estilo para el ilustrador ("Pokémon moderno").
+- [sistema-diseno.md](diseño/sistema-diseno.md) — design tokens: la tabla maestra de la estética.
 
 ## 🛠️ Técnico
 - [ARQUITECTURA.md](ARQUITECTURA.md) — stack, modelo de datos, cómo arrancar.
