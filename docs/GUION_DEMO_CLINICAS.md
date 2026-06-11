@@ -91,7 +91,7 @@ sesiones completadas.
 
 **Qué decir:**
 > "Esto es lo primero que ve el paciente al abrir la app. Treinta segundos. Dos deslizadores.
-> Si el dolor sube a 7 o más, tú recibes la alerta de semáforo que acabamos de ver."
+> Si el dolor sube de 7 (8 o más), tú recibes la alerta de semáforo que acabamos de ver."
 
 ### 3.2 El Guardián (el avatar)
 
@@ -125,7 +125,7 @@ sesiones completadas.
 
 *Escucha. Si la respuesta es positiva, avanza:*
 
-> "Lo que te propongo es probarlo durante 10 semanas con 20-30 de tus pacientes, sin coste.
+> "Lo que te propongo es probarlo durante 10 semanas con 20-40 de tus pacientes, sin coste.
 > Al final, si ves que funciona, hablamos de continuar. ¿Cuándo podríamos empezar?"
 
 ---
@@ -134,7 +134,7 @@ sesiones completadas.
 
 ### "Me interesa, ¿cuándo empezamos?"
 → Concretar fecha de la sesión de onboarding (máximo 2 semanas).
-→ Pedir lista de 20-30 pacientes candidatos.
+→ Pedir lista de 20-40 pacientes candidatos.
 → Confirmar que tiene vídeos o disponibilidad para grabarlos.
 
 ### "Me interesa pero necesito pensarlo"

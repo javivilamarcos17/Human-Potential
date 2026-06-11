@@ -71,7 +71,7 @@ Tu fisio verá la alerta y puede adaptarte la rutina o contactarte. No te castig
 por los días difíciles — te acompañamos.
 
 **¿Y si me olvido de hacer el triaje?**
-La app te manda una notificación de recordatorio cada día a la hora que tú elijas.
+La app te manda una notificación de recordatorio cada día.
 Si un día no puedes, no pasa nada — simplemente no hay dato de ese día. Lo que importa
 es la tendencia, no la perfección.
 

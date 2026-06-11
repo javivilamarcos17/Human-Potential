@@ -9,7 +9,7 @@
 
 Comprobar que Anti Frágil **produce adherencia real** en pacientes de una clínica,
 que **el profesional lo usa sin fricción** y que el modelo B2B2C tiene disposición
-de pago. Con 8-12 semanas y 20-40 pacientes debemos responder tres preguntas:
+de pago. Con 10 semanas y 20-40 pacientes debemos responder tres preguntas:
 
 1. ¿Los pacientes se engancha y siguen usando la app más de 4 semanas?
 2. ¿El panel da al profesional información útil que no tenía antes?

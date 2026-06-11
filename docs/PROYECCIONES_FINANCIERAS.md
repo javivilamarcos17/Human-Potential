@@ -25,7 +25,7 @@ Antes de los escenarios, los parámetros que los mueven:
 
 | Parámetro | Valor usado | Notas |
 |-----------|-------------|-------|
-| Cuota mensual por clínica | 150-300 € / mes | Rango a validar. Referencia: CRMs de fisio cuestan 80-200 €/mes sin el valor de retención. |
+| Cuota mensual por clínica | 150-250 € / mes (plan Cadena: negociado) | Rango a validar. Referencia: CRMs de fisio cuestan 80-200 €/mes sin el valor de retención. |
 | Pacientes por clínica activa | 30-80 | Clínica pequeña-mediana. |
 | Cuota mensual del paciente | 9-15 € / mes | Solo si la clínica repercute el coste; muchas lo absorberán como diferencial. |
 | Tasa de adopción de pacientes | 40-70 % de los pacientes de la clínica | Depende del onboarding y la implicación del profesional. |
@@ -102,7 +102,7 @@ bloque. Posible si el piloto genera un caso de éxito sólido y documentado.
 | Concepto | Estimación orientativa | Notas |
 |----------|------------------------|-------|
 | Desarrollo del MVP (Sprint 1-7, ~14 semanas) | 20.000-50.000 € | Depende del equipo (agencia vs. freelancers). Ver [`DOSSIER_DESARROLLO.md`](DOSSIER_DESARROLLO.md). |
-| Arte de avatares (ilustrador humano, 20 fases × 3 arquetipos) | 3.000-8.000 € | Muy variable según el ilustrador y el estilo. |
+| Arte de avatares (ilustrador humano, Season 0: 3-4 formas × 3 arquetipos; mapa completo 30 fases — D9) | 3.000-8.000 € | Muy variable según el ilustrador y el estilo. |
 | Diseño de identidad visual | 2.000-5.000 € | Logo, paleta, guía de estilo. |
 | Publicación en App Store / Google Play | ~130 € / año | Cuentas de desarrollador Apple + Google. |
 | **Total inversión inicial estimada** | **~25.000-65.000 €** | Rango amplio — el dossier de desarrollo precisará la cifra. |

@@ -147,7 +147,7 @@
 > Estas frases están aquí para no perderlas, no para usarlas.
 > **No incluir Fuego ni Metal en ningún contenido del MVP.**
 
-### Arquetipo FUEGO · Guardián: Ignis el Incandescente *(pendiente de aprobación)*
+### 🔮 VISIÓN NORTE — Arquetipo FUEGO (Fase 2/3, NO usar en MVP) · Guardián: Ignis (nombre pendiente de aprobación)
 
 | Hito | Frase |
 |------|-------|
