@@ -10,6 +10,12 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### MVP funcional testeable con pacientes (2026-06-12)
+- **`app-funcional.html`** evolucionado a producto testeable: alta exprés autónoma (mini-Auditoría 30/30/20/20), motor de adaptación digital (6 reglas: dolor/energía/RPE/molestia/progresión/estancamiento), rutina amoldada al tiempo real (5/15/30 min), modo Centro B2B2C (código LIDOMARE26, actividades del centro, opción "hoy no puedo ir"), datos al centro vía WhatsApp (alertas + resumen 7 días), pantalla Mi Progreso (gráfico dolor/energía 14 días + nudge presencial), Tarjeta Épica funcional (canvas + Web Share).
+- **Avatares**: siluetas atléticas con épica creciente (6 etapas), huevo con 4 sub-fases vivas (runas→grietas→temblor), celebración de evolución a pantalla completa, **líneas evolutivas Brote/Atlas/Apex** según Auditoría inicial (documentadas en moodboard como dirección de arte).
+- Fix: migración defensiva del estado guardado (desbloquea "simular día" en navegadores con versión previa).
+- **`docs/PILOTO_EXPRESS.md`**: guía para testear con 2-3 pacientes reales esta semana (GitHub Pages, 0 €).
+
 ### Inventario visual del MVP completo: A1-A12 con pantalla premium (2026-06-11)
 - **`mockups/prototipo/sombrero.html`** (A3): revelación del arquetipo (Agua, ligada a la Auditoría 62/100) + elección 1 de 3 Guardianes con SVG propios. Solo Kael oficial; los otros dos marcados "(nombre provisional)" según el léxico.
 - **`mockups/prototipo/upselling.html`** (A12): banner empático tras dolor alto 2 días — invita a sesión presencial con la Dra. Elena Ruiz; reserva fuera de la app (D6). Era la última pieza del MVP sin representación visual.

@@ -15,6 +15,10 @@
 | Organizador | TODO (modo solitario por eficiencia de tokens) | Construcción directa | 🔄 activo |
 | Agentes 1-3 | — | Pausados (bloqueos de permisos; el organizador absorbió sus pendientes) | ⏸️ |
 
+**2026-06-12 — MVP FUNCIONAL testeable** (`app-funcional.html` + `PILOTO_EXPRESS.md`): alta autónoma,
+motor adaptativo digital, modo Centro Lidomare, datos→WhatsApp, Mi Progreso, Tarjeta Épica real,
+avatares épicos con sub-fases de huevo y líneas Brote/Atlas/Apex. Listo para pacientes piloto.
+
 **Hecho en modo solitario (2026-06-11):** RLS completa (migración 0006) · monedero.html ·
 sombrero.html · upselling.html · correcciones IC-2…IC-7 + I2 · flujo del index conectado ·
 hub demo con 9 piezas · QA de enlaces 0 rotos. **Inventario visual MVP A1-A12: COMPLETO.**
