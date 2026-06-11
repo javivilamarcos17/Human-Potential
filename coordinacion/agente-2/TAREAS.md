@@ -14,8 +14,16 @@
   (integra las 10 acciones bloqueantes de tu `PRIVACIDAD_RGPD.md`) y comercial (clínica
   piloto firmada, precios). SOLO ese archivo.
 
-## ⬜ COLA
-- (Tras esta, tu track de negocio queda completo. El organizador decidirá si hay más.)
+## ⬜ COLA (en orden — nuevo sub-track: operaciones y ventas)
+1. **`docs/GUION_DEMO_CLINICAS.md`** — guion paso a paso para hacer la demo a una clínica
+   usando `mockups/demo.html`: qué enseñar en qué orden, qué decir en cada pantalla, qué
+   preguntas hacer al fisio, y cierres según su reacción. Apóyate en `FAQ_CLINICAS.md`.
+2. **`docs/ONBOARDING_CLINICA.md`** — guía operativa de alta de una clínica nueva: pasos
+   semana a semana (alta, plantilla de auditoría, grabar vídeos, crear packs, primeros
+   pacientes con Código de Honor), quién hace qué, y criterios de "clínica activada".
+3. **`docs/FAQ_PACIENTES.md`** — preguntas frecuentes del paciente (soporte): cómo entro,
+   qué es mi Guardián, por qué baja mi cuota, qué pasa si fallo días, privacidad de mis
+   datos. Tono empatía clínica, coherente con `diseño/microcopy-app.md`.
 
 ## ✅ Hecho: PROYECCIONES · COMPETENCIA · RIESGOS · KPIS · MODELO_PRECIOS · GO_TO_MARKET · PRIVACIDAD_RGPD
 

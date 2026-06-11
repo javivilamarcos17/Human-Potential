@@ -40,6 +40,13 @@
 2. **`mockups/prototipo/evolucion.html`** — galería visual de la evolución: las 6 etapas
    mayores del arquetipo Agua con sus sub-fases (placeholders), el "momento evolución"
    (celebración) y la pantalla de re-Auditoría "wow" (62→67, +5 vitalidad). Misma estética.
+3. **Eleva `mockups/prototipo/index.html` al listón premium (v0.3)** — fue construido antes
+   de fijar el listón: actualízalo para que use `tokens.css`, sustituye los emojis de avatar
+   por el SVG de Kael (cópialo de `board-premium.html`), añade fondo aurora y cristal en las
+   8 pantallas. El flujo y los textos NO cambian — solo la capa visual.
+4. **`mockups/prototipo/monedero.html`** — pantalla del Descuento Sudado: saldo visual,
+   cómo baja la cuota (12€ → con suelo 4€, según `docs/MODELO_PRECIOS.md`), código de
+   referido JAVI-AF-2026 y acceso a la Tarjeta Épica. Estética premium, standalone.
 
 ## ✅ Hecho: PITCH_DECK · IDENTIDAD_VISUAL · ONE_PAGER · prototipo index.html + pulido C3-C6
 
