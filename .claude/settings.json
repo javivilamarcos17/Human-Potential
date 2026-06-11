@@ -70,7 +70,9 @@
       "PowerShell(git add docs/PRIVACIDAD_RGPD.md coordinacion/agente-2/ESTADO.md)",
       "Bash(git commit -m 'feat\\(copy\\): copy de notificaciones push con tono empat\\\\xc3\\\\xada cl\\\\xc3\\\\xadnica *)",
       "Bash(git commit -m 'feat\\(copy\\): copy de estados vacios, carga y error con tono calido *)",
-      "Bash(findstr copy *)"
+      "Bash(findstr copy *)",
+      "Bash(git commit -m 'feat\\(copy\\): frases Tarjetas Epicas por arquetipo x hito *)",
+      "Bash(python -)"
     ],
     "additionalDirectories": [
       "c:\\Users\\jabiv\\Desktop\\Human Potential\\docs\\diseño"

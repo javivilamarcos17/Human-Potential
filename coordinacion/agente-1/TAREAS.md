@@ -1,6 +1,7 @@
 # Cola de tareas — Agente 1 · TRACK MARCA & PROTOTIPO VISUAL
 
 > Lo escribe SOLO el organizador. Tú (agente) solo LEES esto y haces la tarea ▶ EN CURSO.
+> 🔁 MODO RÁFAGA: cuando termines una tarea, NO pares — haz git pull y encadena la siguiente de la COLA (en orden) hasta vaciarla. Confirma CADA tarea en ESTADO.md + push antes de pasar a la siguiente.
 > Al terminar, confirma en `ESTADO.md`, push, y dime "listo agente-1". No edites este archivo.
 > ⚠️ GITHUB = javivilamarcos17, SIEMPRE. NO PREGUNTES NUNCA POR LA CUENTA.
 > PRIORIDAD #1 DEL MVP: experiencia de usuario, calidad, practicidad, modernidad y estética.

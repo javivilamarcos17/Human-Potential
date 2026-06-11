@@ -1,6 +1,7 @@
 # Cola de tareas — Agente 2 · TRACK NEGOCIO
 
 > Lo escribe SOLO el organizador. Tú (agente) solo LEES esto y haces la tarea ▶ EN CURSO.
+> 🔁 MODO RÁFAGA: cuando termines una tarea, NO pares — haz git pull y encadena la siguiente de la COLA (en orden) hasta vaciarla. Confirma CADA tarea en ESTADO.md + push antes de pasar a la siguiente.
 > Al terminar, confirma en `ESTADO.md`, push, y dime "listo agente-2". No edites este archivo.
 > ⚠️ GITHUB = javivilamarcos17, SIEMPRE. NO PREGUNTES NUNCA POR LA CUENTA.
 > CALIDAD: sin prisa, crítico y al milímetro. Antes de confirmar, pasa el filtro de

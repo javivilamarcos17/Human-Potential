@@ -10,6 +10,13 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Añadido — Sistema de diseño, prototipos premium y cierre del track de negocio (2026-06-11)
+- **Sistema de diseño**: `docs/diseño/sistema-diseno.md` + `mockups/prototipo/tokens.css` (tabla maestra de la estética; cambiarla en el futuro = un archivo) + tema Flutter espejo (`app_theme.dart`, paleta oscura premium).
+- **Listón visual oficial**: `mockups/prototipo/board-premium.html` (board del paciente con avatar SVG, aurora animada, cristal). Dirección de arte fijada: **"Pokémon moderno"**, arco huevo→tipado→mono→guerrero→épico.
+- **Prototipos**: pulido v0.2 del flujo (`index.html`, C3-C5 cerrados) · panel del fisio (`clinica.html`, QA aprobado) · **Tarjeta Épica** (`tarjeta-epica.html`, motor viral) · **hub de demo** (`mockups/demo.html`) para reuniones.
+- **Track negocio (agente 2) completo hasta checklist**: MODELO_PRECIOS · PLAN_GO_TO_MARKET · PRIVACIDAD_RGPD (borrador, con 10 acciones bloqueantes pre-piloto).
+- QA: C7 corregido (descuento del código alineado con MODELO_PRECIOS). Persona de demo canónica en todas las piezas.
+
 ### Añadido — UX como prioridad #1 + Riesgos (2026-06-11)
 - **`docs/diseño/experiencia-usuario.md`** — la experiencia de usuario, lo visual y la personalización declaradas **prioridad #1 del MVP**: sensación objetivo, principios UX, momentos clave, microinteracciones y checklist de "pantalla terminada".
 - **`docs/RIESGOS_Y_MITIGACIONES.md`** (agente 2) integrado en el índice; agente 2 avanza a KPIS.
