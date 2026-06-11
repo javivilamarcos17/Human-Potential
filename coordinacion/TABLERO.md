@@ -12,10 +12,11 @@
 
 | Agente | Track | Tarea en curso | Estado |
 |--------|-------|----------------|--------|
-| Organizador | Diseño producto + QA + integración | Vigía + integrar correcciones de agentes | 🔄 activo |
-| Agente 1 | Marca & prototipo visual | index.html → v0.3 premium; luego monedero.html | ▶ asignada |
-| Agente 2 | Negocio | Aplicar IC-2…IC-7 de AUDITORIA_COHERENCIA en sus docs | ▶ asignada |
-| Agente 3 | Contenido & voz (copy) | Aplicar I1-I5 del léxico en sus copys | ▶ asignada |
+| Organizador | TODO (modo solitario por eficiencia de tokens) | Construcción directa | 🔄 activo |
+| Agentes 1-3 | — | Pausados (bloqueos de permisos; el organizador absorbió sus pendientes) | ⏸️ |
+
+**Hecho en modo solitario (2026-06-11):** RLS completa (migración 0006) · monedero.html premium ·
+correcciones IC-2…IC-7 + I2 aplicadas · hub demo con evolución y monedero · index.html verificado al listón.
 
 ## Entregado y verificado ✅
 - **Visual:** prototipo navegable v0.2 (8 pantallas, persona canónica, pulido C3-C5) · maqueta panorámica · IDENTIDAD_VISUAL

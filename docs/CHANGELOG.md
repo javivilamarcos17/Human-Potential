@@ -10,6 +10,12 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### Modo solitario: RLS + monedero + QA aplicado (2026-06-11)
+- **Migración 0006 — políticas RLS completas**: aislamiento multi-clínica en las 29 tablas (paciente ve lo suyo; profesional solo su clínica; pacientes B2C invisibles para clínicas — D8; catálogos solo lectura) + batería de pruebas obligatoria pre-despliegue. Cumple ESPECIFICACION_MVP §C y PRIVACIDAD_RGPD §7.
+- **`mockups/prototipo/monedero.html`** (A9): Descuento Sudado al listón premium — cuota 12→4 € con suelo protegido, desglose (racha/referidos/reto), código JAVI-AF-2026 copiable, CTA a Tarjeta Épica, nota D6.
+- **QA aplicado en los docs**: IC-2…IC-7 de AUDITORIA_COHERENCIA (umbral semáforo ≥8 en demo, 20-40 pacientes, 10 semanas, precios 150-250 €, arte Season 0, notificación sin hora prometida) + I2 (Fuego marcado Visión Norte en copy-tarjetas-epicas).
+- **Hub de demo**: cards de evolución y monedero añadidas; títulos deduplicados.
+
 ### QA cruzado + relevo de organizador ejecutado (2026-06-11)
 - **`docs/AUDITORIA_COHERENCIA.md`** (agente 2): auditoría cruzada de los 13 docs de negocio — 8 incoherencias (IC-1…IC-8) con archivo:línea y corrección propuesta.
 - **Correcciones del organizador aplicadas**: PROPUESTA_DE_VALOR (A4/D1) y SYSTEM_VISION (Core Loop, D3, D5) actualizados de 20 → **30 fases** con nota Season 0 (D9); ESPECIFICACION_MVP A11 ahora incluye el pie de firma clínica en la Tarjeta Épica (IC-8, alineado con copy-tarjetas-epicas y guion de demo).
