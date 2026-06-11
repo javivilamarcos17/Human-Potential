@@ -542,11 +542,11 @@ function registrarPrueba(){
   S.pruebasHechas.push({f:hoyISO(),v,pts});
   S.xp+=15; save();                                         // XP por prueba real
   const fin=S.pruebasHechas.length>=CONFIG.pruebas.length;
-  alert((fin?'✨ SEMANA DE ECLOSIÓN COMPLETADA.
+  alert((fin?'✨ SEMANA DE ECLOSION COMPLETADA.
 ':'')+'Marca registrada: '+v+' '+pr.unidad+' → +15 XP.
 Vitalidad afinada: '+S.aud+'/100'+(fin?'
 
-Tu valoración ya es REAL. Tu Guardián crece sobre cimientos verdaderos.':''));
+Tu valoracion ya es REAL. Tu Guardian crece sobre cimientos verdaderos.':''));
   pintar(); ir('home');
 }
 function tiempo(el){S.tiempoHoy=+el.dataset.min;
