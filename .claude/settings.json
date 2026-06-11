@@ -73,7 +73,11 @@
       "Bash(findstr copy *)",
       "Bash(git commit -m 'feat\\(copy\\): frases Tarjetas Epicas por arquetipo x hito *)",
       "Bash(python -)",
-      "PowerShell(git add docs/CHECKLIST_LANZAMIENTO.md coordinacion/agente-2/ESTADO.md)"
+      "PowerShell(git add docs/CHECKLIST_LANZAMIENTO.md coordinacion/agente-2/ESTADO.md)",
+      "Bash(git commit -m 'feat\\(copy\\): copy del panel de clinica B2B \\(semaforos, ficha, alertas\\) *)",
+      "PowerShell(git add docs/GUION_DEMO_CLINICAS.md coordinacion/agente-2/ESTADO.md)",
+      "PowerShell(git commit -m \"docs: guion demo clinicas \\(4 partes, cierres por reaccion, errores a evitar\\)\")",
+      "Bash(git commit -m 'feat\\(copy\\): copy de anamnesis con banderas rojas y transicion a tests *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\jabiv\\Desktop\\Human Potential\\docs\\diseño"
