@@ -16,4 +16,5 @@
 ✅ 2026-06-11 — Checklist lanzamiento piloto — docs/CHECKLIST_LANZAMIENTO.md
 ✅ 2026-06-11 — Guion demo clínicas — docs/GUION_DEMO_CLINICAS.md
 ✅ 2026-06-11 — Onboarding clínica nueva — docs/ONBOARDING_CLINICA.md
-✅ 2026-06-11 — FAQ pacientes (tono empatía clínica, 6 bloques) — docs/FAQ_PACIENTES.md
+✅ 2026-06-11 — FAQ pacientes — docs/FAQ_PACIENTES.md
+✅ 2026-06-11 — Auditoría de coherencia (8 incoherencias críticas/medias, resumen ejecutivo) — docs/AUDITORIA_COHERENCIA.md
