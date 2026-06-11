@@ -12,7 +12,7 @@ Anti Frágil es una aplicación móvil (ecosistema B2B2C) que soluciona el aband
 1. **Triaje Diario:** Al entrar, el usuario reporta su Nivel de Dolor (1-10) y Energía (1-10).
 2. **Acción:** Reproduce un vídeo o "Pack de Rutina" asignado previamente por su clínico.
 3. **Feedback:** Al terminar, indica su Esfuerzo (RPE) y si hubo molestias.
-4. **Recompensa:** Gana "Puntos de Vitalidad" (XP). Su Avatar evoluciona a lo largo de 20 etapas visuales según la constancia.
+4. **Recompensa:** Gana "Puntos de Vitalidad" (XP). Su Avatar evoluciona a lo largo de 30 fases visuales (6 etapas mayores) según la constancia.
 
 ## 4. Motor de Monetización y Viralidad
 * **El Descuento Sudado:** Un panel visual donde el usuario ve cómo su cuota baja al traer referidos o mantener rachas.
@@ -40,9 +40,9 @@ Claude, es imperativo que NO añadas ni sugieras programar estas funcionalidades
 |---|----------|---------|-------|
 | **D1** | **Stack: Flutter + Supabase** | App móvil y panel web en Flutter (Dart); backend, base de datos, login y almacenamiento en Supabase (PostgreSQL). | 2026-06-10 · [ADR-001](docs/decisiones/ADR-001-stack-tecnologico.md) |
 | **D2** | **Arquitectura multi-clínica desde el día uno** | La base de datos soporta muchas clínicas (multi-tenant) con datos aislados. El MVP lanza con una sola marca; la marca blanca es un interruptor futuro. | 2026-06-10 · [ADR-002](docs/decisiones/ADR-002-arquitectura-multi-tenant.md) |
-| **D3** | **Avatar = reflejo de datos clínicos, no catálogo** | El Guardián nace de la Auditoría de Vitalidad y evoluciona por constancia. 20 fases visuales (Huevo → Forja → Olimpo/Nivel 100). El arquetipo lo asigna el algoritmo ("Sombrero Seleccionador") y el usuario elige 1 de 3 dentro de su familia. | 2026-06-10 |
+| **D3** | **Avatar = reflejo de datos clínicos, no catálogo** | El Guardián nace de la Auditoría de Vitalidad y evoluciona por constancia. 30 fases visuales en 6 etapas mayores (Huevo → Forja → Olimpo/Nivel 100 — ver D9: Season 0 lanza con 3-4 formas). El arquetipo lo asigna el algoritmo ("Sombrero Seleccionador") y el usuario elige 1 de 3 dentro de su familia. | 2026-06-10 |
 | **D4** | **Nº de arquetipos = configurable** | El arquetipo es un dato editable, no fijo en código. El MVP arranca con 3 familias (Tierra, Agua, Viento); añadir Fuego/Metal más adelante no requiere reprogramar, solo arte e ilustración nueva. | 2026-06-10 |
-| **D5** | **Arte de avatares: ilustrador humano** | El sistema deja *placeholders* intercambiables. Las ilustraciones finales (20 fases × familia) las hace un ilustrador humano, no IA. | 2026-06-10 |
+| **D5** | **Arte de avatares: ilustrador humano** | El sistema deja *placeholders* intercambiables. Las ilustraciones finales (mapa de 30 fases × familia; Season 0 arranca con 3-4 formas — D9) las hace un ilustrador humano, no IA. | 2026-06-10 |
 | **D6** | **Pagos siempre fuera de la app** | En el MVP no hay pasarela de pago in-app (ni Stripe in-app ni IAP). La app solo muestra saldos y descuentos visuales ("Descuento Sudado"). El cobro real ocurre en la web/recepción de la clínica. | 2026-06-10 |
 | **D7** | **Auditoría y tests configurables por profesional** | Lo estable es el marco (4 bloques, escala 0-100); el contenido (ejercicios, preguntas, umbrales, protocolos) lo especializa cada clínica/profesional vía plantillas editables. No hay un test único para todos. | 2026-06-10 · [diseño/auditoria-vitalidad.md](docs/diseño/auditoria-vitalidad.md) |
 | **D8** | **Registro dual B2C + B2B2C** | Vía abierta (email) y vía partner (Código de Centro, ej. LIDOMARE26) con personalización del centro y skin exclusiva. `clinica_id` pasa a opcional. | 2026-06-11 · [diseño/arquitectura-modular.md](docs/diseño/arquitectura-modular.md) |

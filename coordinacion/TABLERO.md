@@ -1,22 +1,21 @@
 # 📋 TABLERO — visión global (lo mantiene el organizador)
 
-> Quién hace qué y en qué estado. Actualizado: 2026-06-11 (relevo de organizador).
+> Quién hace qué y en qué estado. Actualizado: 2026-06-11 (relevo ejecutado; QA cruzado aplicándose).
 
-## ⚡ RELEVO — estado exacto para el nuevo organizador
-- A1 (visual): entregó moodboard + evolucion.html. Pendiente en su cola: v0.3 premium de index.html + monedero.html. REVISAR evolucion.html contra el listón (board-premium.html) antes de dar por buena.
-- A2 (negocio): TODO entregado. EN CURSO: docs/AUDITORIA_COHERENCIA.md (informe de incoherencias cruzadas). Al recibirlo: revisar y aplicar correcciones.
-- A3 (copy): 6 copys entregados. EN CURSO: docs/diseño/lexico-marca.md.
-- Novedad mayor: Esquema Maestro modular D8-D11 (SYSTEM_VISION §7 + diseño/arquitectura-modular.md + migración 0005). Lidomare = partner real.
-- Servidor demo: arrancar con `python -m http.server 8080` en la carpeta del proyecto → mockups/demo.html.
+## ⚡ Estado actual
+- Relevo completado: AUDITORIA_COHERENCIA recibida y revisada; lexico-marca recibido (I1-I5); evolucion.html ✔ pasa el listón; REVISION_CRITICA.md restaurado (estaba vaciado por accidente).
+- Correcciones del organizador aplicadas: PROPUESTA_DE_VALOR + SYSTEM_VISION → 30 fases/Season 0 (IC-1); ESPECIFICACION_MVP A11 → pie firma clínica (IC-8).
+- Esquema Maestro modular D8-D11 (SYSTEM_VISION §7 + diseño/arquitectura-modular.md + migración 0005). Lidomare = partner real.
+- Servidor demo: `python -m http.server 8080` → mockups/demo.html.
 - Vigía: bucle de `git fetch` en background para detectar pushes de agentes (rearmar tras cada push propio).
 - PR abierto: feat/boceto-mvp → master (merge SOLO con aprobación del dueño).
 
 | Agente | Track | Tarea en curso | Estado |
 |--------|-------|----------------|--------|
-| Organizador | Diseño producto + QA + integración | Revisión crítica continua + vigía | 🔄 activo |
-| Agente 1 | Marca & prototipo visual | `mockups/prototipo/clinica.html` (panel del fisio) | ▶ asignada |
-| Agente 2 | Negocio | `docs/PLAN_GO_TO_MARKET.md` | ▶ asignada |
-| Agente 3 | Contenido & voz (copy) | `docs/diseño/microcopy-app.md` | ⬜ pendiente de lanzar |
+| Organizador | Diseño producto + QA + integración | Vigía + integrar correcciones de agentes | 🔄 activo |
+| Agente 1 | Marca & prototipo visual | index.html → v0.3 premium; luego monedero.html | ▶ asignada |
+| Agente 2 | Negocio | Aplicar IC-2…IC-7 de AUDITORIA_COHERENCIA en sus docs | ▶ asignada |
+| Agente 3 | Contenido & voz (copy) | Aplicar I1-I5 del léxico en sus copys | ▶ asignada |
 
 ## Entregado y verificado ✅
 - **Visual:** prototipo navegable v0.2 (8 pantallas, persona canónica, pulido C3-C5) · maqueta panorámica · IDENTIDAD_VISUAL

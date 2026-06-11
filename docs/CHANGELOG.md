@@ -10,6 +10,12 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### QA cruzado + relevo de organizador ejecutado (2026-06-11)
+- **`docs/AUDITORIA_COHERENCIA.md`** (agente 2): auditoría cruzada de los 13 docs de negocio — 8 incoherencias (IC-1…IC-8) con archivo:línea y corrección propuesta.
+- **Correcciones del organizador aplicadas**: PROPUESTA_DE_VALOR (A4/D1) y SYSTEM_VISION (Core Loop, D3, D5) actualizados de 20 → **30 fases** con nota Season 0 (D9); ESPECIFICACION_MVP A11 ahora incluye el pie de firma clínica en la Tarjeta Épica (IC-8, alineado con copy-tarjetas-epicas y guion de demo).
+- **`docs/REVISION_CRITICA.md` restaurado** — había quedado vaciado por accidente en el commit f37dbf6; recuperado del historial (bb8352c).
+- **Colas repartidas**: A1 → index.html v0.3 premium + monedero.html (evolucion.html ✔ pasa el listón); A2 → aplicar IC-2…IC-7 en sus docs; A3 → aplicar I1-I5 del léxico en sus copys (Aire→Viento, Fuego fuera del MVP, nombres no aprobados a placeholder).
+
 ### Añadido — Esquema Maestro modular (D8-D11) + ráfaga final de agentes (2026-06-11)
 - **Decisiones D8-D11** (SYSTEM_VISION §7): registro dual B2C/B2B2C (Código de Centro, ej. LIDOMARE26), gamificación por **Temporadas** (Season 0 simple + Vitrina de Trofeos), bifurcación diaria **presencial (QR en recepción)/casa**, módulo clínico low-tech con placeholders medibles. Detalle: `docs/diseño/arquitectura-modular.md` + **migración 0005** (incluye `servicios_centro` y equivalencias presencial↔casa para recomendar las actividades de Lidomare).
 - **Agente 1**: `moodboard-avatares.md` (estética "Pokémon moderno") + `mockups/prototipo/evolucion.html` (galería de evolución; QA pendiente).

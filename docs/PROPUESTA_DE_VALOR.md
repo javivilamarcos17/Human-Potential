@@ -94,7 +94,7 @@ está la diferencia:
 | A1 | **Onboarding + Código de Honor** | Alta del paciente vinculado a su clínica. | 🟢 MVP |
 | A2 | **Auditoría de Vitalidad (1-100)** | Test físico inicial (fuerza, aeróbico, movilidad, constancia) del que nace el avatar. **Configurable por profesional** (D7). Diseño en [diseño/auditoria-vitalidad.md](diseño/auditoria-vitalidad.md). | 🟢 MVP |
 | A3 | **Sombrero Seleccionador** | Asigna familia/arquetipo y deja elegir 1 de 3 Guardianes. | 🟢 MVP |
-| A4 | **Avatar / Guardián (20 fases)** | El espejo del progreso. Sistema de evolución con sentido clínico. | 🟢 MVP |
+| A4 | **Avatar / Guardián (30 fases, 6 etapas)** | El espejo del progreso. Sistema de evolución con sentido clínico. El MVP (Season 0) lanza con 3-4 formas base — D9. | 🟢 MVP |
 | A5 | **Dashboard de gamificación** | Avatar al centro + barra de XP + racha. | 🟢 MVP |
 | A6 | **Triaje diario** | Reporte de dolor (1-10) y energía (1-10). | 🟢 MVP |
 | A7 | **Reproductor de rutinas (Packs)** | Vídeos prescritos por la clínica (Vimeo/AWS). | 🟢 MVP |
@@ -135,7 +135,7 @@ está la diferencia:
 
 | # | Pieza | Quién | Fase |
 |---|-------|-------|------|
-| D1 | **Arte de avatares** (20 fases × arquetipo) | Ilustrador humano (decisión D5). | 🟢 MVP |
+| D1 | **Arte de avatares** (Season 0: 3-4 formas × arquetipo; mapa completo 30 fases) | Ilustrador humano (decisión D5). | 🟢 MVP |
 | D2 | **Biblioteca de vídeos de ejercicios** | Los profesionales de la clínica. | 🟢 MVP |
 | D3 | **Identidad visual de marca** | Diseñador (paleta, logo, tono). | 🟢 MVP |
 | D4 | **Textos con tono "empatía clínica"** | Copywriting (mensajes que no culpan). | 🟢 MVP |

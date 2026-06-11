@@ -61,6 +61,7 @@
 
 ### A11 · Tarjetas Épicas
 - Genera imagen vertical (avatar+nivel+frase) → compartir (share_plus). Sin red social interna.
+- Pie de tarjeta: firma de autoridad clínica con nombre de la clínica (ver `diseño/copy-tarjetas-epicas.md`) + (opcional) código de referido.
 
 ### A12 · Upselling
 - Banner si dolor alto o estancamiento → enlace a web/WhatsApp de la clínica.
