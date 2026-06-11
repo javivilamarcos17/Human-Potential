@@ -113,8 +113,9 @@
       <div class="hecho-hoy" id="hecho-hoy" style="display:none">✓ Jornada de hoy completada. Kael descansa contigo.</div>
       <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
       <div class="toolbar">
-        <div class="tool" onclick="diaSiguiente()">⏭ Simular día siguiente</div>
-        <div class="tool" onclick="reset()">↺ Reiniciar demo</div>
+        <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
+        <div class="tool" onclick="diaSiguiente()">⏭ Simular día</div>
+        <div class="tool" onclick="reset()">↺ Reiniciar</div>
       </div>
       <a class="volver" href="../demo.html">← Hub de demo</a>
     </div>
@@ -139,6 +140,7 @@
         <b>⚠ Aviso enviado a <span class="cfg-fisio">tu fisio</span> (<span class="cfg-clinica">tu clínica</span>).</b><br>
         Dolor alto registrado. Tu rutina de hoy se adapta a versión suave — sin culpa,
         <span class="cfg-nombre">.</span>: reportarlo ES cuidarte.
+        <a id="wa-alerta" href="#" target="_blank" style="display:none;margin-top:10px;text-align:center;font-weight:700;color:#062018;background:var(--af-primario);border-radius:10px;padding:10px;text-decoration:none">📲 Avisar ahora a mi fisio por WhatsApp</a>
       </div>
       <button class="cta" onclick="cerrarTriaje()">Registrar triaje · +5 XP</button>
     </div>
@@ -194,6 +196,7 @@ const CONFIG = {
   fisio:    'Dra. Elena Ruiz',
   clinica:  'MovePlus',
   zona:     'zona lumbar',
+  whatsappFisio: '',   // ej. '34600111222' — activa el envío real de alertas y resúmenes
   pack: {
     nombre: 'Pack Lumbar',
     ejercicios: [
@@ -247,7 +250,7 @@ const etapaDe=f=>ETAPAS.find(([a,b])=>f>=a&&f<=b)[2];
 const K='af_mvp_v1';
 const hoyISO=()=>S.fechaSim || new Date().toISOString().slice(0,10);
 let S=JSON.parse(localStorage.getItem(K)||'null')||{
-  xp:0, ses:0, racha:0, ultDia:null, reaud:0, retos:0, mejora:0, aud:62, fechaSim:null, hechoHoy:false, dolorHoy:3};
+  xp:0, ses:0, racha:0, ultDia:null, reaud:0, retos:0, mejora:0, aud:62, fechaSim:null, hechoHoy:false, dolorHoy:3, hist:[]};
 const save=()=>localStorage.setItem(K,JSON.stringify(S));
 
 /* ════ AVATAR SVG por etapa (placeholder D5) ════ */
@@ -285,7 +288,11 @@ function pintar(){
   document.querySelectorAll('.cfg-clinica').forEach(e=>e.textContent=CONFIG.clinica);
   document.querySelectorAll('.cfg-zona').forEach(e=>e.textContent=CONFIG.zona);
 }
-function dolor(v){const e=$('v-dolor');e.textContent=v;e.style.color=v>=8?'var(--af-rojo)':v>=5?'var(--af-ambar)':'var(--af-primario)';$('alerta').style.display=v>=8?'block':'none';S.dolorHoy=+v;}
+function dolor(v){const e=$('v-dolor');e.textContent=v;e.style.color=v>=8?'var(--af-rojo)':v>=5?'var(--af-ambar)':'var(--af-primario)';$('alerta').style.display=v>=8?'block':'none';S.dolorHoy=+v;
+  const wa=$('wa-alerta');
+  if(v>=8 && CONFIG.whatsappFisio){wa.style.display='block';
+    wa.href='https://wa.me/'+CONFIG.whatsappFisio+'?text='+encodeURIComponent(`⚠ Anti Frágil — ${CONFIG.paciente}: dolor ${v}/10 en ${CONFIG.zona} hoy (${hoyISO()}). Rutina adaptada a suave.`);}
+  else wa.style.display='none';}
 function energia(v){$('v-energia').textContent=v;}
 function cerrarTriaje(){
   const suave=S.dolorHoy>=8, pack=suave?CONFIG.packSuave:CONFIG.pack;
@@ -308,7 +315,10 @@ function terminarJornada(){
   const bonus=Math.min(S.racha*XP.porDiaRacha,XP.topeBonus);
   const ganada=XP.triaje+XP.rutina+XP.feedback+bonus;
   const faseAntes=faseDesde({...S});
-  S.xp+=ganada; S.ses+=1; S.ultDia=hoy; S.hechoHoy=true; save();
+  S.xp+=ganada; S.ses+=1; S.ultDia=hoy; S.hechoHoy=true;
+  S.hist.push({f:hoy,d:S.dolorHoy,e:+$('v-energia').textContent,r:+$('v-rpe').textContent,m:$('molestia').checked});
+  if(S.hist.length>30)S.hist.shift();
+  save();
   const faseAhora=faseDesde({...S});
   $('xp-ganada').textContent='+'+ganada+' XP';
   $('desglose').innerHTML=
@@ -326,6 +336,17 @@ function terminarJornada(){
 function prevISO(iso){const d=new Date(iso);d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
 function diaSiguiente(){const d=new Date(hoyISO());d.setDate(d.getDate()+1);S.fechaSim=d.toISOString().slice(0,10);S.hechoHoy=false;save();pintar();}
 function reset(){localStorage.removeItem(K);location.reload();}
+function enviarResumen(){
+  const u=S.hist.slice(-7);
+  if(!u.length){alert('Aún no hay jornadas registradas.');return;}
+  const med=a=>(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1);
+  const txt=`Anti Frágil — resumen de ${CONFIG.paciente} (últimos ${u.length} días)\n`+
+    `Racha: ${S.racha} días · Sesiones totales: ${S.ses} · Nivel ${nivelDesdeXp(S.xp)}\n`+
+    `Dolor medio: ${med(u.map(x=>x.d))}/10 · Energía media: ${med(u.map(x=>x.e))}/10 · RPE medio: ${med(u.map(x=>x.r))}\n`+
+    u.map(x=>`${x.f}: dolor ${x.d}, energía ${x.e}, RPE ${x.r}${x.m?' ⚠ molestia nueva':''}`).join('\n');
+  if(CONFIG.whatsappFisio) window.open('https://wa.me/'+CONFIG.whatsappFisio+'?text='+encodeURIComponent(txt));
+  else{navigator.clipboard&&navigator.clipboard.writeText(txt);alert('Resumen copiado al portapapeles (configura whatsappFisio en CONFIG para envío directo):\n\n'+txt);}
+}
 pintar();
 </script>
 </body>
