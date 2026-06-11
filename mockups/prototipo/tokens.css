@@ -1,0 +1,52 @@
+/* ════════════════════════════════════════════════════════════════
+   Anti Frágil — DESIGN TOKENS (tabla maestra de la estética)
+   Fuente de verdad: docs/diseño/sistema-diseno.md
+   Cambiar la estética del producto = cambiar ESTE archivo.
+   Las maquetas/prototipos deben enlazarlo y usar SOLO estas variables.
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Base (modo oscuro premium) ── */
+  --af-bg:            #0A1626;
+  --af-panel:         rgba(255,255,255,.055);
+  --af-line:          rgba(255,255,255,.09);
+  --af-texto:         #F2F6FA;
+  --af-texto-suave:   #8DA2B8;
+
+  /* ── Marca y acción ── */
+  --af-primario:      #2ECC8F;
+  --af-primario-osc:  #1AA870;
+  --af-dorado:        #F4C430;
+
+  /* ── Arquetipos ── */
+  --af-agua:          #5BD0E8;
+  --af-agua-osc:      #2E86C1;
+  --af-tierra:        #C9A36B;
+  --af-tierra-osc:    #8A6B3F;
+  --af-viento:        #B8C6F2;
+  --af-viento-osc:    #5C6BC0;
+
+  /* ── Estados clínicos (semáforos) ── */
+  --af-rojo:          #E53935;
+  --af-ambar:         #FFA726;
+  --af-verde-ok:      #2ECC8F;
+
+  /* ── Tipografía ── */
+  --af-font-display:  'Nunito', sans-serif;   /* 800-900 · títulos y números héroe */
+  --af-font-texto:    'Inter', sans-serif;    /* 400-700 · cuerpo y datos */
+  /* Escala (px): 11 · 13 · 15 · 17 · 22 · 28 · 44 — no usar otros tamaños */
+
+  /* ── Radios ── */
+  --af-radio-s:       12px;
+  --af-radio-m:       16px;
+  --af-radio-l:       22px;
+  --af-radio-xl:      36px;
+
+  /* ── Sombras y cristal ── */
+  --af-sombra-flotante: 0 14px 34px rgba(46,204,143,.30);
+  --af-blur-cristal:    10px;   /* usar: backdrop-filter: blur(var(--af-blur-cristal)) */
+
+  /* ── Movimiento ── */
+  --af-t-rapida:      170ms ease;   /* pulsar/hover */
+  --af-t-media:       320ms ease;   /* cambio de pantalla */
+  /* Respiración avatar: 5.2s ±12px · Pulso halo: 4.5s · Brillo XP: 2.8s */
+}

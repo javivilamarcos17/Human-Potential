@@ -50,6 +50,14 @@ Para tener **muchas fases bien pensadas sin disparar el coste de ilustración**,
 
 ---
 
+## 3b. El arco visual (dirección del dueño)
+
+> Estética **"Pokémon moderno"** (no Pokémon literales): criaturas adorables con evoluciones
+> emocionantes, acabado limpio actual. El viaje visual: **huevo → huevo con el estilo de su
+> tipo** (el huevo ya muestra el arquetipo: gotas, roca, nubes…) → **de "mono/adorable"**
+> (Cría) → **cada vez más guerrero/atlético** (Joven, Guardián con armadura) → **épico**
+> (Alado, Deidad). Muchas fases bien organizadas = participación durante mucho más tiempo.
+
 ## 4. Los arcos del viaje (de frágil a antifrágil)
 
 | Arco | Etapas mayores | Fases | Qué representa |

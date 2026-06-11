@@ -30,7 +30,7 @@ class AntiFragilApp extends StatelessWidget {
     return MaterialApp(
       title: 'Anti Frágil',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
+      theme: AppTheme.dark,
       // Flujo de arranque: Onboarding → (Auditoría) → Dashboard.
       // El equipo lo sustituirá por go_router con rutas reales.
       home: const OnboardingScreen(),
