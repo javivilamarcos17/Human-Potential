@@ -133,6 +133,10 @@
         <input id="a-centro" placeholder="Ej.: LIDOMARE26" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px;text-transform:uppercase">
         <div class="sub" style="margin-top:6px;font-size:11px">Con él, tu centro te acompaña: verá tu progreso y te propondrá sus actividades.</div>
       </div>
+      <div class="panel" style="display:flex;gap:10px;align-items:flex-start">
+        <input type="checkbox" id="a-consent" style="width:22px;height:22px;accent-color:var(--af-primario);flex:0 0 22px;margin-top:2px">
+        <label for="a-consent" class="sub" style="cursor:pointer">Acepto que mis datos de salud (dolor, energía, ejercicio) se usen para mi seguimiento y, si uso código de centro, se compartan con mi centro. Puedo borrarlos cuando quiera escribiendo a mi centro o a privacidad@antifragil.es. <b>Borrador piloto — pendiente de validación legal.</b></label>
+      </div>
       <button class="cta" onclick="altaSubmit()">Crear mi Guardián</button>
     </div>
 
@@ -175,7 +179,7 @@
         <div class="tool" onclick="diaSiguiente()">⏭ Simular día</div>
         <div class="tool" onclick="reset()">↺ Reiniciar</div>
       </div>
-      <a class="volver" href="../demo.html">← Hub de demo</a>
+      <a class="volver" href="../demo.html">← Hub de demo · <span style="opacity:.6">v0.9 piloto</span></a>
     </div>
 
     <!-- PRUEBA DE ECLOSIÓN -->
@@ -750,6 +754,7 @@ function diaSiguiente(){try{const d=new Date(hoyISO());d.setDate(d.getDate()+1);
 function reset(){localStorage.removeItem(K);location.reload();}
 function altaSubmit(){
   const n=$('a-nombre').value.trim(); if(!n){alert('Dinos tu nombre 🙂');return;}
+  if(!$('a-consent').checked){alert('Necesitamos tu consentimiento para guardar tus datos de salud — sin él no podemos acompañarte.');return;}
   // Score 0-100 con los pesos reales: fuerza 30 + aeróbico 30 + movilidad 20 + constancia 20
   const f=Math.min(30,Math.round(+$('a-f').textContent)),          // 1 sentadilla ≈ 1 punto (tope 30)
         a=Math.min(30,Math.round(+$('a-a').textContent/2)),        // 60 min → 30 puntos
