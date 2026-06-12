@@ -104,7 +104,15 @@
       <div class="panel">
         <div class="sub">¿Cómo te llamas?</div>
         <input id="a-nombre" placeholder="Tu nombre" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px">
-        <div class="sub" style="margin-top:12px">¿Dónde está tu molestia principal?</div>
+        <div class="sub" style="margin-top:12px">¿Qué buscas sobre todo?</div>
+        <select id="a-objetivo" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px">
+          <option value="agua">Recuperarme de un dolor o lesión</option>
+          <option value="fuego">Transformar mi cuerpo</option>
+          <option value="rayo">Resistencia y velocidad (correr, cardio)</option>
+          <option value="hierba">Crear el hábito y soltar estrés</option>
+          <option value="roca">Ganar fuerza</option>
+        </select>
+        <div class="sub" style="margin-top:12px">¿Hay alguna zona que quieras cuidar? <span style="opacity:.6">(opcional)</span></div>
         <select id="a-zona" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px">
           <option value="zona lumbar">Zona lumbar</option><option value="cervicales">Cervicales</option>
           <option value="hombro">Hombro</option><option value="rodilla">Rodilla</option>
@@ -451,6 +459,17 @@ S.hist=S.hist||[];S.perfil=S.perfil||null;S.tiempoHoy=S.tiempoHoy||15;
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}};
 
 /* ════ AVATAR SVG por etapa (placeholder D5) ════ */
+/* IMÁGENES REALES (brief de arte): coloca los PNG en mockups/avatares/<elemento>-<linea>/<etapa>.png
+   (ej. agua-mistica/cria.png). Si el archivo existe, la app lo usa; si no, cae al SVG placeholder. */
+const _imgCache={};
+function avatarHTML(fase){
+  const et={'Huevo':'huevo','Cría':'cria','Juvenil':'juvenil','Desarrollo':'desarrollo','Adulto':'adulto','Apex':'apex'}[etapaDe(fase)];
+  const ruta='../avatares/'+(S.elemento||'agua')+'-'+lineaKey(S.aud)+'/'+et+'.png';
+  if(_imgCache[ruta]===false) return avatarSvg(fase);
+  if(_imgCache[ruta]===true)  return '<img src="'+ruta+'" width="150" height="150" style="object-fit:contain">';
+  const im=new Image();im.onload=()=>{_imgCache[ruta]=true;pintar();};im.onerror=()=>{_imgCache[ruta]=false;};im.src=ruta;
+  return avatarSvg(fase);
+}
 function avatarSvg(fase){
   const et=etapaDe(fase);
   /* LÍNEA EVOLUTIVA (D5 revisada): la estética nace de tu valoración inicial.
@@ -555,7 +574,7 @@ function pintar(){
   const p={...S}, f=faseDesde(p), pr=progresoNivel(S.xp);
   const gap=diasSinVenir();
   // Re-enganche sin culpa: el Guardián se aletarga, nunca muere — y te recibe, no te riñe
-  $('ava-svg').innerHTML=avatarSvg(f);
+  $('ava-svg').innerHTML=avatarHTML(f);
   $('ava-svg').style.filter=gap>=2?'grayscale(.75) brightness(.65)':'';
   $('nombre-g').textContent=nombreCriatura(f);
   if(gap>=2&&!S.hechoHoy){
@@ -812,13 +831,11 @@ function altaSubmit(){
   S.audInicial=S.aud;S.retos=0;S.reaud=0;S.retosLog=[];S.mejora=0;
   // Sombrero Seleccionador digital: el elemento nace de tu cuerpo, no de un menú
   S.bloques={f:f,a:a,m:m,c:c};
-  const mx=Math.max(f/30,a/30,m/20,c/20);
-  S.elemento= (m/20>=mx)?'agua'        // domina movilidad → fluidez
-            : (f/30>=mx)?'roca'        // domina fuerza → solidez
-            : (a/30>=mx)?'rayo'        // domina aeróbico → velocidad
-            : (c/20>=mx)?'hierba'      // domina constancia → crecimiento
-            : 'fuego';
-  if(S.aud<25) S.elemento='fuego';     // empezar muy abajo = la chispa que va a arder
+  // El elemento nace de TU OBJETIVO de salud (brief de arte): es tu historia
+  const obj=$('a-objetivo')&&$('a-objetivo').value;
+  if(['agua','fuego','rayo','hierba','roca'].includes(obj)) S.elemento=obj;
+  else{const mx=Math.max(f/30,a/30,m/20,c/20);
+    S.elemento=(m/20>=mx)?'agua':(f/30>=mx)?'roca':(a/30>=mx)?'rayo':(c/20>=mx)?'hierba':'fuego';}
   CONFIG.paciente=n; CONFIG.zona=S.perfil.zona; save();
   if(cod&&!CONFIG.centros[cod]) alert('Código de centro no reconocido — entras en modo individual (puedes vincularte después).');
   sync('alta',{zona:S.perfil.zona,vitalidad_provisional:S.aud,centro_intentado:cod||null});
