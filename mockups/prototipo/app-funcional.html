@@ -393,8 +393,11 @@ function progresoNivel(xp){           // % hacia el siguiente nivel (para la bar
 }
 // Las 30 puertas (espejo del catálogo Dart). p = estado del paciente.
 const FASES=[
- [1,1,p=>true],[2,2,p=>p.ses>=1],[3,4,p=>p.racha>=3],[4,6,p=>p.ses>=5],[5,8,p=>p.racha>=7],
- [6,11,p=>p.reaud>=1],[7,14,p=>p.ses>=10],[8,17,p=>p.racha>=14],[9,20,p=>p.mejora>=1],
+ // Calibrado con el simulador (tests/sim-paciente.js): trabajando a diario, la
+ // eclosión llega al cerrar la Semana de Eclosión (~día 7-8). El late game no cambia.
+ [1,1,p=>true],[2,2,p=>p.ses>=1],[3,3,p=>p.racha>=3],[4,4,p=>p.ses>=5],
+ [5,5,p=>p.racha>=7||(p.pruebasHechas||[]).length>=7],
+ [6,7,p=>(p.pruebasHechas||[]).length>=7||p.reaud>=1],[7,9,p=>p.ses>=10],[8,12,p=>p.racha>=14],[9,16,p=>p.mejora>=1||p.ses>=15],
  [10,24,p=>p.retos>=1],[11,28,p=>p.ses>=20],[12,32,p=>p.retos>=2],[13,36,p=>p.racha>=30],
  [14,40,p=>p.mejora>=5],[15,45,p=>p.retos>=3],[16,50,p=>p.retos>=4],[17,55,p=>p.reaud>=2],
  [18,60,p=>p.racha>=60],[19,65,p=>p.retos>=5],[20,70,p=>p.mejora>=10],[21,73,p=>p.retos>=6],
