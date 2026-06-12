@@ -325,13 +325,13 @@ const CONFIG = {
      provisional del alta. El Guardián nace del trabajo, no de un formulario.
      bloque: f(fuerza,0-30) a(aeróbico,0-30) m(movilidad,0-20) c(constancia,0-20) */
   pruebas: [
-    {bloque:'f', titulo:'Sentadillas en 45 segundos', detalle:'Al ritmo que puedas, sin dolor. Cuenta las completas.', unidad:'sentadillas', aPuntos:v=>Math.min(30,Math.round(v*1.2))},
-    {bloque:'a', titulo:'Marcha rápida sin parar', detalle:'¿Cuántos minutos aguantas hoy a paso vivo?', unidad:'minutos', aPuntos:v=>Math.min(30,Math.round(v/2))},
-    {bloque:'m', titulo:'Flexión de tronco', detalle:'De pie, piernas rectas: ¿a cuántos cm te quedas del suelo? (0 = lo tocas)', unidad:'cm del suelo', aPuntos:v=>Math.max(0,20-Math.round(v/2))},
-    {bloque:'f', titulo:'Plancha frontal', detalle:'Segundos manteniendo la postura con el abdomen activo.', unidad:'segundos', aPuntos:v=>Math.min(30,Math.round(v/3))},
-    {bloque:'a', titulo:'Subir escaleras', detalle:'¿Cuántos pisos seguidos subes sin pararte?', unidad:'pisos', aPuntos:v=>Math.min(30,v*5)},
-    {bloque:'m', titulo:'Sentadilla profunda mantenida', detalle:'Segundos abajo del todo, talones en el suelo.', unidad:'segundos', aPuntos:v=>Math.min(20,Math.round(v/2))},
-    {bloque:'c', titulo:'La semana completa', detalle:'¿Cuántos días has entrenado esta semana (incluida la app)?', unidad:'días', aPuntos:v=>Math.min(20,Math.round(v*20/7))},
+    {bloque:'f', titulo:'Sentadillas en 45 segundos', detalle:'Al ritmo que puedas, sin dolor. Cuenta las completas.', unidad:'sentadillas', max:40, aPuntos:v=>Math.min(30,Math.round(v*1.2))},
+    {bloque:'a', titulo:'Marcha rápida sin parar', detalle:'¿Cuántos minutos aguantas hoy a paso vivo?', unidad:'minutos', max:60, aPuntos:v=>Math.min(30,Math.round(v/2))},
+    {bloque:'m', titulo:'Flexión de tronco', detalle:'De pie, piernas rectas: ¿a cuántos cm te quedas del suelo? (0 = lo tocas)', unidad:'cm del suelo', max:40, aPuntos:v=>Math.max(0,20-Math.round(v/2))},
+    {bloque:'f', titulo:'Plancha frontal', detalle:'Segundos manteniendo la postura con el abdomen activo.', unidad:'segundos', max:120, aPuntos:v=>Math.min(30,Math.round(v/3))},
+    {bloque:'a', titulo:'Subir escaleras', detalle:'¿Cuántos pisos seguidos subes sin pararte?', unidad:'pisos', max:10, aPuntos:v=>Math.min(30,v*5)},
+    {bloque:'m', titulo:'Sentadilla profunda mantenida', detalle:'Segundos abajo del todo, talones en el suelo.', unidad:'segundos', max:60, aPuntos:v=>Math.min(20,Math.round(v/2))},
+    {bloque:'c', titulo:'La semana completa', detalle:'¿Cuántos días has entrenado esta semana (incluida la app)?', unidad:'días', max:7, aPuntos:v=>Math.min(20,Math.round(v*20/7))},
   ],
   /* CENTROS (B2B2C — D8): el centro reparte su código; el cliente entra gratis.
      El centro recibe los datos (WhatsApp), pone su marca y ofrece sus actividades
@@ -424,10 +424,11 @@ function sync(tipo,payload){
   }catch(e){}
 }
 const hoyISO=()=>S.fechaSim || new Date().toISOString().slice(0,10);
-let S=JSON.parse(localStorage.getItem(K)||'null')||{
+let _ls;try{_ls=localStorage.getItem(K);}catch(e){_ls=null;}   // modo privado iOS: no petar
+let S=JSON.parse(_ls||'null')||{
   xp:0, ses:0, racha:0, ultDia:null, reaud:0, retos:0, mejora:0, aud:62, fechaSim:null, hechoHoy:false, dolorHoy:3, hist:[]};
 S.hist=S.hist||[];S.perfil=S.perfil||null;S.tiempoHoy=S.tiempoHoy||15;
-const save=()=>localStorage.setItem(K,JSON.stringify(S));
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}};
 
 /* ════ AVATAR SVG por etapa (placeholder D5) ════ */
 function avatarSvg(fase){
@@ -632,7 +633,7 @@ function abrirPrueba(){
   const pr=pruebaPendiente(); if(!pr) return;
   $('pr-titulo').textContent='Prueba '+(S.pruebasHechas.length+1)+' de '+CONFIG.pruebas.length;
   $('pr-detalle').textContent=pr.titulo+' — '+pr.detalle;
-  $('pr-unidad').textContent=pr.unidad;$('pr-rango').value=0;$('pr-valor').textContent=0;
+  $('pr-unidad').textContent=pr.unidad+' (máx '+(pr.max||60)+')';$('pr-rango').max=pr.max||60;$('pr-rango').value=0;$('pr-valor').textContent=0;
   ir('prueba');
 }
 function registrarPrueba(){
@@ -666,6 +667,8 @@ function tiempo(el){S.tiempoHoy=+el.dataset.min;
   document.querySelectorAll('.t-tiempo').forEach(t=>{t.style.borderColor='';t.style.color='';});
   el.style.borderColor='var(--af-primario)';el.style.color='var(--af-texto)';}
 function cerrarTriaje(){
+  // Leer SIEMPRE el valor visible del slider (no el estado, que podría ser de ayer)
+  S.dolorHoy=+$('v-dolor').textContent;
   const dec=decidirRutina();
   // El día a día manda: la rutina se recorta al tiempo real disponible
   const min=S.tiempoHoy||15, nEj=min<=5?Math.min(2,dec.pack.ejercicios.length):min<=15?Math.min(3,dec.pack.ejercicios.length):dec.pack.ejercicios.length;
