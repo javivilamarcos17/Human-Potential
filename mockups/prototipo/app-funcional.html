@@ -145,7 +145,7 @@
       <div class="stage">
         <div class="ava-wrap"><div class="ava-halo"></div><div id="ava-svg"></div></div>
         <div class="chip"><i></i><span id="chip-fase">Fase 1 · Huevo · Nivel 1</span></div>
-        <div class="nombre-g">Kael, el Fluido</div>
+        <div class="nombre-g" id="nombre-g">???</div>
         <div class="sub" id="saludo">Tu Guardián te espera, Javi.</div>
       </div>
       <div class="stats">
@@ -409,12 +409,25 @@ function faseDesde(p){
   for(const [fase,nivMin,puerta] of FASES){ if(nivel>=nivMin && puerta(p)) f=fase; else break; }
   return f;
 }
-const ETAPAS=[[1,4,'Huevo'],[5,9,'Cría'],[10,13,'Joven'],[14,20,'Guardián'],[21,27,'Alado'],[28,30,'Deidad']];
+const ETAPAS=[[1,4,'Huevo'],[5,9,'Cría'],[10,13,'Juvenil'],[14,20,'Desarrollo'],[21,27,'Adulto'],[28,30,'Apex']];
 const etapaDe=f=>ETAPAS.find(([a,b])=>f>=a&&f<=b)[2];
 // Línea evolutiva según la valoración inicial (D3): el avatar nace reflejando tu punto de partida.
 // Brote (0-40): viaje de fragilidad a fuerza, estética tierna. Atlas (41-70): equilibrada.
 // Apex (71-100): atlética desde el inicio. La re-Auditoría puede cruzarte de línea (momento wow).
-const lineaDe=aud=>aud<=40?'Línea Brote 🌱':aud<=70?'Línea Atlas 🛡️':'Línea Apex ⚡';
+const lineaDe=aud=>aud<=40?'Mística 🌙':aud<=70?'Heroica ⚔️':'Guerrera 🛡️';
+const lineaKey=aud=>aud<=40?'mistica':aud<=70?'heroica':'guerrera';
+/* Los 75 nombres del brief de arte (5 elem x 3 lineas x 5 etapas) */
+const CRIATURAS={
+ agua:{mistica:['Ajolín','Ajolune','Ajondra','Ajomar','Ajomarea'],heroica:['Lutrín','Lutreo','Lutrón','Lutramar','Lutramaral'],guerrera:['Orquín','Orkar','Orkanto','Orkanor','Orkanók']},
+ fuego:{mistica:['Fenín','Fenara','Fenivia','Fenisol','Fenixar'],heroica:['Ibrín','Ibral','Ibrasko','Ibramonte','Ibravolk'],guerrera:['Brasín','Brastor','Brastauro','Brastorón','Magmatauro']},
+ rayo:{mistica:['Nimbín','Nimbela','Nimbalia','Nimborea','Nimborealis'],heroica:['Falquín','Falzel','Falkaro','Falkorre','Falkorayo'],guerrera:['Herkín','Herkelo','Herkarno','Herkanor','Herkulón']},
+ hierba:{mistica:['Cervín','Cervila','Cervalia','Cervandor','Cervaflor'],heroica:['Rufín','Rufelo','Rufambú','Rufandor','Rufandai'],guerrera:['Urzín','Urzal','Urzonco','Urzondor','Urzontor']},
+ roca:{mistica:['Geolín','Geolume','Geodara','Geodonte','Geodralia'],heroica:['Tatuín','Taturel','Taturok','Taturokar','Taturokón'],guerrera:['Bisaltín','Bisaltor','Bisalkor','Bisaltonte','Bisaltitán']}};
+function nombreCriatura(fase){
+  if(etapaDe(fase)==='Huevo')return '???';
+  const idx={'Cría':0,'Juvenil':1,'Desarrollo':2,'Adulto':3,'Apex':4}[etapaDe(fase)]||0;
+  return (CRIATURAS[S.elemento||'agua']||CRIATURAS.agua)[lineaKey(S.aud)][idx];
+}
 
 /* ════ ESTADO PERSISTENTE ════ */
 const K='af_mvp_v1';
@@ -544,6 +557,7 @@ function pintar(){
   // Re-enganche sin culpa: el Guardián se aletarga, nunca muere — y te recibe, no te riñe
   $('ava-svg').innerHTML=avatarSvg(f);
   $('ava-svg').style.filter=gap>=2?'grayscale(.75) brightness(.65)':'';
+  $('nombre-g').textContent=nombreCriatura(f);
   if(gap>=2&&!S.hechoHoy){
     $('saludo').innerHTML=`Kael se aletargó esperándote… pero <b style="color:var(--af-primario)">nunca se fue</b>. Hoy con 5 minutos vuelve a brillar, ${CONFIG.paciente}.`;
     $('btn-empezar').textContent='Despertar a Kael · rutina de regreso';
@@ -767,7 +781,7 @@ function terminarJornada(){
     $('celebra-ava').innerHTML=avatarSvg(faseAhora);
     const eclosion=etapaDe(faseAntes)==='Huevo'&&etapaDe(faseAhora)!=='Huevo';
     $('celebra-txt').textContent=eclosion
-      ?`🥚→ ¡ECLOSIÓN! Tu elemento es… ${({agua:'💧 AGUA',fuego:'🔥 FUEGO',rayo:'⚡ RAYO',hierba:'🌿 HIERBA',roca:'🪨 ROCA'})[S.elemento||'agua']}. Tu cuerpo lo eligió, ${CONFIG.paciente} — y ahora crece contigo.`
+      ?`🥚→ ¡ECLOSIÓN! Es… ¡${nombreCriatura(faseAhora)}! ${({agua:'💧 AGUA',fuego:'🔥 FUEGO',rayo:'⚡ RAYO',hierba:'🌿 HIERBA',roca:'🪨 ROCA'})[S.elemento||'agua']} · línea ${lineaDe(S.aud)}. Tu cuerpo lo eligió, ${CONFIG.paciente}.`
       :etapaDe(faseAhora)!==etapaDe(faseAntes)
       ?`${etapaDe(faseAntes)} → ${etapaDe(faseAhora)}. Una etapa entera conquistada, ${CONFIG.paciente}.`
       :`Fase ${faseAhora} de 30 · ${etapaDe(faseAhora)}. Lo has sudado tú.`;
@@ -877,7 +891,7 @@ async function tarjetaEpica(){
   x.drawImage(img,240,360,600,600);
   x.textAlign='center';x.fillStyle='#F2F6FA';
   x.font='900 92px Nunito,sans-serif';x.fillText(CONFIG.paciente.toUpperCase(),540,220);
-  x.fillStyle='#5BD0E8';x.font='700 52px Inter,sans-serif';x.fillText('Kael, el Fluido · '+etapaDe(f),540,300);
+  x.fillStyle='#5BD0E8';x.font='700 52px Inter,sans-serif';x.fillText(nombreCriatura(f)+' · '+etapaDe(f),540,300);
   x.fillStyle='#F4C430';x.font='900 110px Nunito,sans-serif';x.fillText('NIVEL '+niv,540,1130);
   x.fillStyle='#F2F6FA';x.font='700 58px Inter,sans-serif';x.fillText('🔥 '+S.racha+' días seguidos · '+S.ses+' sesiones',540,1240);
   x.fillStyle='#8DA2B8';x.font='600 46px Inter,sans-serif';
