@@ -75,6 +75,19 @@ A.diaSiguiente();A.diaSiguiente();A.diaSiguiente();
 jornada(2,7,5);
 check(A.S.racha===1,'racha se reinicia tras ausencia: '+A.S.racha);
 
+// ── CAMINO LARGO: hasta el día 60 — ¿el ritmo de evoluciones engancha? ──
+const evoluciones=[];let faseAnt=A.faseDesde({...A.S});
+for(let d=14;d<=60;d++){
+  jornada(Math.max(1,4-Math.floor(d/15)),7,5);   // el dolor baja con las semanas
+  const f2=A.faseDesde({...A.S});
+  if(f2>faseAnt){evoluciones.push('día '+d+' → fase '+f2+' ('+A.etapaDe(f2)+')');faseAnt=f2;}
+  A.diaSiguiente();
+}
+console.log('\n📈 Evoluciones del día 14 al 60:');evoluciones.forEach(e=>console.log('  ',e));
+const f60=A.faseDesde({...A.S});
+check(f60>=8,'día 60: fase '+f60+' ('+A.etapaDe(f60)+') — tope actual del MVP');
+console.log('   (XP total: '+A.S.xp+' · nivel '+A.nivelDesdeXp(A.S.xp)+' · sesiones '+A.S.ses+')');
+
 console.log('\n'+(fallos?('🔴 '+fallos+' FALLOS'):'🟢 TODO OK')+' — últimos avisos de la app:');
 LOG.slice(-3).forEach(l=>console.log('  ',l));
 process.exit(fallos?1:0);

@@ -398,8 +398,8 @@ const FASES=[
  [1,1,p=>true],[2,2,p=>p.ses>=1],[3,3,p=>p.racha>=3],[4,4,p=>p.ses>=5],
  [5,5,p=>p.racha>=7||(p.pruebasHechas||[]).length>=7],
  [6,7,p=>(p.pruebasHechas||[]).length>=7||p.reaud>=1],[7,9,p=>p.ses>=10],[8,12,p=>p.racha>=14],[9,16,p=>p.mejora>=1||p.ses>=15],
- [10,24,p=>p.retos>=1],[11,28,p=>p.ses>=20],[12,32,p=>p.retos>=2],[13,36,p=>p.racha>=30],
- [14,40,p=>p.mejora>=5],[15,45,p=>p.retos>=3],[16,50,p=>p.retos>=4],[17,55,p=>p.reaud>=2],
+ [10,18,p=>p.retos>=1],[11,20,p=>p.ses>=20],[12,22,p=>p.retos>=2],[13,25,p=>p.racha>=21||p.ses>=35],
+ [14,28,p=>p.mejora>=5||p.retos>=3],[15,32,p=>p.retos>=3],[16,36,p=>p.retos>=4],[17,40,p=>p.reaud>=2],
  [18,60,p=>p.racha>=60],[19,65,p=>p.retos>=5],[20,70,p=>p.mejora>=10],[21,73,p=>p.retos>=6],
  [22,76,p=>p.racha>=90],[23,80,p=>p.retos>=7],[24,84,p=>p.aud>=70],[25,88,p=>p.retos>=8],
  [26,92,p=>p.aud>=80],[27,96,p=>p.aud>=85],[28,98,p=>p.retos>=9],[29,99,p=>p.aud>=90],
@@ -631,7 +631,14 @@ function decidirRutina(){
 }
 function pruebaPendiente(){
   S.pruebasHechas=S.pruebasHechas||[];
-  if(S.pruebasHechas.length>=CONFIG.pruebas.length) return null;
+  // RE-AUDITORÍA cíclica: a los 28 días de la última prueba, la semana de pruebas se reabre.
+  // Tus marcas nuevas vs las viejas = mejora REAL medible (desbloquea fases y motiva).
+  if(S.pruebasHechas.length>=CONFIG.pruebas.length){
+    const ult=S.pruebasHechas[S.pruebasHechas.length-1];
+    if(ult&&(new Date(hoyISO())-new Date(ult.f))/86400000>=28){
+      S.reaud=(S.reaud||0)+1;S.pruebasHechas=[];save();
+    } else return null;
+  }
   const ultima=S.pruebasHechas[S.pruebasHechas.length-1];
   if(ultima&&ultima.f===hoyISO()) return null;            // 1 prueba por día
   return CONFIG.pruebas[S.pruebasHechas.length];
@@ -707,14 +714,36 @@ function revisarRutina(){
     b.textContent='Tu Guardián entrena contigo, no con clics · '+Math.floor(falta/60)+':'+String(falta%60).padStart(2,'0');
     clearTimeout(window._tj);window._tj=setTimeout(revisarRutina,1000);return;}
   b.disabled=false;b.textContent='Completar rutina · +20 XP';}
+/* RETOS MAESTROS: hitos que la app otorga sola al cumplirlos — desbloquean fases altas */
+const RETOS=[
+  ['constancia7',  s=>s.racha>=7,  'Semana de Hierro (racha 7)'],
+  ['constancia14', s=>s.racha>=14, 'Quincena Inquebrantable (racha 14)'],
+  ['constancia30', s=>s.racha>=30, 'Mes Legendario (racha 30)'],
+  ['ses25',        s=>s.ses>=25,   'Veterano (25 sesiones)'],
+  ['ses50',        s=>s.ses>=50,   'Centurión (50 sesiones)'],
+  ['dolorBajo',    s=>s.hist.length>=7&&s.hist.slice(-7).every(x=>x.d<=3),'Semana Serena (7 días dolor ≤3)'],
+  ['mejora5',      s=>(s.mejora||0)>=5,'Renacido (+5 Vitalidad real)'],
+  ['eclosionTotal',s=>(s.pruebasHechas||[]).length>=7&&(s.reaud||0)>=1,'Doble Auditoría'],
+  ['regreso',      s=>(s.rachaMax||0)>=7&&s.racha===1&&s.ses>=10,'El que Vuelve (regresar tras caer)'],
+  ['centurion100', s=>s.ses>=100,  'Inmortal (100 sesiones)'],
+];
+function evaluarRetos(){
+  S.retosLog=S.retosLog||[];let nuevo=null;
+  for(const [id,cond,nombre] of RETOS)
+    if(!S.retosLog.includes(id)&&cond(S)){S.retosLog.push(id);S.xp+=150;nuevo=nombre;break;}  // 150 XP (regla Dart)
+  S.retos=S.retosLog.length;
+  return nuevo;
+}
 function terminarJornada(){
   // racha real por calendario (espejo de la regla Dart)
   const hoy=hoyISO(), ayer=S.fechaSim?prevISO(S.fechaSim):prevISO(new Date().toISOString().slice(0,10));
   S.racha=(S.ultDia===ayer)?S.racha+1:1;
   S.rachaMax=Math.max(S.rachaMax||0,S.racha);
+  S.mejora=Math.max(0,S.aud-(S.audInicial!=null?S.audInicial:S.aud));
+  const faseAntes=faseDesde({...S});         // medir ANTES de retos y XP del día
+  const retoNuevo=evaluarRetos();
   const bonus=Math.min(S.racha*XP.porDiaRacha,XP.topeBonus);
   const ganada=XP.triaje+XP.rutina+XP.feedback+bonus;
-  const faseAntes=faseDesde({...S});
   S.xp+=ganada; S.ses+=1; S.ultDia=hoy; S.hechoHoy=true;
   // Coherencia: sesión muy corta + esfuerzo declarado alto = marca para el profesional
   const durMin=Math.round((Date.now()-(window._t0||Date.now()))/60000), rpeHoy=+$('v-rpe').textContent;
@@ -731,6 +760,7 @@ function terminarJornada(){
      <div class="fila"><span>Rutina completada</span><b>+${XP.rutina}</b></div>
      <div class="fila"><span>Feedback RPE</span><b>+${XP.feedback}</b></div>
      <div class="fila"><span>Bonus racha (${S.racha} días × 2, tope 20)</span><b>+${bonus}</b></div>`
+    +(retoNuevo?`<div class="fila"><span style="color:var(--af-dorado)">🏆 RETO MAESTRO: ${retoNuevo}</span><b style="color:var(--af-dorado)">+150</b></div>`:'')
     +($('molestia').checked?`<div class="fila"><span style="color:var(--af-rojo)">⚠ Molestia nueva → alerta enviada a ${CONFIG.clinica}</span><b></b></div>`:'');
   const evo=$('evo-aviso');
   if(faseAhora>faseAntes){evo.style.display='block';evo.innerHTML=`✨ <b>¡Kael ha evolucionado!</b> Fase ${faseAntes} → <b>Fase ${faseAhora} (${etapaDe(faseAhora)})</b>. Esto no lo regala la app: lo has ganado tú.`;
@@ -765,6 +795,7 @@ function altaSubmit(){
         c=Math.round(+$('a-c').textContent*20/7);                  // 7 días → 20 puntos
   const cod=$('a-centro').value.trim().toUpperCase();
   S.perfil={nombre:n,zona:$('a-zona').value,centro:CONFIG.centros[cod]?cod:null}; S.aud=f+a+m+c;
+  S.audInicial=S.aud;S.retos=0;S.reaud=0;S.retosLog=[];S.mejora=0;
   // Sombrero Seleccionador digital: el elemento nace de tu cuerpo, no de un menú
   S.bloques={f:f,a:a,m:m,c:c};
   const mx=Math.max(f/30,a/30,m/20,c/20);
