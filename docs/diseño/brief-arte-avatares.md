@@ -79,3 +79,18 @@ Base (fase 1): huevo crema liso, misterioso, cel shading. Fases 2-4 añaden por 
 3. Micro-fases por edición al final (3 por etapa).
 4. Character sheets de apex y crías. 5. Control de IP en cada diseño.
 **Inventario: 75 macro-formas + ~225 micro + 16 huevos ≈ 316 assets desde 75 diseños.**
+
+---
+
+## Apéndice — Prompts completos del piloto Ajolote (listos para copiar)
+
+**Fase 9 — Ajolune:** `Original monster-taming game creature design, slender young axolotl creature standing semi-upright, coral flower gill fronds evolved into short flowing aquatic ribbons, translucent dorsal fin crest, curious gentle expression, water elemental type, juvenile stage, 3 heads tall, 90s anime cel shading, bold clean ink outlines, flat colors single shadow tone, palette #58C7DD #1E5F77 #E8FBFD #F49BA8, graceful and curious, full body, 3/4 front view, white background, no text`
+
+**Fase 13 — Ajondra:** `Original monster-taming game creature design, elegant serpentine axolotl spirit with long neck, coral ribbons evolved into long flowing water veils floating without wind, glowing crescent moon mark on forehead, water rings orbiting wrists, water elemental type, 4 heads tall, 90s anime cel shading, bold clean ink outlines, flat colors single shadow tone, palette #58C7DD #1E5F77 #E8FBFD #F49BA8, serene and graceful, full body, 3/4 front view, white background, no text`
+
+**Fase 17 — Ajomar:** `Original monster-taming game creature design, tall slender water guardian, refined noble axolotl features, flowing mane of soft mist, long luminous coral veils, glowing crescent forehead mark, calm wise expression, tide particles around it, water elemental type, 5 heads tall, 90s anime cel shading, bold clean ink outlines, flat colors single shadow tone, palette #58C7DD #1E5F77 #E8FBFD #F49BA8, majestic and serene, full body, 3/4 front view, white background, no text`
+
+**Fase 20 — Ajomarea:** `Original monster-taming game creature design, legendary tide guardian, semi-ethereal body between flesh and flowing water current, veils like liquid aurora borealis, crown of water crystal, glowing crescent moon mark, ancient serene presence, mystical not aggressive, water elemental type, 7 heads tall final evolution, 90s anime cel shading, bold clean ink outlines, flat colors single shadow tone, palette #58C7DD #1E5F77 #E8FBFD #F49BA8, breathtaking and majestic, full body, 3/4 front view, white background, no text`
+
+> Flujo: generar en orden 5→9→13→17→20, usando cada resultado como referencia de imagen
+> del siguiente (--cref en Midjourney / image prompt). 4 variaciones por forma, elegir 1.
