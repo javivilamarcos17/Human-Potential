@@ -38,13 +38,13 @@
 - [x] cria — Urzín · [x] juvenil — Urzal · [x] desarrollo — Urzonco · [x] adulto — Urzondor · [x] apex — Urzontor
 
 ## 🪨 ROCA
-### roca-mistica — Tortuga Geoda
-- [ ] cria — Geolín · [ ] juvenil — Geolume · [ ] desarrollo — Geodara · [ ] adulto — Geodonte · [ ] apex — Geodralia
-### roca-heroica — Armadillo de Granito
-- [ ] cria — Tatuín · [ ] juvenil — Taturel · [ ] desarrollo — Taturok · [ ] adulto — Taturokar · [ ] apex — Taturokón
-### roca-guerrera — Bisonte de Basalto
-- [ ] cria — Bisaltín · [ ] juvenil — Bisaltor · [ ] desarrollo — Bisalkor · [x] adulto — Bisaltonte · [ ] apex — Bisaltitán
+### roca-mistica — Tortuga Geoda ✅LÍNEA COMPLETA recibida
+- [x] cria — Geolín · [x] juvenil — Geolume · [x] desarrollo — Geodara · [x] adulto — Geodonte · [x] apex — Geodralia
+### roca-heroica — Armadillo de Granito ✅LÍNEA COMPLETA recibida
+- [x] cria — Tatuín · [x] juvenil — Taturel · [x] desarrollo — Taturok · [x] adulto — Taturokar · [x] apex — Taturokón
+### roca-guerrera — Bisonte de Basalto ✅LÍNEA COMPLETA recibida
+- [x] cria — Bisaltín · [x] juvenil — Bisaltor · [x] desarrollo — Bisalkor · [x] adulto — Bisaltonte · [x] apex — Bisaltitán
 
 ---
-**Progreso: 56 / 75 generadas** — 🔥 FUEGO (15) ✅ · ⚡ RAYO (15) ✅ · 🌿 HIERBA (15) ✅ · 💧 Agua 9 · 🪨 Roca 1.
-Líneas completas (11): Fénix, Íbice, Toro de Brasas, Medusa, Halcón, Escarabajo, Ciervo, Panda Rojo, Oso de Corteza. Falta: completar Agua (Ajolote 4/5, Nutria 2/5, Orca 3/5) y Roca (solo Bisonte adulto). Guardar como PNG transparente.
+**Progreso: 69 / 75 generadas** — 🔥 FUEGO · ⚡ RAYO · 🌿 HIERBA · 🪨 ROCA completos (60). 💧 Agua 9/15.
+Faltan SOLO 6 (todas de Agua): Ajolote cría · Nutria cría/juvenil/desarrollo · Orca adulto/apex. Guardar todo como PNG transparente.
