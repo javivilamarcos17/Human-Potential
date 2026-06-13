@@ -1,0 +1,1 @@
+Guarda aqui las tiras: <elemento>-<linea>.png (ej. agua-mistica.png) — la imagen completa de las 5 fases tal cual la generas

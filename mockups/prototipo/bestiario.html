@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Frágil · Bestiario — las 15 líneas</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--af-bg);font-family:var(--af-font-texto);color:var(--af-texto);padding:30px 4vw 60px}
+  .aurora{position:fixed;inset:0;overflow:hidden;filter:blur(85px);opacity:.35;z-index:0}
+  .aurora i{position:absolute;border-radius:50%}
+  .aurora i:nth-child(1){width:520px;height:520px;left:-150px;top:-120px;background:#103a5c}
+  .aurora i:nth-child(2){width:440px;height:440px;right:-150px;bottom:-120px;background:#0d4a45}
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto}
+  h1{font-family:var(--af-font-display);font-weight:900;font-size:30px}
+  h1 span{color:var(--af-primario)}
+  .sub{color:var(--af-texto-suave);font-size:14px;margin:6px 0 24px;line-height:1.6}
+  .elem{font-family:var(--af-font-display);font-weight:800;font-size:21px;margin:30px 0 6px;padding-bottom:6px;border-bottom:1px solid var(--af-line)}
+  .linea{margin-top:18px}
+  .lt{font-size:14px;font-weight:700;color:var(--af-texto)}
+  .lt b{color:var(--af-texto-suave);font-weight:600}
+  .tira{margin-top:8px;background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-l);backdrop-filter:blur(var(--af-blur-cristal));overflow:hidden;min-height:90px;display:flex;align-items:center;justify-content:center}
+  .tira img{width:100%;display:block}
+  .pend{color:var(--af-texto-suave);font-size:13px;padding:30px;text-align:center}
+  .badge{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:8px;vertical-align:middle}
+  .ok{background:rgba(46,204,143,.15);color:var(--af-primario);border:1px solid rgba(46,204,143,.4)}
+  .no{background:rgba(255,255,255,.05);color:var(--af-texto-suave);border:1px solid var(--af-line)}
+  .resumen{background:var(--af-panel);border:1px solid var(--af-line);border-radius:var(--af-radio-l);padding:16px 20px;margin-top:14px;font-size:13.5px;color:var(--af-texto-suave);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="aurora"><i></i><i></i></div>
+<div class="wrap">
+  <h1>Bestiario <span>Anti Frágil</span></h1>
+  <p class="sub">Las 15 líneas evolutivas · 5 elementos × 3 personalidades (Mística · Heroica · Guerrera).
+  Cada línea: 5 macro-formas, de cría a forma legendaria. <a href="../demo.html" style="color:var(--af-texto-suave)">← hub</a></p>
+  <div class="resumen" id="resumen">Cargando…</div>
+  <div id="grid"></div>
+</div>
+<script>
+const ELEM={agua:'💧 AGUA',fuego:'🔥 FUEGO',rayo:'⚡ RAYO',hierba:'🌿 HIERBA',roca:'🪨 ROCA'};
+const LINEAS={
+ agua:[['mistica','Ajolote','Recuperación · movilidad · dolor de espalda'],['heroica','Nutria','Nadador carismático'],['guerrera','Orca de Abismo','Coloso oceánico']],
+ fuego:[['mistica','Fénix','Renacimiento · transformación'],['heroica','Íbice','Superación · escalada'],['guerrera','Toro de Brasas','Fuerza ardiente']],
+ rayo:[['mistica','Medusa Celeste','Tormenta serena'],['heroica','Halcón Peregrino','Velocidad · cardio'],['guerrera','Escarabajo Hércules','Fuerza proporcional']],
+ hierba:[['mistica','Ciervo del Bosque','Crecimiento · hábitos'],['heroica','Panda Rojo','Equilibrio · agilidad'],['guerrera','Oso de Corteza','Protección · tanque']],
+ roca:[['mistica','Tortuga Geoda','Sedentario que esconde cristal'],['heroica','Armadillo de Granito','Defensa que se vuelve arma'],['guerrera','Bisonte de Basalto','Powerlifter']]
+};
+let html='',total=0,hechas=0;
+const probes=[];
+for(const el of Object.keys(LINEAS)){
+  html+=`<div class="elem">${ELEM[el]}</div>`;
+  for(const [lin,criatura,desc] of LINEAS[el]){
+    total++;
+    const id=el+'-'+lin, ruta='../avatares/tiras/'+id+'.png';
+    html+=`<div class="linea"><div class="lt">${criatura} <b>· ${lin} · ${desc}</b><span class="badge no" id="b-${id}">pendiente</span></div>
+      <div class="tira" id="t-${id}"><div class="pend">Guarda <b>avatares/tiras/${id}.png</b> y aparecerá aquí</div></div></div>`;
+    probes.push([id,ruta]);
+  }
+}
+document.getElementById('grid').innerHTML=html;
+// cargar tiras que existan
+probes.forEach(([id,ruta])=>{
+  const img=new Image();
+  img.onload=()=>{document.getElementById('t-'+id).innerHTML='<img src="'+ruta+'" alt="'+id+'">';
+    const b=document.getElementById('b-'+id);b.className='badge ok';b.textContent='✓ listo';
+    hechas++;upd();};
+  img.src=ruta;
+});
+function upd(){document.getElementById('resumen').innerHTML=
+  `<b style="color:var(--af-texto)">${hechas} de ${total} líneas montadas.</b> Cada tira es la imagen completa de las 5 fases tal como la generas — guárdala en <b>mockups/avatares/tiras/&lt;elemento&gt;-&lt;linea&gt;.png</b> y refresca. (Para la app fase a fase hace falta recortar cada criatura por separado en mockups/avatares/&lt;elemento&gt;-&lt;linea&gt;/&lt;etapa&gt;.png).`;}
+upd();
+</script>
+</body>
+</html>
