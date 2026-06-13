@@ -1185,10 +1185,35 @@ function verGuardian(){
 /* ── NUTRICIÓN (editable) — acompañar, no recetar. Ver diseño/nutricion-mvp.md ── */
 const NUTRI={
   momentos:[['desayuno','Desayuno'],['comida','Comida'],['cena','Cena'],['snack','Snack / picoteo']],
-  opciones:[['verde','🟢','Saludable'],['ambar','🟡','Normal'],['rojo','🔴','Capricho']],
+  // El cliente elige QUÉ comió (fácil) y la app le dice si es sano (le educa).
+  // Edita la lista para afinar la guía nutricional. color: verde|ambar|rojo
+  tipos:[
+    {t:'Verdura / ensalada',          color:'verde'},
+    {t:'Pollo / pescado / huevo',     color:'verde'},
+    {t:'Legumbres',                   color:'verde'},
+    {t:'Fruta',                       color:'verde'},
+    {t:'Lácteo natural / yogur',      color:'verde'},
+    {t:'Frutos secos',                color:'verde'},
+    {t:'Pasta / arroz / pan',         color:'ambar'},
+    {t:'Carne roja',                  color:'ambar'},
+    {t:'Bocadillo',                   color:'ambar'},
+    {t:'Zumo / lácteo azucarado',     color:'ambar'},
+    {t:'Frito / rebozado',            color:'rojo'},
+    {t:'Dulce / bollería',            color:'rojo'},
+    {t:'Pizza / comida rápida',       color:'rojo'},
+    {t:'Snack salado / patatas',      color:'rojo'},
+    {t:'Refresco / alcohol',          color:'rojo'},
+    {t:'Me la salté',                 color:'ambar'},
+  ],
+  emoji:{verde:'🟢',ambar:'🟡',rojo:'🔴'},
+  // el micro-consejo que EDUCA al cliente sobre lo que acaba de elegir
+  consejo:{
+    verde:'💚 Buena elección: nutritivo y poco procesado.',
+    ambar:'🟡 Correcto con moderación — ojo a la cantidad.',
+    rojo:'🔴 Un capricho. No pasa nada: compénsalo con agua y movimiento.',
+  },
   metaAgua:8,
-  // mensaje según cuántas comidas saludables registró (la app nunca culpa)
-  mensaje:(verde,rojo,total)=> total===0 ? 'Marca cómo comiste hoy. Sin números, sin culpa.'
+  mensaje:(verde,rojo,total)=> total===0 ? 'Dinos qué comiste y te decimos si va bien — sin culpa.'
     : verde>=total*0.7 ? '💚 Día redondo. Tu cuerpo y tu Guardián lo notan.'
     : rojo>=total*0.6 ? 'Un día flojo no borra tu progreso. Mañana: agua y movimiento, y a seguir.'
     : 'Equilibrio es esto: ni perfecto ni mal. Vas bien.',
@@ -1197,17 +1222,34 @@ function nutriHoy(){S.nutri=S.nutri||{};S.nutri[hoyISO()]=S.nutri[hoyISO()]||{ag
 function verNutricion(){ nutriHoy(); pintarNutricion(); ir('nutricion'); }
 function pintarNutricion(){
   const d=nutriHoy();
-  $('nutri-comidas').innerHTML=NUTRI.momentos.map(([k,lbl])=>
-    `<div style="margin-bottom:12px"><div class="sub" style="color:var(--af-texto)">${lbl}</div>
-      <div class="toolbar" style="margin-top:6px">${NUTRI.opciones.map(([c,emo,t])=>
-        `<div class="tool" onclick="comida('${k}','${c}')" style="${d[k]===c?'border-color:var(--af-primario);color:var(--af-texto)':''}">${emo} ${t}</div>`).join('')}</div></div>`).join('');
+  $('nutri-comidas').innerHTML=NUTRI.momentos.map(([k,lbl])=>{
+    const sel=d[k];               // índice del tipo elegido (o undefined)
+    const tipo=sel!=null?NUTRI.tipos[sel]:null;
+    const opts='<option value="">— elige —</option>'+NUTRI.tipos.map((t,i)=>`<option value="${i}" ${sel==i?'selected':''}>${t.t}</option>`).join('');
+    return `<div style="margin-bottom:14px">
+      <div class="sub" style="color:var(--af-texto);font-weight:600">${lbl}</div>
+      <select onchange="comida('${k}',this.value)" style="width:100%;margin-top:6px;padding:11px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:14px">${opts}</select>
+      ${tipo?`<div class="sub" style="margin-top:6px;line-height:1.45">${NUTRI.consejo[tipo.color]}</div>`:''}
+    </div>`;}).join('');
   $('nutri-agua').textContent=d.agua||0;
   $('nutri-agua-meta').textContent=(d.agua||0)>=NUTRI.metaAgua?'✓ Objetivo de hoy cumplido':`Objetivo: ${NUTRI.metaAgua} vasos`;
-  const vals=NUTRI.momentos.map(([k])=>d[k]).filter(Boolean);
-  const verde=vals.filter(v=>v==='verde').length, rojo=vals.filter(v=>v==='rojo').length;
-  $('nutri-balance').innerHTML=`<div style="font-size:14px;color:var(--af-texto);line-height:1.5">${NUTRI.mensaje(verde,rojo,vals.length)}</div>`;
+  const colores=NUTRI.momentos.map(([k])=>d[k]!=null?NUTRI.tipos[d[k]].color:null).filter(Boolean);
+  const verde=colores.filter(c=>c==='verde').length, rojo=colores.filter(c=>c==='rojo').length;
+  // Mirada SEMANAL: un día flojo no rompe nada — se compensa con el resto y con tu actividad
+  const sem=semanaNutri();
+  const lineaSem=sem.dias>=3
+    ? `<div class="sub" style="margin-top:8px">Tu semana: <b style="color:var(--af-primario)">${sem.buenos}/${sem.dias} días cuidándote</b>.${rojo>0?' Hoy flojeaste — no pasa nada: tu actividad y los buenos días lo compensan.':''}</div>`
+    : '';
+  $('nutri-balance').innerHTML=`<div style="font-size:14px;color:var(--af-texto);line-height:1.5">${NUTRI.mensaje(verde,rojo,colores.length)}</div>${lineaSem}`;
 }
-function comida(k,c){ const d=nutriHoy(); d[k]=c; save(); pintarNutricion(); }
+function semanaNutri(){
+  const dias=Object.keys(S.nutri||{}).sort().slice(-7); let buenos=0;
+  dias.forEach(f=>{ const dd=S.nutri[f];
+    const cs=NUTRI.momentos.map(([k])=>dd[k]!=null?NUTRI.tipos[dd[k]].color:null).filter(Boolean);
+    if(cs.length && cs.filter(c=>c==='verde').length>=cs.length*0.5) buenos++; });
+  return {dias:dias.length, buenos};
+}
+function comida(k,idx){ const d=nutriHoy(); if(idx==='')delete d[k]; else d[k]=+idx; save(); pintarNutricion(); }
 function agua(n){ const d=nutriHoy(); d.agua=Math.max(0,(d.agua||0)+n); save(); pintarNutricion(); }
 function guardarNutri(){
   const d=nutriHoy();
