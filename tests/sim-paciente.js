@@ -16,6 +16,7 @@ global.document={getElementById:id=>els[id]||(els[id]=fakeEl()),
   querySelectorAll:()=>[],createElement:()=>fakeEl()};
 global.localStorage={getItem:k=>store[k]||null,setItem:(k,v)=>store[k]=v,removeItem:k=>delete store[k]};
 global.navigator={};global.window={};global.crypto={randomUUID:()=>'test-uuid'};
+global.Image=function(){return{set src(v){if(this.onerror)this.onerror();},onload:null,onerror:null};};
 global.alert=m=>LOG.push('ALERT: '+String(m).slice(0,90));
 global.confirm=()=>true;global.fetch=()=>Promise.resolve({ok:true});
 global.location={reload(){},href:''};
