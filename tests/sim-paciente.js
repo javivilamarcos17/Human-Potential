@@ -17,6 +17,7 @@ global.document={getElementById:id=>els[id]||(els[id]=fakeEl()),
 global.localStorage={getItem:k=>store[k]||null,setItem:(k,v)=>store[k]=v,removeItem:k=>delete store[k]};
 global.navigator={};global.window={};global.crypto={randomUUID:()=>'test-uuid'};
 global.Image=function(){return{set src(v){if(this.onerror)this.onerror();},onload:null,onerror:null};};
+global.setInterval=()=>0;global.clearInterval=()=>{};global.setTimeout=()=>0;
 global.alert=m=>LOG.push('ALERT: '+String(m).slice(0,90));
 global.confirm=()=>true;global.fetch=()=>Promise.resolve({ok:true});
 global.location={reload(){},href:''};
@@ -24,7 +25,7 @@ const LOG=[];
 
 // ── cargar la app ───────────────────────────────────────────────────
 const ctx={};
-new Function(js+'\n;Object.assign(this,{S,save,altaSubmit,cerrarTriaje,terminarJornada,diaSiguiente,faseDesde,etapaDe,nivelDesdeXp,registrarPrueba,pruebaPendiente,abrirPrueba,CONFIG,hoyISO,verPC,cerrarSeason});').call(ctx);
+new Function(js+'\n;Object.assign(this,{S,save,altaSubmit,cerrarTriaje,terminarJornada,diaSiguiente,faseDesde,etapaDe,nivelDesdeXp,registrarPrueba,pruebaPendiente,abrirPrueba,CONFIG,hoyISO,verPC,cerrarSeason,verRetos,verProgreso,mostrarBienvenida,abrirPlayer,plSiguiente,enviarResumen});').call(ctx);
 const A=ctx;
 
 // ── helpers de interacción ──────────────────────────────────────────
@@ -88,6 +89,14 @@ console.log('\n📈 Evoluciones del día 14 al 60:');evoluciones.forEach(e=>cons
 const f60=A.faseDesde({...A.S});
 check(f60>=8,'día 60: fase '+f60+' ('+A.etapaDe(f60)+') — tope actual del MVP');
 console.log('   (XP total: '+A.S.xp+' · nivel '+A.nivelDesdeXp(A.S.xp)+' · sesiones '+A.S.ses+')');
+
+// ── HUMO DE UI: ninguna pantalla debe petar al abrirse ──
+const ui=[['verRetos',()=>A.verRetos()],['verPC',()=>A.verPC()],['verProgreso',()=>A.verProgreso()],
+  ['mostrarBienvenida',()=>{A.mostrarBienvenida&&A.mostrarBienvenida();}],
+  ['abrirPlayer',()=>{window._packHoy=A.CONFIG.pack.ejercicios;A.abrirPlayer&&A.abrirPlayer();}],
+  ['plSiguiente x6',()=>{for(let i=0;i<6;i++)A.plSiguiente&&A.plSiguiente();}],
+  ['enviarResumen',()=>A.enviarResumen&&A.enviarResumen()]];
+ui.forEach(([n,fn])=>{try{fn();check(true,'UI '+n+' no peta');}catch(e){fallos++;console.log('❌ UI '+n+' PETA:',e.message);}});
 
 console.log('\n'+(fallos?('🔴 '+fallos+' FALLOS'):'🟢 TODO OK')+' — últimos avisos de la app:');
 LOG.slice(-3).forEach(l=>console.log('  ',l));

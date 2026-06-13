@@ -14,8 +14,8 @@
 - [x] cria.png — Orquín · [x] juvenil.png — Orkar · [x] desarrollo.png — Orkanto · [ ] adulto.png — Orkanor · [ ] apex.png — Orkanók
 
 ## 🔥 FUEGO
-### fuego-mistica — Fénix
-- [ ] cria — Fenín · [ ] juvenil — Fenara · [ ] desarrollo — Fenivia · [ ] adulto — Fenisol · [ ] apex — Fenixar
+### fuego-mistica — Fénix ✅LÍNEA COMPLETA recibida
+- [x] cria — Fenín · [x] juvenil — Fenara · [x] desarrollo — Fenivia · [x] adulto — Fenisol · [x] apex — Fenixar
 ### fuego-heroica — Íbice
 - [ ] cria — Ibrín · [ ] juvenil — Ibral · [ ] desarrollo — Ibrasko · [ ] adulto — Ibramonte · [ ] apex — Ibravolk
 ### fuego-guerrera — Toro de Brasas
@@ -46,4 +46,4 @@
 - [ ] cria — Bisaltín · [ ] juvenil — Bisaltor · [ ] desarrollo — Bisalkor · [x] adulto — Bisaltonte · [ ] apex — Bisaltitán
 
 ---
-**Progreso: 11 / 75 generadas** (Ajolote 4 · Nutria 2 · Orca 3 · Bisonte 1, pendientes de guardar como PNG transparente)
+**Progreso: 16 / 75 generadas** (Ajolote 4 · Nutria 2 · Orca 3 · Bisonte 1 · Fénix 5 ✅, pendientes de guardar como PNG transparente)
