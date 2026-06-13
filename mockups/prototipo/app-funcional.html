@@ -180,6 +180,7 @@
       </div>
       <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
       <div class="toolbar">
+        <div class="tool" onclick="verRetos()">🏆 Logros</div>
         <div class="tool" onclick="verPC()">🗃 PC</div>
         <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
         <div class="tool" onclick="verProgreso()">📈 Mi progreso</div>
@@ -208,6 +209,14 @@
       <div class="h1">🗃 PC</div>
       <div class="sub">Cada forma que conquistas se guarda aquí para siempre. Al cerrar la temporada, tu Guardián completo se archivará en el PC y empezarás una nueva historia.</div>
       <div id="pc-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"></div>
+      <button class="cta" onclick="ir('home')">Volver</button>
+    </div>
+
+    <!-- RETOS MAESTROS (álbum de logros) -->
+    <div class="scr" id="retos">
+      <div class="h1">🏆 Retos Maestros</div>
+      <div class="sub" id="retos-cabecera"></div>
+      <div id="retos-lista" style="margin-top:14px"></div>
       <button class="cta" onclick="ir('home')">Volver</button>
     </div>
 
@@ -955,6 +964,25 @@ function cerrarSeason(){
   sync('season_cerrada',{season:S.season-1,stats:S.pc[S.pc.length-1].stats});
   save();pintar();
   alert('🥚 Una nueva historia comienza. Tu nuevo huevo brilla con el aura de tu antiguo Guardián — y nadie sabe aún qué hay dentro.');
+}
+function verRetos(){
+  S.retosLog=S.retosLog||[];
+  const hechos=S.retosLog.length, total=RETOS.length;
+  $('retos-cabecera').textContent=`${hechos} de ${total} conquistados · cada uno suma +150 XP`;
+  // pista de progreso hacia el siguiente reto pendiente
+  const prog={
+    constancia7:[S.racha,7,'días de racha'],constancia14:[S.racha,14,'días de racha'],
+    constancia30:[S.racha,30,'días de racha'],ses25:[S.ses,25,'sesiones'],ses50:[S.ses,50,'sesiones'],
+    centurion100:[S.ses,100,'sesiones'],mejora5:[S.mejora||0,5,'pts de Vitalidad']};
+  $('retos-lista').innerHTML=RETOS.map(([id,cond,nombre])=>{
+    const ok=S.retosLog.includes(id), p=prog[id];
+    const pista=!ok&&p?`<div class="sub" style="font-size:11px;margin-top:3px">${Math.min(p[0],p[1])}/${p[1]} ${p[2]}</div>`:'';
+    return `<div style="display:flex;align-items:center;gap:12px;background:var(--af-panel);border:1px solid ${ok?'rgba(244,196,48,.45)':'var(--af-line)'};border-radius:var(--af-radio-m);padding:13px 15px;margin-bottom:8px;${ok?'':'opacity:.7'}">
+      <div style="font-size:22px">${ok?'🏆':'🔒'}</div>
+      <div style="flex:1"><div style="font-weight:700;font-size:14px;color:${ok?'var(--af-dorado)':'var(--af-texto)'}">${nombre}</div>${pista}</div>
+      ${ok?'<div class="sub" style="color:var(--af-dorado)">+150</div>':''}</div>`;
+  }).join('');
+  ir('retos');
 }
 function verPC(){
   const col=S.pc||[];
