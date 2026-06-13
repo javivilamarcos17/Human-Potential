@@ -94,3 +94,39 @@ Base (fase 1): huevo crema liso, misterioso, cel shading. Fases 2-4 añaden por 
 
 > Flujo: generar en orden 5→9→13→17→20, usando cada resultado como referencia de imagen
 > del siguiente (--cref en Midjourney / image prompt). 4 variaciones por forma, elegir 1.
+
+---
+
+## Por qué cada criatura (matching salud ↔ elemento) — canónico del dueño
+
+El elemento lo decide el OBJETIVO de salud del usuario en el alta. Cada animal está
+elegido para que su metáfora encaje con ese perfil (y evitar parecidos con líneas famosas;
+guiños a fauna ibérica = identidad para clínica española).
+
+- **💧 Agua** → movilidad, fisioterapia, dolor de espalda, natación/yoga/pilates.
+  - *Ajolote (mística):* regenera tejidos → recuperación de lesión/dolor crónico. Apex sanador, no bélico.
+  - *Nutria (heroica):* bebé que flota → nadador olímpico carismático.
+  - *Orca (guerrera):* cría torpe en tierra → gladiador oceánico.
+- **🔥 Fuego** → transformación corporal, pérdida de grasa, alta intensidad.
+  - *Fénix (mística):* renacimiento → el gran cambio físico. Cada evolución es un "renacer".
+  - *Íbice/cabra montesa (heroica):* escala paredes verticales → superación. Fauna ibérica.
+  - *Toro de Brasas (guerrera):* potencia pura, icónico culturalmente.
+- **⚡ Rayo** → cardio, runners, HIIT, deportes de equipo.
+  - *Medusa Celeste (mística):* tormenta viva serena.
+  - *Halcón Peregrino (heroica):* el animal más rápido → storytelling para runners.
+  - *Escarabajo Hércules (guerrera):* levanta cientos de veces su peso → fuerza de gimnasio.
+- **🌿 Hierba** → hábitos, nutrición, estrés, principiantes que construyen constancia.
+  - *Ciervo del Bosque (mística):* astas que florecen con el progreso = indicador visual de crecimiento.
+  - *Panda Rojo (heroica):* ternura máxima → acróbata del dosel.
+  - *Oso de Corteza (guerrera):* corteza que se endurece fase a fase → tanque protector.
+- **🪨 Roca** → fuerza, hipertrofia, sedentarios "rígidos" que construyen base.
+  - *Tortuga Geoda (mística):* parece piedra común pero esconde cristal violeta dentro → "la belleza estaba dentro" (sedentario).
+  - *Armadillo de Granito (heroica):* bolita defensiva → luchador veloz (perfil con dolor/sedentarismo).
+  - *Bisonte de Basalto (guerrera):* el powerlifter.
+
+### Ritmo evolutivo (replicable en las 15 líneas)
+Cada etapa = **rediseño de silueta al entrar** + 2-3 micro-cambios acumulativos +
+**la última fase de cada etapa lleva señal de "evolución inminente"** (brillo/aura/vaho).
+Solo las macro-formas tienen nombre; las micro-fases muestran "Nombre · Fase N".
+El huevo reacciona al comportamiento: si entrena se mece y emite partículas de su elemento;
+si lleva días inactivo se queda quieto y frío (aversión a la pérdida antes de conocer la criatura).
