@@ -1,5 +1,13 @@
 # Inventario de avatares — checklist de producción (75 piezas)
 
+## 🖼️ BESTIARIO (tiras completas) — ✅ 15/15 MONTADAS
+Las 15 líneas tienen su tira (imagen de las 5 fases) en `tiras/<elemento>-<linea>.png`.
+Verlas: `mockups/prototipo/bestiario.html`. Para cambiar una: sobrescribe su .png.
+
+## 🎮 APP fase a fase — pendiente de recorte
+Para que el avatar evolucione DENTRO de la app, cada criatura debe recortarse por fase en
+`<elemento>-<linea>/<etapa>.png`. El checklist de abajo trackea ese recorte (0/75 aún).
+
 > Marca `[x]` cada imagen guardada. Nombre de archivo SIEMPRE en minúsculas:
 > `cria.png · juvenil.png · desarrollo.png · adulto.png · apex.png`
 > Ruta: `mockups/avatares/<elemento>-<linea>/<etapa>.png` · fondo TRANSPARENTE.

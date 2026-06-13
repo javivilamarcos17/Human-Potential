@@ -1,1 +1,12 @@
-Guarda aqui las tiras: <elemento>-<linea>.png (ej. agua-mistica.png) — la imagen completa de las 5 fases tal cual la generas
+TIRAS DEL BESTIARIO — cómo editar en el futuro
+================================================
+Cada archivo es la imagen completa (5 fases) de una línea: <elemento>-<linea>.png
+Elementos: agua fuego rayo hierba roca · Líneas: mistica heroica guerrera
+
+Para CAMBIAR una línea: genera la nueva tira y sobrescribe el .png con el mismo nombre.
+Para AÑADIR la que falta: guarda rayo-mistica.png (Medusa Celeste).
+Se ven en: mockups/prototipo/bestiario.html
+
+Estas tiras son para VER el arte de un vistazo. Para que el avatar evolucione DENTRO
+de la app (fase a fase), hay que recortar cada criatura por separado en:
+mockups/avatares/<elemento>-<linea>/<etapa>.png  (cria/juvenil/desarrollo/adulto/apex)
