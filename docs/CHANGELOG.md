@@ -10,6 +10,13 @@
 
 > Los cambios en desarrollo van aquí hasta que se publican.
 
+### MVP funcional v1.0 — DEPURADO y listo para piloto (2026-06-13)
+- **QA de cierre:** auditoría sin botones muertos / pantallas fantasma / IDs rotos (12 pantallas). Simulador E2E de 60 días + humo de UI (7 pantallas no petan): 🟢 TODO OK.
+- **Hardening:** red de seguridad en el arranque (ningún fallo deja pantalla en blanco), localStorage protegido en modo privado iOS, herramientas de simulación ocultas salvo `?debug=1` (pacientes no las ven).
+- **Coherencia:** nombre del Guardián dinámico en todos los textos (fin del "Kael" hardcodeado), "Vitalidad provisional" (afinada en la Semana de Eclosión).
+- **Nuevas piezas:** reproductor de rutina guiado paso a paso (trabajo/descanso), banderas rojas clínicas (deriva a profesional/112), álbum de Retos Maestros, tutorial de bienvenida (60s), huevo reactivo.
+- **Avatares (arte del dueño, generado):** 41/75 fases recibidas — Fuego y Rayo completos; sistema de carga de imágenes con fallback SVG listo (`mockups/avatares/`, INVENTARIO.md).
+
 ### MVP funcional testeable con pacientes (2026-06-12)
 - **`app-funcional.html`** evolucionado a producto testeable: alta exprés autónoma (mini-Auditoría 30/30/20/20), motor de adaptación digital (6 reglas: dolor/energía/RPE/molestia/progresión/estancamiento), rutina amoldada al tiempo real (5/15/30 min), modo Centro B2B2C (código LIDOMARE26, actividades del centro, opción "hoy no puedo ir"), datos al centro vía WhatsApp (alertas + resumen 7 días), pantalla Mi Progreso (gráfico dolor/energía 14 días + nudge presencial), Tarjeta Épica funcional (canvas + Web Share).
 - **Avatares**: siluetas atléticas con épica creciente (6 etapas), huevo con 4 sub-fases vivas (runas→grietas→temblor), celebración de evolución a pantalla completa, **líneas evolutivas Brote/Atlas/Apex** según Auditoría inicial (documentadas en moodboard como dirección de arte).
