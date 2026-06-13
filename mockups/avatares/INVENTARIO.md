@@ -7,7 +7,7 @@
 
 ## 💧 AGUA
 ### agua-mistica — Ajolote
-- [ ] cria.png — Ajolín · [x] juvenil.png — Ajolune · [x] desarrollo.png — Ajondra · [x] adulto.png — Ajomar · [x] apex.png — Ajomarea
+- [ ] cria.png — Ajolín · [x] juvenil.png — Ajolune · [x] desarrollo.png — Ajondra · [x] adulto.png — Ajomar · [x] apex.png — Ajomarea ✅recibido
 ### agua-heroica — Nutria
 - [ ] cria.png — Lutrín · [ ] juvenil.png — Lutreo · [ ] desarrollo.png — Lutrón · [x] adulto.png — Lutramar · [x] apex.png — Lutramaral
 ### agua-guerrera — Orca
