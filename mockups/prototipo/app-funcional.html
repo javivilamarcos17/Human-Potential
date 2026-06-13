@@ -180,6 +180,7 @@
       </div>
       <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
       <div class="toolbar">
+        <div class="tool" onclick="verNutricion()">🥗 Nutrición</div>
         <div class="tool" onclick="verRetos()">🏆 Logros</div>
         <div class="tool" onclick="verPC()">🗃 PC</div>
         <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
@@ -227,6 +228,25 @@
       <div class="sub">Cada forma que conquistas se guarda aquí para siempre. Al cerrar la temporada, tu Guardián completo se archivará en el PC y empezarás una nueva historia.</div>
       <div id="pc-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"></div>
       <button class="cta" onclick="ir('home')">Volver</button>
+    </div>
+
+    <!-- NUTRICIÓN (acompañamiento, sin agobio) -->
+    <div class="scr" id="nutricion">
+      <div class="h1">Tu nutrición de hoy</div>
+      <div class="sub">Un toque por comida. Sin pesar nada, sin culpa — solo conciencia.</div>
+      <div class="panel"><div id="nutri-comidas"></div></div>
+      <div class="panel">
+        <div class="sub" style="color:var(--af-texto)">💧 Vasos de agua hoy</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-top:10px">
+          <button class="tool" style="font-size:22px;padding:6px 16px" onclick="agua(-1)">−</button>
+          <div class="t-num" id="nutri-agua" style="font-size:38px;color:var(--af-agua)">0</div>
+          <button class="tool" style="font-size:22px;padding:6px 16px" onclick="agua(1)">+</button>
+        </div>
+        <div class="sub" style="text-align:center" id="nutri-agua-meta"></div>
+      </div>
+      <div class="panel" id="nutri-balance" style="text-align:center"></div>
+      <button class="cta" onclick="guardarNutri()">Guardar mi día · +5 XP</button>
+      <button class="sec" onclick="ir('home')">Volver con mi Guardián</button>
     </div>
 
     <!-- RETOS MAESTROS (álbum de logros) -->
@@ -1161,6 +1181,41 @@ function verGuardian(){
   const sig=[5,10,14,21,28,31].find(x=>x>f);
   $('gf-siguiente').textContent=sig&&sig<=30?`Próxima forma en la fase ${sig} (${etapaDe(sig)}) — sigue entrenando.`:(f>=30?'Has alcanzado la cima. 👑':'');
   ir('guardian');
+}
+/* ── NUTRICIÓN (editable) — acompañar, no recetar. Ver diseño/nutricion-mvp.md ── */
+const NUTRI={
+  momentos:[['desayuno','Desayuno'],['comida','Comida'],['cena','Cena'],['snack','Snack / picoteo']],
+  opciones:[['verde','🟢','Saludable'],['ambar','🟡','Normal'],['rojo','🔴','Capricho']],
+  metaAgua:8,
+  // mensaje según cuántas comidas saludables registró (la app nunca culpa)
+  mensaje:(verde,rojo,total)=> total===0 ? 'Marca cómo comiste hoy. Sin números, sin culpa.'
+    : verde>=total*0.7 ? '💚 Día redondo. Tu cuerpo y tu Guardián lo notan.'
+    : rojo>=total*0.6 ? 'Un día flojo no borra tu progreso. Mañana: agua y movimiento, y a seguir.'
+    : 'Equilibrio es esto: ni perfecto ni mal. Vas bien.',
+};
+function nutriHoy(){S.nutri=S.nutri||{};S.nutri[hoyISO()]=S.nutri[hoyISO()]||{agua:0};return S.nutri[hoyISO()];}
+function verNutricion(){ nutriHoy(); pintarNutricion(); ir('nutricion'); }
+function pintarNutricion(){
+  const d=nutriHoy();
+  $('nutri-comidas').innerHTML=NUTRI.momentos.map(([k,lbl])=>
+    `<div style="margin-bottom:12px"><div class="sub" style="color:var(--af-texto)">${lbl}</div>
+      <div class="toolbar" style="margin-top:6px">${NUTRI.opciones.map(([c,emo,t])=>
+        `<div class="tool" onclick="comida('${k}','${c}')" style="${d[k]===c?'border-color:var(--af-primario);color:var(--af-texto)':''}">${emo} ${t}</div>`).join('')}</div></div>`).join('');
+  $('nutri-agua').textContent=d.agua||0;
+  $('nutri-agua-meta').textContent=(d.agua||0)>=NUTRI.metaAgua?'✓ Objetivo de hoy cumplido':`Objetivo: ${NUTRI.metaAgua} vasos`;
+  const vals=NUTRI.momentos.map(([k])=>d[k]).filter(Boolean);
+  const verde=vals.filter(v=>v==='verde').length, rojo=vals.filter(v=>v==='rojo').length;
+  $('nutri-balance').innerHTML=`<div style="font-size:14px;color:var(--af-texto);line-height:1.5">${NUTRI.mensaje(verde,rojo,vals.length)}</div>`;
+}
+function comida(k,c){ const d=nutriHoy(); d[k]=c; save(); pintarNutricion(); }
+function agua(n){ const d=nutriHoy(); d.agua=Math.max(0,(d.agua||0)+n); save(); pintarNutricion(); }
+function guardarNutri(){
+  const d=nutriHoy();
+  if(d._xp){ alert('Ya registraste tu nutrición de hoy. ¡Mañana más!'); ir('home'); return; }
+  d._xp=true; S.xp+=5; save();
+  sync('nutricion',{comidas:NUTRI.momentos.map(([k])=>({m:k,v:d[k]||null})),agua:d.agua||0});
+  alert('Día de nutrición guardado · +5 XP. Cuidarte por dentro también hace crecer a tu Guardián.');
+  pintar(); ir('home');
 }
 function verRetos(){
   S.retosLog=S.retosLog||[];
