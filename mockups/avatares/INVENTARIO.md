@@ -22,10 +22,10 @@
 - [x] cria — Brasín · [x] juvenil — Brastor · [x] desarrollo — Brastauro · [x] adulto — Brastorón · [x] apex — Magmatauro
 
 ## ⚡ RAYO
-### rayo-mistica — Medusa Celeste
-- [ ] cria — Nimbín · [ ] juvenil — Nimbela · [ ] desarrollo — Nimbalia · [ ] adulto — Nimborea · [ ] apex — Nimborealis
-### rayo-heroica — Halcón Peregrino
-- [ ] cria — Falquín · [ ] juvenil — Falzel · [ ] desarrollo — Falkaro · [ ] adulto — Falkorre · [ ] apex — Falkorayo
+### rayo-mistica — Medusa Celeste ✅LÍNEA COMPLETA recibida
+- [x] cria — Nimbín · [x] juvenil — Nimbela · [x] desarrollo — Nimbalia · [x] adulto — Nimborea · [x] apex — Nimborealis
+### rayo-heroica — Halcón Peregrino ✅LÍNEA COMPLETA recibida
+- [x] cria — Falquín · [x] juvenil — Falzel · [x] desarrollo — Falkaro · [x] adulto — Falkorre · [x] apex — Falkorayo
 ### rayo-guerrera — Escarabajo Hércules
 - [ ] cria — Herkín · [ ] juvenil — Herkelo · [ ] desarrollo — Herkarno · [ ] adulto — Herkanor · [ ] apex — Herkulón
 
@@ -46,5 +46,5 @@
 - [ ] cria — Bisaltín · [ ] juvenil — Bisaltor · [ ] desarrollo — Bisalkor · [x] adulto — Bisaltonte · [ ] apex — Bisaltitán
 
 ---
-**Progreso: 26 / 75 generadas** — 🔥 FUEGO COMPLETO (15) · Agua 9 · Roca 1 · pendientes de guardar como PNG transparente.
-Líneas completas: Fénix, Íbice, Toro de Brasas. Casi completa: Orca (3/5), Nutria (2/5), Ajolote (4/5).
+**Progreso: 36 / 75 generadas** — 🔥 FUEGO COMPLETO (15) · ⚡ RAYO 10/15 (Medusa+Halcón) · 💧 Agua 9 · 🪨 Roca 1.
+Líneas completas (7): Fénix, Íbice, Toro de Brasas, Medusa Celeste, Halcón Peregrino. Falta guardar como PNG transparente.

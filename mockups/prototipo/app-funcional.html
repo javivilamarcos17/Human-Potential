@@ -185,8 +185,8 @@
         <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
         <div class="tool" onclick="verProgreso()">📈 Mi progreso</div>
         <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
-        <div class="tool" onclick="diaSiguiente()">⏭ Simular día</div>
-        <div class="tool" onclick="reset()">↺ Reiniciar</div>
+        <div class="tool" id="dbg-dia" style="display:none" onclick="diaSiguiente()">⏭ Simular día</div>
+        <div class="tool" id="dbg-reset" style="display:none" onclick="reset()">↺ Reiniciar</div>
       </div>
       <a class="volver" href="../demo.html">← Hub de demo · <span style="opacity:.6">v0.9 piloto</span></a>
     </div>
@@ -1085,6 +1085,8 @@ if(S.perfil){CONFIG.paciente=S.perfil.nombre;CONFIG.zona=S.perfil.zona;}
 pintar();
 if(!S.perfil) ir('alta');
 if(S.perfil && !S.tutorialVisto) mostrarBienvenida();
+// Modo demo (?debug=1): muestra herramientas de simulación. Pacientes reales NO las ven.
+if(location.search.indexOf('debug=1')>=0){var _d=$('dbg-dia'),_r=$('dbg-reset');if(_d)_d.style.display='block';if(_r)_r.style.display='block';}
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
