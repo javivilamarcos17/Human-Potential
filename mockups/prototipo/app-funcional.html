@@ -726,49 +726,60 @@ function energia(v){$('v-energia').textContent=v;}
    ╚══════════════════════════════════════════════════════════════════════════╝ */
 
 // ── BIBLIOTECA DE EJERCICIOS (añade/quita libremente) ──────────────────────
-//   zona: lumbar|cervical|hombro|rodilla|cadera|general · nivel: 0(recup)..4(metcon)
-//   patron: movilidad|estabilidad|fuerza|cardio · video opcional
+//   Cada ejercicio se explica solo: nom (qué) · det (dosis) · como (paso a paso) ·
+//   cuida (seguridad/error común) · video (opcional). zona · nivel 0(recup)..4(metcon) · patron.
 const EJ=[
- // LUMBAR
- {id:'gato_camello',nom:'Gato-camello',det:'2×10 · respira lento',zona:'lumbar',nivel:0,patron:'movilidad'},
- {id:'bascula',nom:'Báscula pélvica',det:'2×10 · sin dolor',zona:'lumbar',nivel:0,patron:'movilidad'},
- {id:'rodillas_pecho',nom:'Rodillas al pecho',det:'30s por pierna · mécete suave',zona:'lumbar',nivel:0,patron:'movilidad'},
- {id:'puente',nom:'Puente de glúteo',det:'3×12 · sube en 2s',zona:'lumbar',nivel:1,patron:'fuerza'},
- {id:'birddog',nom:'Bird-dog',det:'2×8 por lado · lumbar quieta',zona:'lumbar',nivel:1,patron:'estabilidad'},
- {id:'plancha',nom:'Plancha frontal',det:'3×30s · abdomen activo',zona:'lumbar',nivel:2,patron:'estabilidad'},
- {id:'puente1',nom:'Puente a una pierna',det:'2×8 por lado · pelvis estable',zona:'lumbar',nivel:2,patron:'fuerza'},
- {id:'pmuerto',nom:'Peso muerto con goma',det:'3×10 · espalda larga',zona:'lumbar',nivel:3,patron:'fuerza'},
- {id:'birddog2',nom:'Bird-dog con pausa',det:'2×6 por lado · 3s de pausa',zona:'lumbar',nivel:3,patron:'estabilidad'},
- // CERVICAL
- {id:'mov_cuello',nom:'Movilidad de cuello',det:'2×8 cada dirección · lento',zona:'cervical',nivel:0,patron:'movilidad'},
- {id:'retraccion',nom:'Retracción cervical',det:'3×8 · doble mentón',zona:'cervical',nivel:0,patron:'movilidad'},
- {id:'trapecio',nom:'Estiramiento de trapecio',det:'30s por lado',zona:'cervical',nivel:0,patron:'movilidad'},
- {id:'iso_cervical',nom:'Isométrico cervical',det:'3×10s cada dirección',zona:'cervical',nivel:1,patron:'fuerza'},
- {id:'remo_goma',nom:'Remo con goma',det:'3×12 · junta escápulas',zona:'cervical',nivel:2,patron:'fuerza'},
- {id:'facepull',nom:'Face pull',det:'3×12 · codos altos',zona:'cervical',nivel:3,patron:'fuerza'},
- // HOMBRO
- {id:'pendular',nom:'Pendular',det:'1 min · relaja el brazo',zona:'hombro',nivel:0,patron:'movilidad'},
- {id:'rot_ext',nom:'Rotación externa con goma',det:'3×12 · codo pegado',zona:'hombro',nivel:1,patron:'fuerza'},
- {id:'elev_lat',nom:'Elevaciones laterales',det:'3×12 · sin subir trapecio',zona:'hombro',nivel:2,patron:'fuerza'},
- {id:'press_h',nom:'Press de hombro',det:'3×10 · core firme',zona:'hombro',nivel:3,patron:'fuerza'},
- // RODILLA
- {id:'iso_cuad',nom:'Isométrico de cuádriceps',det:'3×10s · aprieta el muslo',zona:'rodilla',nivel:0,patron:'fuerza'},
- {id:'sent_pared',nom:'Sentadilla a la pared',det:'3×20s',zona:'rodilla',nivel:1,patron:'fuerza'},
- {id:'stepup',nom:'Step-up',det:'3×10 por pierna',zona:'rodilla',nivel:2,patron:'fuerza'},
- {id:'bulgara',nom:'Sentadilla búlgara',det:'3×8 por pierna · control',zona:'rodilla',nivel:3,patron:'fuerza'},
- // CADERA
- {id:'circ_cadera',nom:'Círculos de cadera',det:'2×10 cada lado',zona:'cadera',nivel:0,patron:'movilidad'},
- {id:'almeja',nom:'Almeja con goma',det:'3×15 por lado',zona:'cadera',nivel:1,patron:'fuerza'},
- {id:'abduccion',nom:'Abducción de cadera',det:'3×12 por lado',zona:'cadera',nivel:2,patron:'fuerza'},
- {id:'zancada_lat',nom:'Zancada lateral',det:'3×10 por lado',zona:'cadera',nivel:3,patron:'fuerza'},
- // GENERAL (fitness · sustituye el gym)
- {id:'sentadilla',nom:'Sentadilla',det:'3×15 · talones firmes',zona:'general',nivel:1,patron:'fuerza'},
- {id:'flexiones',nom:'Flexiones',det:'3×10 · pecho al suelo',zona:'general',nivel:2,patron:'fuerza'},
- {id:'zancadas',nom:'Zancadas alternas',det:'3×10 por pierna',zona:'general',nivel:2,patron:'fuerza'},
- {id:'plancha_remo',nom:'Plancha con remo',det:'3×10 · sin balanceo',zona:'general',nivel:3,patron:'estabilidad'},
- {id:'sent_salto',nom:'Sentadillas con salto',det:'AMRAP · 15 por ronda',zona:'general',nivel:4,patron:'cardio'},
- {id:'burpees',nom:'Burpees',det:'AMRAP · 10 por ronda',zona:'general',nivel:4,patron:'cardio'},
- {id:'mountain',nom:'Mountain climbers',det:'AMRAP · 30 por ronda',zona:'general',nivel:4,patron:'cardio'},
+ // ══ LUMBAR ══
+ {id:'gato_camello',nom:'Gato-camello',det:'2×10 · lento',zona:'lumbar',nivel:0,patron:'movilidad',como:'A cuatro patas, manos bajo hombros. Suelta aire arqueando la espalda hacia arriba (gato); toma aire hundiéndola suave (camello).',cuida:'Mueve solo el rango sin dolor. Nada de tirones.'},
+ {id:'bascula',nom:'Báscula pélvica',det:'2×10',zona:'lumbar',nivel:0,patron:'movilidad',como:'Tumbado boca arriba, rodillas dobladas. Bascula la pelvis pegando la lumbar al suelo y suéltala, despacio.',cuida:'Movimiento pequeño y controlado, sin empujar con las piernas.'},
+ {id:'rodillas_pecho',nom:'Rodillas al pecho',det:'30s por pierna',zona:'lumbar',nivel:0,patron:'movilidad',como:'Boca arriba, lleva una rodilla al pecho con las manos y mécete muy suave. Cambia de pierna.',cuida:'Si tira en la otra pierna, dóblala apoyando el pie.'},
+ {id:'puente',nom:'Puente de glúteo',det:'3×12 · sube en 2s',zona:'lumbar',nivel:1,patron:'fuerza',como:'Boca arriba, pies apoyados. Aprieta glúteos y sube la cadera hasta alinear rodilla-cadera-hombro. Baja despacio.',cuida:'Sube con el glúteo, no arqueando la lumbar.'},
+ {id:'birddog',nom:'Bird-dog',det:'2×8 por lado',zona:'lumbar',nivel:1,patron:'estabilidad',como:'A cuatro patas, estira a la vez brazo y pierna opuestos hasta la horizontal. Vuelve y cambia.',cuida:'La lumbar no se mueve: imagina un vaso de agua en la espalda.'},
+ {id:'plancha',nom:'Plancha frontal',det:'3×30s',zona:'lumbar',nivel:2,patron:'estabilidad',como:'Apoyo en antebrazos y puntas de pies. Cuerpo recto, abdomen y glúteo apretados.',cuida:'Cadera ni hundida ni en pico. Si pesa, apoya rodillas.'},
+ {id:'puente1',nom:'Puente a una pierna',det:'2×8 por lado',zona:'lumbar',nivel:2,patron:'fuerza',como:'Como el puente, pero estira una pierna y sube la cadera con la otra. Mantén la pelvis nivelada.',cuida:'No dejes caer un lado de la cadera.'},
+ {id:'pmuerto',nom:'Peso muerto con goma',det:'3×10',zona:'lumbar',nivel:3,patron:'fuerza',como:'De pie sobre la goma, agárrala. Lleva la cadera atrás bajando el tronco con la espalda recta y sube apretando glúteos.',cuida:'Espalda larga y neutra siempre, nunca redondeada.'},
+ {id:'birddog2',nom:'Bird-dog con pausa',det:'2×6 por lado · 3s',zona:'lumbar',nivel:3,patron:'estabilidad',como:'Bird-dog manteniendo 3 segundos arriba con todo apretado.',cuida:'Si pierdes el equilibrio, baja el rango.'},
+ // ══ CERVICAL ══
+ {id:'mov_cuello',nom:'Movilidad de cuello',det:'2×8 cada dirección',zona:'cervical',nivel:0,patron:'movilidad',como:'Sentado y erguido, lleva la oreja al hombro, la barbilla al pecho y gira despacio a cada lado.',cuida:'Lento y sin llegar al dolor. No hagas círculos completos hacia atrás.'},
+ {id:'retraccion',nom:'Retracción cervical',det:'3×8',zona:'cervical',nivel:0,patron:'movilidad',como:'Sin agachar la cabeza, llévala hacia atrás haciendo doble mentón. Mantén 2s y suelta.',cuida:'No mires al techo: el movimiento es horizontal.'},
+ {id:'trapecio',nom:'Estiramiento de trapecio',det:'30s por lado',zona:'cervical',nivel:0,patron:'movilidad',como:'Lleva la oreja al hombro y ayuda suave con la mano. Hombro contrario relajado abajo.',cuida:'Estiramiento cómodo, sin rebotes.'},
+ {id:'iso_cervical',nom:'Isométrico cervical',det:'3×10s cada dirección',zona:'cervical',nivel:1,patron:'fuerza',como:'Pon la mano en la frente y empuja la cabeza contra ella SIN que se mueva. Repite en lados y nuca.',cuida:'La cabeza no se desplaza: solo tensión. Respira.'},
+ {id:'remo_goma',nom:'Remo con goma',det:'3×12',zona:'cervical',nivel:2,patron:'fuerza',como:'Goma anclada al frente. Tira de los codos hacia atrás juntando las escápulas. Vuelve controlando.',cuida:'No encojas los hombros hacia las orejas.'},
+ {id:'facepull',nom:'Face pull',det:'3×12 · codos altos',zona:'cervical',nivel:3,patron:'fuerza',como:'Goma a la altura de la cara. Tira hacia tu frente abriendo los codos altos y atrás.',cuida:'Movimiento lento, aprieta atrás 1s.'},
+ // ══ HOMBRO ══
+ {id:'pendular',nom:'Pendular',det:'1 min',zona:'hombro',nivel:0,patron:'movilidad',como:'Inclínate apoyando la mano sana en una mesa. Deja colgar el brazo afectado y hazlo oscilar suave en círculos.',cuida:'El brazo va relajado, no lo muevas con fuerza.'},
+ {id:'rot_ext',nom:'Rotación externa con goma',det:'3×12',zona:'hombro',nivel:1,patron:'fuerza',como:'Codo pegado al costado en 90°. Con goma, abre el antebrazo hacia fuera y vuelve despacio.',cuida:'El codo no se separa del cuerpo (ponte una toalla debajo).'},
+ {id:'elev_lat',nom:'Elevaciones laterales',det:'3×12',zona:'hombro',nivel:2,patron:'fuerza',como:'De pie, sube los brazos a los lados hasta la altura del hombro y baja con control.',cuida:'No subas los hombros hacia las orejas ni cojas impulso.'},
+ {id:'press_h',nom:'Press de hombro',det:'3×10',zona:'hombro',nivel:3,patron:'fuerza',como:'Mancuernas a la altura de los hombros. Empuja arriba hasta estirar y baja controlando.',cuida:'No arquees la lumbar: aprieta abdomen.'},
+ // ══ RODILLA ══
+ {id:'iso_cuad',nom:'Isométrico de cuádriceps',det:'3×10s',zona:'rodilla',nivel:0,patron:'fuerza',como:'Sentado con la pierna estirada, aprieta el muslo y empuja la rodilla hacia el suelo. Mantén 10s.',cuida:'Tensión sin dolor. Respira mientras aprietas.'},
+ {id:'sent_pared',nom:'Sentadilla a la pared',det:'3×20s',zona:'rodilla',nivel:1,patron:'fuerza',como:'Espalda en la pared, baja deslizando hasta que rodillas estén cómodas (no más de 90°). Aguanta.',cuida:'Rodillas alineadas con los pies, no hacia dentro.'},
+ {id:'stepup',nom:'Step-up',det:'3×10 por pierna',zona:'rodilla',nivel:2,patron:'fuerza',como:'Sube a un escalón con una pierna empujando con el talón, baja con control. Alterna.',cuida:'Sube con la pierna de arriba, no impulses con la de abajo.'},
+ {id:'bulgara',nom:'Sentadilla búlgara',det:'3×8 por pierna',zona:'rodilla',nivel:3,patron:'fuerza',como:'Un pie atrás apoyado en un banco. Baja con la pierna de delante y sube con control.',cuida:'La rodilla de delante no se va hacia dentro.'},
+ // ══ CADERA ══
+ {id:'circ_cadera',nom:'Círculos de cadera',det:'2×10 cada lado',zona:'cadera',nivel:0,patron:'movilidad',como:'De pie o a cuatro patas, lleva la rodilla en círculos amplios abriendo la cadera.',cuida:'Rango cómodo, sin forzar.'},
+ {id:'almeja',nom:'Almeja con goma',det:'3×15 por lado',zona:'cadera',nivel:1,patron:'fuerza',como:'De lado, rodillas dobladas y goma en los muslos. Abre la rodilla de arriba como una almeja sin girar la pelvis.',cuida:'La pelvis no rota hacia atrás: solo se abre la rodilla.'},
+ {id:'abduccion',nom:'Abducción de cadera',det:'3×12 por lado',zona:'cadera',nivel:2,patron:'fuerza',como:'De lado, sube la pierna estirada hacia el techo y baja con control.',cuida:'No la lleves hacia delante: sube por el plano del cuerpo.'},
+ {id:'zancada_lat',nom:'Zancada lateral',det:'3×10 por lado',zona:'cadera',nivel:3,patron:'fuerza',como:'Da un paso amplio al lado y baja la cadera flexionando esa pierna, la otra estirada. Vuelve.',cuida:'Pecho arriba, rodilla alineada con el pie.'},
+ // ══ ESPALDA ALTA / DORSAL ══
+ {id:'apertura_t',nom:'Apertura en T (movilidad torácica)',det:'2×8 por lado',zona:'dorsal',nivel:0,patron:'movilidad',como:'De lado en el suelo, brazos juntos al frente. Abre el de arriba hacia el otro lado girando el pecho. Sigue la mano con la mirada.',cuida:'Gira desde el pecho, la cadera quieta.'},
+ {id:'superman',nom:'Superman',det:'3×10',zona:'dorsal',nivel:1,patron:'fuerza',como:'Boca abajo, eleva a la vez brazos y piernas unos centímetros apretando la espalda. Baja despacio.',cuida:'No tires la cabeza atrás: mirada al suelo.'},
+ {id:'remo_inclinado',nom:'Remo inclinado',det:'3×12',zona:'dorsal',nivel:2,patron:'fuerza',como:'Tronco inclinado con espalda recta, mancuernas colgando. Lleva los codos atrás juntando escápulas.',cuida:'Espalda recta, no redondeada.'},
+ {id:'dominada_asist',nom:'Dominada asistida',det:'3×6',zona:'dorsal',nivel:3,patron:'fuerza',como:'Con goma o banco de ayuda, cuélgate y tira del pecho hacia la barra. Baja controlando.',cuida:'No te dejes caer: controla la bajada.'},
+ // ══ CORE ══
+ {id:'dead_bug',nom:'Dead bug',det:'2×10',zona:'core',nivel:1,patron:'estabilidad',como:'Boca arriba, brazos y rodillas a 90°. Baja brazo y pierna opuestos sin despegar la lumbar. Alterna.',cuida:'La lumbar pegada al suelo todo el rato.'},
+ {id:'plancha_lat',nom:'Plancha lateral',det:'2×20s por lado',zona:'core',nivel:2,patron:'estabilidad',como:'De lado, apoyo en antebrazo y pies. Sube la cadera y mantén el cuerpo recto.',cuida:'Si pesa, apoya la rodilla de abajo.'},
+ {id:'hollow',nom:'Hollow hold',det:'3×20s',zona:'core',nivel:3,patron:'estabilidad',como:'Boca arriba, brazos y piernas estirados despegados del suelo formando una banana. Lumbar pegada.',cuida:'Si la lumbar se despega, sube brazos y piernas.'},
+ // ══ GENERAL / FITNESS (sustituye el gym) ══
+ {id:'sentadilla',nom:'Sentadilla',det:'3×15',zona:'general',nivel:1,patron:'fuerza',como:'Pies al ancho de hombros. Baja llevando la cadera atrás como para sentarte, pecho arriba. Sube apretando glúteos.',cuida:'Talones firmes, rodillas hacia fuera siguiendo los pies.'},
+ {id:'flexiones',nom:'Flexiones',det:'3×10',zona:'general',nivel:2,patron:'fuerza',como:'Manos algo más anchas que los hombros. Baja el pecho con el cuerpo recto y empuja arriba.',cuida:'Cuerpo en línea, sin hundir la cadera. Puedes apoyar rodillas.'},
+ {id:'zancadas',nom:'Zancadas alternas',det:'3×10 por pierna',zona:'general',nivel:2,patron:'fuerza',como:'Da un paso largo al frente y baja hasta casi tocar el suelo con la rodilla de atrás. Empuja para volver.',cuida:'Rodilla de delante sobre el tobillo, no la pases del pie.'},
+ {id:'remo_invertido',nom:'Remo invertido',det:'3×10',zona:'general',nivel:3,patron:'fuerza',como:'Bajo una barra/mesa firme, cuerpo recto colgando. Tira del pecho hacia la barra y baja.',cuida:'Cuerpo recto, aprieta glúteo y abdomen.'},
+ {id:'plancha_remo',nom:'Plancha con remo',det:'3×10',zona:'general',nivel:3,patron:'estabilidad',como:'En plancha sobre las manos, sube una mancuerna (o mano) hacia la cadera sin girar el cuerpo. Alterna.',cuida:'La cadera no se balancea: aprieta el abdomen.'},
+ {id:'sent_salto',nom:'Sentadillas con salto',det:'AMRAP · 15/ronda',zona:'general',nivel:4,patron:'cardio',como:'Baja a sentadilla y salta explosivo hacia arriba. Cae suave y encadena.',cuida:'Cae con rodillas flexionadas amortiguando. Para si te falta el aire.'},
+ {id:'burpees',nom:'Burpees',det:'AMRAP · 10/ronda',zona:'general',nivel:4,patron:'cardio',como:'Desde de pie: baja a plancha, flexión, recoge y salta arriba con palmada.',cuida:'Mantén el ritmo que puedas sostener. Espalda controlada al bajar.'},
+ {id:'mountain',nom:'Mountain climbers',det:'AMRAP · 30/ronda',zona:'general',nivel:4,patron:'cardio',como:'En plancha sobre las manos, lleva las rodillas al pecho alternando rápido, como corriendo.',cuida:'Cadera baja y estable, no la subas.'},
+ {id:'thruster',nom:'Thruster con mancuernas',det:'AMRAP · 12/ronda',zona:'general',nivel:4,patron:'fuerza',como:'Sentadilla con mancuernas en hombros; al subir, empuja las mancuernas sobre la cabeza en un solo gesto.',cuida:'Encadena sentadilla y empuje fluido, abdomen firme.'},
 ];
 
 // ── DIALES DEL MOTOR (ajusta sin tocar la lógica) ──────────────────────────
@@ -793,7 +804,7 @@ function componerRutina(zona, nivel, nEj, soloPatrones){
   // 1 pase priorizando nivel, con rotación diaria para que no sea idéntico
   const orden=pool.map((e,i)=>e).sort((a,b)=> ((EJ.indexOf(a)+rot)%pool.length) - ((EJ.indexOf(b)+rot)%pool.length));
   for(const e of orden){ if(elegidos.length>=nEj) break; if(!usados.has(e.id)){elegidos.push(e);usados.add(e.id);} }
-  return {nombre: zonaLabel(zona)+' · Nivel '+nivel, ejercicios: elegidos.map(e=>({nombre:e.nom,detalle:e.det,video:e.video||''}))};
+  return {nombre: zonaLabel(zona)+' · Nivel '+nivel, ejercicios: elegidos.map(e=>({nombre:e.nom,detalle:e.det,video:e.video||'',como:e.como||'',cuida:e.cuida||''}))};
 }
 function zonaLabel(z){return {lumbar:'Zona lumbar',cervical:'Cervicales',hombro:'Hombro',rodilla:'Rodilla',cadera:'Cadera',general:'Cuerpo completo'}[z]||'Tu rutina';}
 function zonaPaciente(){const z=(S.perfil&&S.perfil.zona)||'';return ['lumbar','cervical','hombro','rodilla','cadera'].find(k=>z.indexOf(k)>=0)|| (z.indexOf('cervical')>=0?'cervical':'general');}
@@ -929,9 +940,11 @@ function cerrarTriaje(){
     +`${pack.nombre} · plan digital Anti Frágil`
     +(dec.vender?`<br><a href="upselling.html" style="color:var(--af-dorado);font-weight:700;text-decoration:none">💆 O resuélvelo antes: sesión presencial con ${CONFIG.fisio} →</a>`:'');
   $('rut-lista').innerHTML=pack.ejercicios.map(e=>
-    `<div class="ej" onclick="marcar(this)"><div class="chk">✓</div><div style="flex:1">
-       <div class="t1">${e.nombre}</div><div class="t2">${e.detalle}</div></div>
-       ${e.video?`<a href="${e.video}" target="_blank" onclick="event.stopPropagation()" style="font-size:12px;font-weight:700;color:var(--af-agua);text-decoration:none">▶ Ver</a>`:''}
+    `<div class="ej" style="flex-direction:column;align-items:stretch" onclick="this.classList.toggle('ok');revisarRutina()">
+       <div style="display:flex;align-items:center;gap:12px"><div class="chk">✓</div><div style="flex:1">
+         <div class="t1">${e.nombre}</div><div class="t2">${e.detalle}</div></div>
+         ${e.video?`<a href="${e.video}" target="_blank" onclick="event.stopPropagation()" style="font-size:12px;font-weight:700;color:var(--af-agua);text-decoration:none">▶ Ver</a>`:''}</div>
+       ${e.como?`<div class="t2" style="margin-top:8px;padding-left:38px;line-height:1.5">📋 ${e.como}${e.cuida?`<br><span style="color:var(--af-ambar)">⚠ ${e.cuida}</span>`:''}</div>`:''}
      </div>`).join('');
   window._t0=Date.now();window._nEj=pack.ejercicios.length;   // arranca el reloj de honestidad
   window._packHoy=pack.ejercicios;
@@ -956,7 +969,9 @@ function plPintar(){
     $('pl-nombre').textContent=ej.nombre;$('pl-detalle').textContent=ej.detalle;
     $('pl-etiqueta').textContent='En marcha';$('pl-etiqueta').style.color='var(--af-primario)';
     $('pl-timer').style.color='var(--af-primario)';
-    $('pl-video').innerHTML=ej.video?`<a href="${ej.video}" target="_blank" style="font-weight:700;color:var(--af-agua);text-decoration:none">▶ Ver demostración</a>`:'';
+    $('pl-video').innerHTML=
+      (ej.como?`<div style="font-size:13.5px;color:var(--af-texto);line-height:1.55;text-align:left;margin-top:4px">📋 ${ej.como}${ej.cuida?`<br><span style="color:var(--af-ambar)">⚠ ${ej.cuida}</span>`:''}</div>`:'')
+      +(ej.video?`<a href="${ej.video}" target="_blank" style="display:inline-block;margin-top:10px;font-weight:700;color:var(--af-agua);text-decoration:none">▶ Ver demostración</a>`:'');
     $('pl-accion').textContent='✓ Hecho · descansar';
     PL.t=40;
   } else {                                    // descanso
