@@ -263,9 +263,25 @@
     <div class="scr" id="rutina">
       <div class="h1" id="rut-titulo">Tu rutina de hoy</div>
       <div class="sub" id="rut-sub"></div>
+      <button class="cta" onclick="abrirPlayer()">▶ Guíame paso a paso</button>
+      <div class="sub" style="text-align:center;margin:10px 0 4px">o márcalos a tu ritmo:</div>
       <div id="rut-lista"></div>
       <button class="cta" id="btn-rutina" disabled onclick="ir('feedback')">Completar rutina · +20 XP</button>
       <button class="sec" onclick="ir('home')">Hoy no puedo terminarla</button>
+    </div>
+
+    <!-- REPRODUCTOR GUIADO -->
+    <div class="scr" id="player">
+      <div class="sub" id="pl-progreso" style="text-align:center"></div>
+      <div class="h1" id="pl-nombre" style="text-align:center;margin-top:6px"></div>
+      <div class="sub" id="pl-detalle" style="text-align:center"></div>
+      <div class="panel" style="text-align:center;padding:26px 16px">
+        <div id="pl-etiqueta" class="sub" style="letter-spacing:1px;text-transform:uppercase"></div>
+        <div id="pl-timer" style="font-family:var(--af-font-display);font-weight:900;font-size:62px;color:var(--af-primario);margin:6px 0">00:40</div>
+        <div id="pl-video"></div>
+      </div>
+      <button class="cta" id="pl-accion" onclick="plSiguiente()">✓ Hecho · siguiente</button>
+      <button class="sec" onclick="plParar()">Salir del modo guiado</button>
     </div>
 
     <!-- FEEDBACK -->
@@ -740,8 +756,54 @@ function cerrarTriaje(){
        ${e.video?`<a href="${e.video}" target="_blank" onclick="event.stopPropagation()" style="font-size:12px;font-weight:700;color:var(--af-agua);text-decoration:none">▶ Ver</a>`:''}
      </div>`).join('');
   window._t0=Date.now();window._nEj=pack.ejercicios.length;   // arranca el reloj de honestidad
+  window._packHoy=pack.ejercicios;
   ir('rutina');
 }
+/* REPRODUCTOR GUIADO: lleva al paciente ejercicio a ejercicio con trabajo y descanso */
+let PL={idx:0,fase:'work',t:0,timer:null,ejs:[]};
+function abrirPlayer(){
+  PL={idx:0,fase:'work',t:0,timer:null,ejs:window._packHoy||[]};
+  ir('player');plPintar();
+}
+function plPintar(){
+  clearInterval(PL.timer);
+  const ej=PL.ejs[PL.idx];
+  if(!ej){                                   // rutina terminada → marca todo y a feedback
+    document.querySelectorAll('#rut-lista .ej').forEach(e=>e.classList.add('ok'));
+    if($('btn-rutina'))$('btn-rutina').disabled=false;
+    ir('feedback');return;
+  }
+  $('pl-progreso').textContent='Ejercicio '+(PL.idx+1)+' de '+PL.ejs.length;
+  if(PL.fase==='work'){
+    $('pl-nombre').textContent=ej.nombre;$('pl-detalle').textContent=ej.detalle;
+    $('pl-etiqueta').textContent='En marcha';$('pl-etiqueta').style.color='var(--af-primario)';
+    $('pl-timer').style.color='var(--af-primario)';
+    $('pl-video').innerHTML=ej.video?`<a href="${ej.video}" target="_blank" style="font-weight:700;color:var(--af-agua);text-decoration:none">▶ Ver demostración</a>`:'';
+    $('pl-accion').textContent='✓ Hecho · descansar';
+    PL.t=40;
+  } else {                                    // descanso
+    $('pl-nombre').textContent='Descanso';
+    const sig=PL.ejs[PL.idx+1];
+    $('pl-detalle').textContent=sig?'Siguiente: '+sig.nombre:'Último — ¡ya casi!';
+    $('pl-etiqueta').textContent='Recupera';$('pl-etiqueta').style.color='var(--af-ambar)';
+    $('pl-timer').style.color='var(--af-ambar)';$('pl-video').innerHTML='';
+    $('pl-accion').textContent='Saltar descanso';
+    PL.t=20;
+  }
+  plTick();PL.timer=setInterval(plTick,1000);
+}
+function plTick(){
+  $('pl-timer').textContent='0:'+String(Math.max(0,PL.t)).padStart(2,'0');
+  if(PL.t<=0)plSiguiente();
+  PL.t--;
+}
+function plSiguiente(){
+  clearInterval(PL.timer);
+  if(PL.fase==='work'){PL.fase='rest';}
+  else {PL.fase='work';PL.idx++;}
+  plPintar();
+}
+function plParar(){clearInterval(PL.timer);ir('rutina');}
 function marcar(el){el.classList.toggle('ok');revisarRutina();}
 function revisarRutina(){
   const todos=document.querySelectorAll('#rut-lista .ej.ok').length>=document.querySelectorAll('#rut-lista .ej').length;
