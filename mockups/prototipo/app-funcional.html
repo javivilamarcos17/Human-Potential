@@ -717,36 +717,136 @@ function energia(v){$('v-energia').textContent=v;}
 /* ── MOTOR DE ADAPTACIÓN DIGITAL ─────────────────────────────────────────
    La app decide la rutina con los datos del paciente y explica el porqué.
    Empatía clínica: adapta, no castiga. Y guía a presencial cuando los datos lo piden. */
+/* ╔══════════════════════════════════════════════════════════════════════════╗
+   ║  MOTOR DE PRESCRIPCIÓN — el corazón del producto.                         ║
+   ║  La rutina NO se elige de una lista: se COMPONE para ti cada día según    ║
+   ║  tu zona, tu nivel ganado, tu dolor, tu energía, tu vida y tu tiempo.     ║
+   ║  Para cambiarlo: edita la BIBLIOTECA y los DIALES de abajo. La lógica no  ║
+   ║  se toca. Diseño: docs/diseño/motor-entrenamiento.md                       ║
+   ╚══════════════════════════════════════════════════════════════════════════╝ */
+
+// ── BIBLIOTECA DE EJERCICIOS (añade/quita libremente) ──────────────────────
+//   zona: lumbar|cervical|hombro|rodilla|cadera|general · nivel: 0(recup)..4(metcon)
+//   patron: movilidad|estabilidad|fuerza|cardio · video opcional
+const EJ=[
+ // LUMBAR
+ {id:'gato_camello',nom:'Gato-camello',det:'2×10 · respira lento',zona:'lumbar',nivel:0,patron:'movilidad'},
+ {id:'bascula',nom:'Báscula pélvica',det:'2×10 · sin dolor',zona:'lumbar',nivel:0,patron:'movilidad'},
+ {id:'rodillas_pecho',nom:'Rodillas al pecho',det:'30s por pierna · mécete suave',zona:'lumbar',nivel:0,patron:'movilidad'},
+ {id:'puente',nom:'Puente de glúteo',det:'3×12 · sube en 2s',zona:'lumbar',nivel:1,patron:'fuerza'},
+ {id:'birddog',nom:'Bird-dog',det:'2×8 por lado · lumbar quieta',zona:'lumbar',nivel:1,patron:'estabilidad'},
+ {id:'plancha',nom:'Plancha frontal',det:'3×30s · abdomen activo',zona:'lumbar',nivel:2,patron:'estabilidad'},
+ {id:'puente1',nom:'Puente a una pierna',det:'2×8 por lado · pelvis estable',zona:'lumbar',nivel:2,patron:'fuerza'},
+ {id:'pmuerto',nom:'Peso muerto con goma',det:'3×10 · espalda larga',zona:'lumbar',nivel:3,patron:'fuerza'},
+ {id:'birddog2',nom:'Bird-dog con pausa',det:'2×6 por lado · 3s de pausa',zona:'lumbar',nivel:3,patron:'estabilidad'},
+ // CERVICAL
+ {id:'mov_cuello',nom:'Movilidad de cuello',det:'2×8 cada dirección · lento',zona:'cervical',nivel:0,patron:'movilidad'},
+ {id:'retraccion',nom:'Retracción cervical',det:'3×8 · doble mentón',zona:'cervical',nivel:0,patron:'movilidad'},
+ {id:'trapecio',nom:'Estiramiento de trapecio',det:'30s por lado',zona:'cervical',nivel:0,patron:'movilidad'},
+ {id:'iso_cervical',nom:'Isométrico cervical',det:'3×10s cada dirección',zona:'cervical',nivel:1,patron:'fuerza'},
+ {id:'remo_goma',nom:'Remo con goma',det:'3×12 · junta escápulas',zona:'cervical',nivel:2,patron:'fuerza'},
+ {id:'facepull',nom:'Face pull',det:'3×12 · codos altos',zona:'cervical',nivel:3,patron:'fuerza'},
+ // HOMBRO
+ {id:'pendular',nom:'Pendular',det:'1 min · relaja el brazo',zona:'hombro',nivel:0,patron:'movilidad'},
+ {id:'rot_ext',nom:'Rotación externa con goma',det:'3×12 · codo pegado',zona:'hombro',nivel:1,patron:'fuerza'},
+ {id:'elev_lat',nom:'Elevaciones laterales',det:'3×12 · sin subir trapecio',zona:'hombro',nivel:2,patron:'fuerza'},
+ {id:'press_h',nom:'Press de hombro',det:'3×10 · core firme',zona:'hombro',nivel:3,patron:'fuerza'},
+ // RODILLA
+ {id:'iso_cuad',nom:'Isométrico de cuádriceps',det:'3×10s · aprieta el muslo',zona:'rodilla',nivel:0,patron:'fuerza'},
+ {id:'sent_pared',nom:'Sentadilla a la pared',det:'3×20s',zona:'rodilla',nivel:1,patron:'fuerza'},
+ {id:'stepup',nom:'Step-up',det:'3×10 por pierna',zona:'rodilla',nivel:2,patron:'fuerza'},
+ {id:'bulgara',nom:'Sentadilla búlgara',det:'3×8 por pierna · control',zona:'rodilla',nivel:3,patron:'fuerza'},
+ // CADERA
+ {id:'circ_cadera',nom:'Círculos de cadera',det:'2×10 cada lado',zona:'cadera',nivel:0,patron:'movilidad'},
+ {id:'almeja',nom:'Almeja con goma',det:'3×15 por lado',zona:'cadera',nivel:1,patron:'fuerza'},
+ {id:'abduccion',nom:'Abducción de cadera',det:'3×12 por lado',zona:'cadera',nivel:2,patron:'fuerza'},
+ {id:'zancada_lat',nom:'Zancada lateral',det:'3×10 por lado',zona:'cadera',nivel:3,patron:'fuerza'},
+ // GENERAL (fitness · sustituye el gym)
+ {id:'sentadilla',nom:'Sentadilla',det:'3×15 · talones firmes',zona:'general',nivel:1,patron:'fuerza'},
+ {id:'flexiones',nom:'Flexiones',det:'3×10 · pecho al suelo',zona:'general',nivel:2,patron:'fuerza'},
+ {id:'zancadas',nom:'Zancadas alternas',det:'3×10 por pierna',zona:'general',nivel:2,patron:'fuerza'},
+ {id:'plancha_remo',nom:'Plancha con remo',det:'3×10 · sin balanceo',zona:'general',nivel:3,patron:'estabilidad'},
+ {id:'sent_salto',nom:'Sentadillas con salto',det:'AMRAP · 15 por ronda',zona:'general',nivel:4,patron:'cardio'},
+ {id:'burpees',nom:'Burpees',det:'AMRAP · 10 por ronda',zona:'general',nivel:4,patron:'cardio'},
+ {id:'mountain',nom:'Mountain climbers',det:'AMRAP · 30 por ronda',zona:'general',nivel:4,patron:'cardio'},
+];
+
+// ── DIALES DEL MOTOR (ajusta sin tocar la lógica) ──────────────────────────
+const MOTOR={
+  // techo de intensidad que has GANADO según la fase de tu avatar
+  nivelPorFase: f => f<5?1 : f<14?2 : f<21?3 : 4,
+  // tu objetivo (elemento) empuja la intensidad: agua recupera, fuego/rayo/roca aprietan
+  ajusteObjetivo: {agua:-1, hierba:0, roca:1, fuego:1, rayo:1},
+  ejerciciosPorTiempo: {5:2, 15:3, 30:5},   // cuántos ejercicios según el tiempo de hoy
+  diasProgresion: 5,                          // días buenos seguidos para subir nivel
+};
+
+// ── COMPOSITOR: elige los ejercicios ideales para hoy ──────────────────────
+function componerRutina(zona, nivel, nEj, soloPatrones){
+  let pool=EJ.filter(e=>e.nivel<=nivel && (e.zona===zona || e.zona==='general'));
+  if(soloPatrones) pool=pool.filter(e=>soloPatrones.includes(e.patron));
+  if(!pool.length) pool=EJ.filter(e=>e.zona===zona||e.zona==='general');
+  // prioriza el nivel más alto permitido (más reto) y añade variedad por día
+  pool.sort((a,b)=>b.nivel-a.nivel);
+  const rot=new Date(hoyISO()).getDate();
+  const elegidos=[]; const usados=new Set();
+  // 1 pase priorizando nivel, con rotación diaria para que no sea idéntico
+  const orden=pool.map((e,i)=>e).sort((a,b)=> ((EJ.indexOf(a)+rot)%pool.length) - ((EJ.indexOf(b)+rot)%pool.length));
+  for(const e of orden){ if(elegidos.length>=nEj) break; if(!usados.has(e.id)){elegidos.push(e);usados.add(e.id);} }
+  return {nombre: zonaLabel(zona)+' · Nivel '+nivel, ejercicios: elegidos.map(e=>({nombre:e.nom,detalle:e.det,video:e.video||''}))};
+}
+function zonaLabel(z){return {lumbar:'Zona lumbar',cervical:'Cervicales',hombro:'Hombro',rodilla:'Rodilla',cadera:'Cadera',general:'Cuerpo completo'}[z]||'Tu rutina';}
+function zonaPaciente(){const z=(S.perfil&&S.perfil.zona)||'';return ['lumbar','cervical','hombro','rodilla','cadera'].find(k=>z.indexOf(k)>=0)|| (z.indexOf('cervical')>=0?'cervical':'general');}
+
+// ── DECISIÓN DEL DÍA: calcula nivel + modo y compone la rutina ─────────────
 function decidirRutina(){
   const energia=+$('v-energia').textContent, u=S.hist.slice(-5);
   const med=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
   const rpe3=med(S.hist.slice(-3).map(x=>x.r)), dolor5=med(u.map(x=>x.d));
   const molestiaAyer=S.hist.length&&S.hist[S.hist.length-1].m;
-  // dolor medio no baja en 14 días → estancamiento
   const v=S.hist.slice(-14), estancado=v.length>=14 && med(v.slice(-7).map(x=>x.d))>=med(v.slice(0,7).map(x=>x.d));
-
-  // El guía sanitario escucha tu vida: lo que respondes cambia lo que te propone
   const vida=(S.vida&&S.vida[hoyISO()])||{};
-  if(vida.sueno&&vida.sueno.indexOf('Mal')>=0) return {pack:CONFIG.packSuave, titulo:'Hoy, regenerar',
-    motivo:'Dormiste mal — forzar hoy sería robarle a mañana. Movilidad suave y a recuperar: el descanso también entrena.', vender:false};
-  if(vida.estres&&vida.estres.indexOf('Alto')>=0) return {pack:CONFIG.packSuave, titulo:'Hoy, soltar tensión',
-    motivo:'Estrés alto. Esta rutina baja revoluciones: respira en cada ejercicio — tu espalda y tu cabeza lo agradecerán.', vender:false};
-  if(diasSinVenir()>=2) return {pack:CONFIG.packSuave, titulo:'Rutina de regreso',
-    motivo:`${diasSinVenir()} días fuera no borran lo construido. Hoy solo despertamos el cuerpo — mañana seguimos donde lo dejaste.`, vender:false};
-  if(S.dolorHoy>=8) return {pack:CONFIG.packSuave, titulo:'Rutina suave de hoy',
-    motivo:`Dolor alto hoy. Bajamos la carga para proteger tu ${CONFIG.zona} — moverse suave también es avanzar.`, vender:true};
-  if(molestiaAyer) return {pack:CONFIG.packSuave, titulo:'Rutina suave de hoy',
-    motivo:'Ayer notaste una molestia nueva. Hoy toca consolidar, no apretar.', vender:true};
-  if(S.dolorHoy>=5||energia<=3) return {pack:CONFIG.packSuave, titulo:'Rutina ajustada de hoy',
-    motivo:S.dolorHoy>=5?'Dolor moderado hoy: la app ha rebajado la intensidad por ti.':'Energía baja hoy: mejor poco y bien que mucho y mal.', vender:false};
-  if(rpe3!==null&&rpe3>=8) return {pack:CONFIG.packSuave, titulo:'Día de descarga',
-    motivo:`Tus últimos esfuerzos han sido muy altos (RPE ${rpe3.toFixed(1)}). Hoy descargamos para que el cuerpo asimile.`, vender:false};
-  if(u.length>=5&&dolor5<=3&&rpe3!==null&&rpe3<=4) return {pack:CONFIG.packAvanzado, titulo:'¡Subes de nivel!',
-    motivo:`5 días con dolor bajo y esfuerzo cómodo: tu ${CONFIG.zona} pide más. La app te sube a progresión.`, vender:false};
-  if(estancado) return {pack:CONFIG.pack, titulo:'Tu rutina de hoy',
-    motivo:'Tu dolor lleva 2 semanas sin bajar. La app seguirá contigo — pero unas manos expertas podrían encontrar lo que falta.', vender:true};
-  return {pack:CONFIG.pack, titulo:'Tu rutina de hoy', motivo:'', vender:false};
+  const fase=faseDesde({...S}), zona=zonaPaciente();
+  const nEj=MOTOR.ejerciciosPorTiempo[S.tiempoHoy||15]||3;
+
+  // techo de intensidad ganado + empuje del objetivo
+  let techo=MOTOR.nivelPorFase(fase)+(MOTOR.ajusteObjetivo[S.elemento||'agua']||0);
+  techo=Math.max(0,Math.min(4,techo));
+
+  // ── MODO TERAPÉUTICO (dolor → movimiento): atacamos la zona, medimos mañana ──
+  if(S.dolorHoy>=8) return pres(componerRutina(zona,0,nEj,['movilidad']),'Hoy: descomprimir',
+    `Dolor alto en tu ${zonaLabel(zona).toLowerCase()}. Movimiento muy suave dirigido a la zona — moverse bien también cura. Mañana medimos.`, true);
+  if(molestiaAyer) return pres(componerRutina(zona,0,nEj,['movilidad','estabilidad']),'Hoy: consolidar',
+    'Ayer notaste algo nuevo. Hoy movilidad de la zona, sin apretar. Si mañana sigue, llamamos a tu profesional.', true);
+  if(S.dolorHoy>=5) return pres(componerRutina(zona,Math.min(1,techo),nEj,['movilidad','estabilidad','fuerza']),'Hoy: movimiento terapéutico',
+    `Dolor moderado: trabajamos tu ${zonaLabel(zona).toLowerCase()} a baja intensidad para soltarla. El movimiento correcto es parte de la solución.`, false);
+
+  // ── MODO RECUPERACIÓN (vida/estado) ──
+  if(diasSinVenir()>=2) return pres(componerRutina(zona,0,nEj),'Rutina de regreso',
+    `${diasSinVenir()} días fuera no borran lo construido. Hoy despertamos el cuerpo — mañana volvemos al ritmo.`, false);
+  if(vida.sueno&&vida.sueno.indexOf('Mal')>=0) return pres(componerRutina(zona,0,nEj,['movilidad']),'Hoy, regenerar',
+    'Dormiste mal. Forzar hoy le roba a mañana: movilidad y a recuperar.', false);
+  if(vida.estres&&vida.estres.indexOf('Alto')>=0) return pres(componerRutina(zona,Math.min(1,techo),nEj),'Hoy, soltar tensión',
+    'Estrés alto. Bajamos revoluciones y respiramos en cada ejercicio.', false);
+  if(energia<=3) return pres(componerRutina(zona,Math.min(1,techo),nEj),'Rutina ajustada',
+    'Energía baja hoy: mejor poco y bien que mucho y mal.', false);
+  if(rpe3!==null&&rpe3>=8) return pres(componerRutina(zona,Math.min(2,techo),nEj),'Día de descarga',
+    `Tus últimos esfuerzos fueron muy altos (RPE ${rpe3.toFixed(1)}). Hoy descargamos para asimilar.`, false);
+
+  // ── MODO PROGRESIÓN: cuerpo listo para más ──
+  if(u.length>=MOTOR.diasProgresion&&dolor5<=3&&rpe3!==null&&rpe3<=4){
+    const nv=Math.min(4,techo);
+    return pres(componerRutina(zona,nv,nEj),nv>=4?'¡Modo cañera! 🔥':'¡Subes de nivel!',
+      nv>=4?'Constancia + cuerpo sin dolor: hoy desbloqueas tu Metcon. Sustituye una sesión de gym.':`${MOTOR.diasProgresion} días sólidos: tu cuerpo pide más. Subimos a nivel ${nv}.`, false);
+  }
+  if(estancado) return pres(componerRutina(zona,techo,nEj),'Tu rutina de hoy',
+    'Tu dolor lleva 2 semanas sin bajar. Seguimos contigo, pero unas manos expertas podrían encontrar lo que al movimiento se le escapa.', true);
+
+  // ── DÍA NORMAL: a tu nivel ganado ──
+  return pres(componerRutina(zona,techo,nEj),'Tu rutina de hoy',
+    `Hecha a tu medida hoy: ${zonaLabel(zona).toLowerCase()}, nivel ${techo}.`, false);
 }
+function pres(pack,titulo,motivo,vender){return {pack,titulo,motivo,vender};}
 function pruebaPendiente(){
   S.pruebasHechas=S.pruebasHechas||[];
   // RE-AUDITORÍA cíclica: a los 28 días de la última prueba, la semana de pruebas se reabre.
