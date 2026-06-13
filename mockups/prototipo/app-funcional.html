@@ -165,7 +165,7 @@
         <div class="xprow"><span>Vitalidad</span><b id="xp-detalle">Nivel 1 · 0/100 XP</b></div>
         <div class="track"><div class="fill" id="xp-fill" style="width:0%"></div></div>
       </div>
-      <div class="hecho-hoy" id="hecho-hoy" style="display:none">✓ Jornada de hoy completada. Kael descansa contigo.</div>
+      <div class="hecho-hoy" id="hecho-hoy" style="display:none">✓ Jornada de hoy completada. Tu Guardián descansa contigo.</div>
       <div id="eclosion" style="display:none;margin-top:14px;background:linear-gradient(135deg,rgba(244,196,48,.13),rgba(91,208,232,.08));border:1.5px solid rgba(244,196,48,.4);border-radius:var(--af-radio-l);padding:14px;cursor:pointer" onclick="abrirPrueba()">
         <div style="font-family:var(--af-font-display);font-weight:800;font-size:15px;color:var(--af-dorado)" id="ec-titulo">🥚 Semana de Eclosión</div>
         <div class="sub" id="ec-sub"></div>
@@ -336,7 +336,7 @@
         <div class="xp-big" id="xp-ganada">+30 XP</div>
         <div class="panel desg" id="desglose"></div>
         <div class="evo" id="evo-aviso"></div>
-        <button class="cta" onclick="ir('home');pintar()">Volver con Kael</button>
+        <button class="cta" onclick="ir('home');pintar()">Volver con mi Guardián</button>
       </div>
     </div>
 
@@ -634,8 +634,8 @@ function pintar(){
   $('ava-svg').style.filter=gap>=2?'grayscale(.75) brightness(.65)':'';
   $('nombre-g').textContent=nombreCriatura(f);
   if(gap>=2&&!S.hechoHoy){
-    $('saludo').innerHTML=`Kael se aletargó esperándote… pero <b style="color:var(--af-primario)">nunca se fue</b>. Hoy con 5 minutos vuelve a brillar, ${CONFIG.paciente}.`;
-    $('btn-empezar').textContent='Despertar a Kael · rutina de regreso';
+    $('saludo').innerHTML=`${nombreCriatura(f)} se aletargó esperándote… pero <b style="color:var(--af-primario)">nunca se fue</b>. Hoy con 5 minutos vuelve a brillar, ${CONFIG.paciente}.`;
+    $('btn-empezar').textContent='Despertar a tu Guardián · rutina de regreso';
   } else $('btn-empezar').textContent='Empezar mi jornada';
   const EMO={agua:'💧',fuego:'🔥',rayo:'⚡',hierba:'🌿',roca:'🪨'};
   const elTxt=etapaDe(f)==='Huevo'?'❔ ¿Qué habrá dentro?':`${EMO[S.elemento||'agua']} ${(S.elemento||'agua').toUpperCase()}`;
@@ -913,7 +913,7 @@ function terminarJornada(){
     +(retoNuevo?`<div class="fila"><span style="color:var(--af-dorado)">🏆 RETO MAESTRO: ${retoNuevo}</span><b style="color:var(--af-dorado)">+150</b></div>`:'')
     +($('molestia').checked?`<div class="fila"><span style="color:var(--af-rojo)">⚠ Molestia nueva → alerta enviada a ${CONFIG.clinica}</span><b></b></div>`:'');
   const evo=$('evo-aviso');
-  if(faseAhora>faseAntes){evo.style.display='block';evo.innerHTML=`✨ <b>¡Kael ha evolucionado!</b> Fase ${faseAntes} → <b>Fase ${faseAhora} (${etapaDe(faseAhora)})</b>. Esto no lo regala la app: lo has ganado tú.`;
+  if(faseAhora>faseAntes){evo.style.display='block';evo.innerHTML=`✨ <b>¡${nombreCriatura(faseAhora)} ha evolucionado!</b> Fase ${faseAntes} → <b>Fase ${faseAhora} (${etapaDe(faseAhora)})</b>. Esto no lo regala la app: lo has ganado tú.`;
     $('celebra-ava').innerHTML=avatarSvg(faseAhora);
     const eclosion=etapaDe(faseAntes)==='Huevo'&&etapaDe(faseAhora)!=='Huevo';
     $('celebra-txt').textContent=eclosion
@@ -956,7 +956,7 @@ function altaSubmit(){
   CONFIG.paciente=n; CONFIG.zona=S.perfil.zona; save();
   if(cod&&!CONFIG.centros[cod]) alert('Código de centro no reconocido — entras en modo individual (puedes vincularte después).');
   sync('alta',{zona:S.perfil.zona,vitalidad_provisional:S.aud,centro_intentado:cod||null});
-  alert(`Tu Vitalidad inicial: ${S.aud}/100\n(Fuerza ${f}/30 · Aeróbico ${a}/30 · Movilidad ${m}/20 · Constancia ${c}/20)\n\nTu huevo ya late. Las pruebas reales de tu primera semana afinarán este número — y de ahí nacerá tu Guardián.`);
+  alert(`Tu Vitalidad provisional: ${S.aud}/100\n(Fuerza ${f}/30 · Aeróbico ${a}/30 · Movilidad ${m}/20 · Constancia ${c}/20)\n\nTu huevo ya late. Las pruebas reales de tu primera semana afinarán este número — y de ahí nacerá tu Guardián.`);
   pintar(); ir('home');
 }
 const SEASONS=['Season 0 · El Despertar','Season 1 · La Forja','Season 2 · El Ascenso'];

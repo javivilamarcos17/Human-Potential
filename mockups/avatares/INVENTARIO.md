@@ -16,10 +16,10 @@
 ## 🔥 FUEGO
 ### fuego-mistica — Fénix ✅LÍNEA COMPLETA recibida
 - [x] cria — Fenín · [x] juvenil — Fenara · [x] desarrollo — Fenivia · [x] adulto — Fenisol · [x] apex — Fenixar
-### fuego-heroica — Íbice
-- [ ] cria — Ibrín · [ ] juvenil — Ibral · [ ] desarrollo — Ibrasko · [ ] adulto — Ibramonte · [ ] apex — Ibravolk
-### fuego-guerrera — Toro de Brasas
-- [ ] cria — Brasín · [ ] juvenil — Brastor · [ ] desarrollo — Brastauro · [ ] adulto — Brastorón · [ ] apex — Magmatauro
+### fuego-heroica — Íbice ✅LÍNEA COMPLETA recibida
+- [x] cria — Ibrín · [x] juvenil — Ibral · [x] desarrollo — Ibrasko · [x] adulto — Ibramonte · [x] apex — Ibravolk
+### fuego-guerrera — Toro de Brasas ✅LÍNEA COMPLETA recibida
+- [x] cria — Brasín · [x] juvenil — Brastor · [x] desarrollo — Brastauro · [x] adulto — Brastorón · [x] apex — Magmatauro
 
 ## ⚡ RAYO
 ### rayo-mistica — Medusa Celeste
@@ -46,4 +46,5 @@
 - [ ] cria — Bisaltín · [ ] juvenil — Bisaltor · [ ] desarrollo — Bisalkor · [x] adulto — Bisaltonte · [ ] apex — Bisaltitán
 
 ---
-**Progreso: 16 / 75 generadas** (Ajolote 4 · Nutria 2 · Orca 3 · Bisonte 1 · Fénix 5 ✅, pendientes de guardar como PNG transparente)
+**Progreso: 26 / 75 generadas** — 🔥 FUEGO COMPLETO (15) · Agua 9 · Roca 1 · pendientes de guardar como PNG transparente.
+Líneas completas: Fénix, Íbice, Toro de Brasas. Casi completa: Orca (3/5), Nutria (2/5), Ajolote (4/5).
