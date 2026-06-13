@@ -790,20 +790,31 @@ const MOTOR={
   ajusteObjetivo: {agua:-1, hierba:0, roca:1, fuego:1, rayo:1},
   ejerciciosPorTiempo: {5:2, 15:3, 30:5},   // cuántos ejercicios según el tiempo de hoy
   diasProgresion: 5,                          // días buenos seguidos para subir nivel
+  // RECETA de patrones por objetivo: qué mezcla de trabajo necesita cada perfil
+  receta: {
+    agua:   ['movilidad','estabilidad','fuerza'],   // recuperación: soltar y controlar
+    hierba: ['movilidad','fuerza','estabilidad'],   // hábito: equilibrado
+    roca:   ['fuerza','fuerza','estabilidad'],      // fuerza/hipertrofia
+    fuego:  ['fuerza','cardio','fuerza'],           // transformación: fuerza + quemar
+    rayo:   ['cardio','fuerza','cardio'],           // cardio/resistencia
+  },
 };
 
 // ── COMPOSITOR: elige los ejercicios ideales para hoy ──────────────────────
-function componerRutina(zona, nivel, nEj, soloPatrones){
+function componerRutina(zona, nivel, nEj, soloPatrones, receta){
   let pool=EJ.filter(e=>e.nivel<=nivel && (e.zona===zona || e.zona==='general'));
   if(soloPatrones) pool=pool.filter(e=>soloPatrones.includes(e.patron));
   if(!pool.length) pool=EJ.filter(e=>e.zona===zona||e.zona==='general');
-  // prioriza el nivel más alto permitido (más reto) y añade variedad por día
-  pool.sort((a,b)=>b.nivel-a.nivel);
   const rot=new Date(hoyISO()).getDate();
-  const elegidos=[]; const usados=new Set();
-  // 1 pase priorizando nivel, con rotación diaria para que no sea idéntico
-  const orden=pool.map((e,i)=>e).sort((a,b)=> ((EJ.indexOf(a)+rot)%pool.length) - ((EJ.indexOf(b)+rot)%pool.length));
-  for(const e of orden){ if(elegidos.length>=nEj) break; if(!usados.has(e.id)){elegidos.push(e);usados.add(e.id);} }
+  const rota=arr=>arr.slice().sort((a,b)=> ((EJ.indexOf(a)+rot)%97) - ((EJ.indexOf(b)+rot)%97));
+  const elegidos=[], usados=new Set();
+  // 1) cubrir la RECETA de patrones del cliente (cardio/fuerza/movilidad según su necesidad)
+  if(receta) for(const pat of receta){ if(elegidos.length>=nEj) break;
+    const c=rota(pool.filter(e=>e.patron===pat && !usados.has(e.id)))[0];
+    if(c){elegidos.push(c);usados.add(c.id);} }
+  // 2) completar con los de mayor nivel disponible (más reto), con rotación diaria
+  for(const e of rota(pool).sort((a,b)=>b.nivel-a.nivel)){ if(elegidos.length>=nEj) break;
+    if(!usados.has(e.id)){elegidos.push(e);usados.add(e.id);} }
   return {nombre: zonaLabel(zona)+' · Nivel '+nivel, ejercicios: elegidos.map(e=>({nombre:e.nom,detalle:e.det,video:e.video||'',como:e.como||'',cuida:e.cuida||''}))};
 }
 function zonaLabel(z){return {lumbar:'Zona lumbar',cervical:'Cervicales',hombro:'Hombro',rodilla:'Rodilla',cadera:'Cadera',general:'Cuerpo completo'}[z]||'Tu rutina';}
@@ -823,6 +834,7 @@ function decidirRutina(){
   // techo de intensidad ganado + empuje del objetivo
   let techo=MOTOR.nivelPorFase(fase)+(MOTOR.ajusteObjetivo[S.elemento||'agua']||0);
   techo=Math.max(0,Math.min(4,techo));
+  const receta=MOTOR.receta[S.elemento||'agua'];   // mezcla de patrones según su necesidad
 
   // ── MODO TERAPÉUTICO (dolor → movimiento): atacamos la zona, medimos mañana ──
   if(S.dolorHoy>=8) return pres(componerRutina(zona,0,nEj,['movilidad']),'Hoy: descomprimir',
@@ -847,14 +859,14 @@ function decidirRutina(){
   // ── MODO PROGRESIÓN: cuerpo listo para más ──
   if(u.length>=MOTOR.diasProgresion&&dolor5<=3&&rpe3!==null&&rpe3<=4){
     const nv=Math.min(4,techo);
-    return pres(componerRutina(zona,nv,nEj),nv>=4?'¡Modo cañera! 🔥':'¡Subes de nivel!',
+    return pres(componerRutina(zona,nv,nEj,null,receta),nv>=4?'¡Modo cañera! 🔥':'¡Subes de nivel!',
       nv>=4?'Constancia + cuerpo sin dolor: hoy desbloqueas tu Metcon. Sustituye una sesión de gym.':`${MOTOR.diasProgresion} días sólidos: tu cuerpo pide más. Subimos a nivel ${nv}.`, false);
   }
   if(estancado) return pres(componerRutina(zona,techo,nEj),'Tu rutina de hoy',
     'Tu dolor lleva 2 semanas sin bajar. Seguimos contigo, pero unas manos expertas podrían encontrar lo que al movimiento se le escapa.', true);
 
-  // ── DÍA NORMAL: a tu nivel ganado ──
-  return pres(componerRutina(zona,techo,nEj),'Tu rutina de hoy',
+  // ── DÍA NORMAL: a tu nivel ganado, con la mezcla que tu objetivo necesita ──
+  return pres(componerRutina(zona,techo,nEj,null,receta),'Tu rutina de hoy',
     `Hecha a tu medida hoy: ${zonaLabel(zona).toLowerCase()}, nivel ${techo}.`, false);
 }
 function pres(pack,titulo,motivo,vender){return {pack,titulo,motivo,vender};}
