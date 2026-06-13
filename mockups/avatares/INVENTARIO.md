@@ -26,8 +26,8 @@
 - [x] cria — Nimbín · [x] juvenil — Nimbela · [x] desarrollo — Nimbalia · [x] adulto — Nimborea · [x] apex — Nimborealis
 ### rayo-heroica — Halcón Peregrino ✅LÍNEA COMPLETA recibida
 - [x] cria — Falquín · [x] juvenil — Falzel · [x] desarrollo — Falkaro · [x] adulto — Falkorre · [x] apex — Falkorayo
-### rayo-guerrera — Escarabajo Hércules
-- [ ] cria — Herkín · [ ] juvenil — Herkelo · [ ] desarrollo — Herkarno · [ ] adulto — Herkanor · [ ] apex — Herkulón
+### rayo-guerrera — Escarabajo Hércules ✅LÍNEA COMPLETA recibida
+- [x] cria — Herkín · [x] juvenil — Herkelo · [x] desarrollo — Herkarno · [x] adulto — Herkanor · [x] apex — Herkulón
 
 ## 🌿 HIERBA
 ### hierba-mistica — Ciervo del Bosque
@@ -46,5 +46,5 @@
 - [ ] cria — Bisaltín · [ ] juvenil — Bisaltor · [ ] desarrollo — Bisalkor · [x] adulto — Bisaltonte · [ ] apex — Bisaltitán
 
 ---
-**Progreso: 36 / 75 generadas** — 🔥 FUEGO COMPLETO (15) · ⚡ RAYO 10/15 (Medusa+Halcón) · 💧 Agua 9 · 🪨 Roca 1.
-Líneas completas (7): Fénix, Íbice, Toro de Brasas, Medusa Celeste, Halcón Peregrino. Falta guardar como PNG transparente.
+**Progreso: 41 / 75 generadas** — 🔥 FUEGO (15) ✅ · ⚡ RAYO (15) ✅ · 💧 Agua 9 · 🪨 Roca 1.
+Líneas completas (8): Fénix, Íbice, Toro de Brasas, Medusa Celeste, Halcón Peregrino, Escarabajo Hércules. Falta guardar como PNG transparente.

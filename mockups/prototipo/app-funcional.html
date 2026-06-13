@@ -1081,12 +1081,17 @@ function enviarResumen(){
   if(waDestino()) window.open("https://wa.me/"+waDestino()+'?text='+encodeURIComponent(txt));
   else{navigator.clipboard&&navigator.clipboard.writeText(txt);alert('Resumen copiado al portapapeles (configura whatsappFisio en CONFIG para envío directo):\n\n'+txt);}
 }
-if(S.perfil){CONFIG.paciente=S.perfil.nombre;CONFIG.zona=S.perfil.zona;}
-pintar();
-if(!S.perfil) ir('alta');
-if(S.perfil && !S.tutorialVisto) mostrarBienvenida();
-// Modo demo (?debug=1): muestra herramientas de simulación. Pacientes reales NO las ven.
-if(location.search.indexOf('debug=1')>=0){var _d=$('dbg-dia'),_r=$('dbg-reset');if(_d)_d.style.display='block';if(_r)_r.style.display='block';}
+// Arranque con red de seguridad: ningún fallo deja la pantalla en blanco
+try{
+  if(S.perfil){CONFIG.paciente=S.perfil.nombre;CONFIG.zona=S.perfil.zona;}
+  pintar();
+  if(!S.perfil) ir('alta');
+  if(S.perfil && !S.tutorialVisto) mostrarBienvenida();
+  // Modo demo (?debug=1): muestra herramientas de simulación. Pacientes reales NO las ven.
+  if(location.search.indexOf('debug=1')>=0){var _d=$('dbg-dia'),_r=$('dbg-reset');if(_d)_d.style.display='block';if(_r)_r.style.display='block';}
+}catch(err){
+  document.querySelector('.content').innerHTML='<div style="padding:40px 20px;text-align:center"><div style="font-size:40px">💚</div><div class="h1" style="margin-top:10px">Algo se atascó</div><div class="sub" style="margin-top:8px">Pulsa para reiniciar tu sesión (tu progreso en la nube no se pierde).</div><button class="cta" onclick="localStorage.removeItem(\''+K+'\');location.reload()">Reiniciar</button></div>';
+}
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
