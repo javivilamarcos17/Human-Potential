@@ -151,7 +151,7 @@
     <!-- HOME -->
     <div class="scr on" id="home">
       <div class="stage">
-        <div class="ava-wrap"><div class="ava-halo"></div><div id="ava-svg"></div></div>
+        <div class="ava-wrap" onclick="verGuardian()" style="cursor:pointer"><div class="ava-halo"></div><div id="ava-svg"></div></div>
         <div class="chip"><i></i><span id="chip-fase">Fase 1 · Huevo · Nivel 1</span></div>
         <div class="nombre-g" id="nombre-g">???</div>
         <div class="sub" id="saludo">Tu Guardián te espera, Javi.</div>
@@ -202,6 +202,23 @@
       </div>
       <button class="cta" onclick="registrarPrueba()">Registrar mi marca real</button>
       <button class="sec" onclick="ir('home')">Hoy no — mañana sigue aquí</button>
+    </div>
+
+    <!-- FICHA DEL GUARDIÁN -->
+    <div class="scr" id="guardian">
+      <div style="text-align:center">
+        <div class="ava-wrap" style="margin:6px auto 2px"><div class="ava-halo"></div><div id="gf-ava"></div></div>
+        <div class="h1" id="gf-nombre" style="margin-top:4px"></div>
+        <div class="chip" id="gf-chip" style="margin-top:8px"></div>
+      </div>
+      <div class="panel"><div class="sub" id="gf-lore" style="color:var(--af-texto);line-height:1.6;font-style:italic"></div></div>
+      <div class="panel">
+        <div class="xprow"><span id="gf-fase"></span><b id="gf-nivel"></b></div>
+        <div class="track"><div class="fill" id="gf-fill" style="width:0%"></div></div>
+        <div class="sub" id="gf-siguiente" style="margin-top:10px"></div>
+      </div>
+      <button class="cta" onclick="tarjetaEpica()">🎴 Compartir a mi Guardián</button>
+      <button class="sec" onclick="ir('home')">Volver</button>
     </div>
 
     <!-- PC: tu colección de formas conquistadas -->
@@ -985,6 +1002,27 @@ function bvPaso(){const p=BIENVENIDA[bvIdx];$('bv-icono').textContent=p.ic;$('bv
   $('bv-btn').textContent=bvIdx<BIENVENIDA.length-1?'Siguiente':'Empezar mi viaje';
   $('bv-dots').textContent=BIENVENIDA.map((_,i)=>i===bvIdx?'●':'○').join(' ');}
 function bvSiguiente(){if(bvIdx<BIENVENIDA.length-1){bvIdx++;bvPaso();}else{S.tutorialVisto=true;save();$('bienvenida').style.display='none';}}
+const LORE={
+ agua:{mistica:'Regenero lo que se rompe. Como tú aprenderás a hacer con tu cuerpo.',heroica:'Nado como un campeón: cada brazada es constancia hecha músculo.',guerrera:'Torpe en tierra, imparable en mi elemento. Solo necesitaba empezar.'},
+ fuego:{mistica:'De cada ceniza renazco más fuerte. Tu cambio también arde por dentro.',heroica:'Escalo lo que otros creen imposible. Una cumbre cada día.',guerrera:'Fuerza pura que crece con el esfuerzo. Nada me detiene.'},
+ rayo:{mistica:'Tormenta serena: poder que no necesita gritar.',heroica:'El ser más rápido del cielo. La velocidad es disciplina.',guerrera:'Levanto cientos de veces mi peso. La fuerza vive en lo pequeño.'},
+ hierba:{mistica:'Mis astas florecen con tu constancia. Crecemos juntos.',heroica:'Ágil y equilibrado: el hábito hecho arte.',guerrera:'Mi coraza se endurece protegiéndote, capa a capa.'},
+ roca:{mistica:'Parezco piedra común, pero por dentro soy cristal. La belleza estaba ahí desde el principio.',heroica:'Mi defensa se vuelve mi arma. Empecé encogido y hoy avanzo.',guerrera:'Una montaña que camina. La base se construye día a día.'}};
+function verGuardian(){
+  const f=faseDesde({...S}), pr=progresoNivel(S.xp), et=etapaDe(f);
+  $('gf-ava').innerHTML=avatarHTML(f);
+  $('gf-nombre').textContent=et==='Huevo'?'Tu huevo misterioso':nombreCriatura(f);
+  const EMO={agua:'💧',fuego:'🔥',rayo:'⚡',hierba:'🌿',roca:'🪨'};
+  $('gf-chip').textContent=et==='Huevo'?'❔ ¿Qué habrá dentro?':`${EMO[S.elemento||'agua']} ${(S.elemento||'agua').toUpperCase()} · ${lineaDe(S.aud)}`;
+  $('gf-lore').textContent=et==='Huevo'?'Entrena cada día y descubrirás qué criatura eligió tu cuerpo.':'"'+(LORE[S.elemento||'agua'][lineaKey(S.aud)])+'"';
+  $('gf-fase').textContent=`Fase ${f} de 30 · ${et}`;
+  $('gf-nivel').textContent=`Nivel ${pr.nivel}`;
+  $('gf-fill').style.width=Math.min(100,Math.round(pr.dentro/pr.coste*100))+'%';
+  // próxima forma mayor (cambio de etapa)
+  const sig=[5,10,14,21,28,31].find(x=>x>f);
+  $('gf-siguiente').textContent=sig&&sig<=30?`Próxima forma en la fase ${sig} (${etapaDe(sig)}) — sigue entrenando.`:(f>=30?'Has alcanzado la cima. 👑':'');
+  ir('guardian');
+}
 function verRetos(){
   S.retosLog=S.retosLog||[];
   const hechos=S.retosLog.length, total=RETOS.length;

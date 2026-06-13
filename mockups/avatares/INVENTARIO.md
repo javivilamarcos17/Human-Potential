@@ -30,12 +30,12 @@
 - [x] cria — Herkín · [x] juvenil — Herkelo · [x] desarrollo — Herkarno · [x] adulto — Herkanor · [x] apex — Herkulón
 
 ## 🌿 HIERBA
-### hierba-mistica — Ciervo del Bosque
-- [ ] cria — Cervín · [ ] juvenil — Cervila · [ ] desarrollo — Cervalia · [ ] adulto — Cervandor · [ ] apex — Cervaflor
-### hierba-heroica — Panda Rojo
-- [ ] cria — Rufín · [ ] juvenil — Rufelo · [ ] desarrollo — Rufambú · [ ] adulto — Rufandor · [ ] apex — Rufandai
-### hierba-guerrera — Oso de Corteza
-- [ ] cria — Urzín · [ ] juvenil — Urzal · [ ] desarrollo — Urzonco · [ ] adulto — Urzondor · [ ] apex — Urzontor
+### hierba-mistica — Ciervo del Bosque ✅LÍNEA COMPLETA recibida
+- [x] cria — Cervín · [x] juvenil — Cervila · [x] desarrollo — Cervalia · [x] adulto — Cervandor · [x] apex — Cervaflor
+### hierba-heroica — Panda Rojo ✅LÍNEA COMPLETA recibida
+- [x] cria — Rufín · [x] juvenil — Rufelo · [x] desarrollo — Rufambú · [x] adulto — Rufandor · [x] apex — Rufandai
+### hierba-guerrera — Oso de Corteza ✅LÍNEA COMPLETA recibida
+- [x] cria — Urzín · [x] juvenil — Urzal · [x] desarrollo — Urzonco · [x] adulto — Urzondor · [x] apex — Urzontor
 
 ## 🪨 ROCA
 ### roca-mistica — Tortuga Geoda
@@ -46,5 +46,5 @@
 - [ ] cria — Bisaltín · [ ] juvenil — Bisaltor · [ ] desarrollo — Bisalkor · [x] adulto — Bisaltonte · [ ] apex — Bisaltitán
 
 ---
-**Progreso: 41 / 75 generadas** — 🔥 FUEGO (15) ✅ · ⚡ RAYO (15) ✅ · 💧 Agua 9 · 🪨 Roca 1.
-Líneas completas (8): Fénix, Íbice, Toro de Brasas, Medusa Celeste, Halcón Peregrino, Escarabajo Hércules. Falta guardar como PNG transparente.
+**Progreso: 56 / 75 generadas** — 🔥 FUEGO (15) ✅ · ⚡ RAYO (15) ✅ · 🌿 HIERBA (15) ✅ · 💧 Agua 9 · 🪨 Roca 1.
+Líneas completas (11): Fénix, Íbice, Toro de Brasas, Medusa, Halcón, Escarabajo, Ciervo, Panda Rojo, Oso de Corteza. Falta: completar Agua (Ajolote 4/5, Nutria 2/5, Orca 3/5) y Roca (solo Bisonte adulto). Guardar como PNG transparente.
