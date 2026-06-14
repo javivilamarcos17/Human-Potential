@@ -1432,23 +1432,24 @@ const NUTRI={
   momentos:[['desayuno','Desayuno'],['comida','Comida'],['cena','Cena'],['snack','Snack / picoteo']],
   // El cliente elige QUÉ comió (fácil) y la app le dice si es sano (le educa).
   // Edita la lista para afinar la guía nutricional. color: verde|ambar|rojo
-  // kcal = estimación por ración media · macro: prot|verd|carb|gras|azuc (para el análisis del plato)
+  // kcal = estimación de una COMIDA completa de ese estilo (no una ración suelta).
+  // Es aproximado: el conteo exacto llegará con la foto del plato (IA). macro para el análisis.
   tipos:[
-    {t:'Verdura / ensalada',      color:'verde', kcal:90,  macro:'verd'},
-    {t:'Pollo / pescado / huevo', color:'verde', kcal:220, macro:'prot'},
-    {t:'Legumbres',               color:'verde', kcal:260, macro:'prot'},
-    {t:'Fruta',                   color:'verde', kcal:90,  macro:'verd'},
-    {t:'Lácteo natural / yogur',  color:'verde', kcal:120, macro:'prot'},
-    {t:'Frutos secos',            color:'verde', kcal:180, macro:'gras'},
-    {t:'Pasta / arroz / pan',     color:'ambar', kcal:350, macro:'carb'},
-    {t:'Carne roja',              color:'ambar', kcal:320, macro:'prot'},
-    {t:'Bocadillo',               color:'ambar', kcal:400, macro:'carb'},
-    {t:'Zumo / lácteo azucarado', color:'ambar', kcal:150, macro:'azuc'},
-    {t:'Frito / rebozado',        color:'rojo',  kcal:450, macro:'gras'},
-    {t:'Dulce / bollería',        color:'rojo',  kcal:350, macro:'azuc'},
-    {t:'Pizza / comida rápida',   color:'rojo',  kcal:600, macro:'carb'},
-    {t:'Snack salado / patatas',  color:'rojo',  kcal:250, macro:'gras'},
-    {t:'Refresco / alcohol',      color:'rojo',  kcal:160, macro:'azuc'},
+    {t:'Verdura / ensalada',      color:'verde', kcal:280, macro:'verd'},
+    {t:'Pollo / pescado / huevo', color:'verde', kcal:450, macro:'prot'},
+    {t:'Legumbres',               color:'verde', kcal:500, macro:'prot'},
+    {t:'Fruta',                   color:'verde', kcal:130, macro:'verd'},
+    {t:'Lácteo natural / yogur',  color:'verde', kcal:200, macro:'prot'},
+    {t:'Frutos secos',            color:'verde', kcal:200, macro:'gras'},
+    {t:'Pasta / arroz / pan',     color:'ambar', kcal:550, macro:'carb'},
+    {t:'Carne roja',              color:'ambar', kcal:550, macro:'prot'},
+    {t:'Bocadillo',               color:'ambar', kcal:450, macro:'carb'},
+    {t:'Zumo / lácteo azucarado', color:'ambar', kcal:180, macro:'azuc'},
+    {t:'Frito / rebozado',        color:'rojo',  kcal:650, macro:'gras'},
+    {t:'Dulce / bollería',        color:'rojo',  kcal:400, macro:'azuc'},
+    {t:'Pizza / comida rápida',   color:'rojo',  kcal:800, macro:'carb'},
+    {t:'Snack salado / patatas',  color:'rojo',  kcal:300, macro:'gras'},
+    {t:'Refresco / alcohol',      color:'rojo',  kcal:180, macro:'azuc'},
     {t:'Me la salté',             color:'ambar', kcal:0,   macro:''},
   ],
   // factores de actividad para el gasto calórico (Mifflin-St Jeor × factor)
@@ -1495,14 +1496,17 @@ function pintarNutricion(){
       ${tipo?`<div class="sub" style="margin-top:6px;line-height:1.45">${NUTRI.consejo[tipo.color]}</div>`:''}
     </div>`;}).join('');
   // ── OBJETIVO CALÓRICO (panel superior) ──
-  const per=S.nutriPerfil, kcal=kcalDia(d);
+  const per=S.nutriPerfil, kcal=kcalDia(d), reg0=NUTRI.momentos.filter(([k])=>d[k]!=null).length;
   if(per){
     const pct=Math.min(100,Math.round(kcal/per.kcal*100));
     const col=kcal>per.kcal*1.1?'var(--af-ambar)':'var(--af-primario)';
     $('nutri-objetivo').innerHTML=
-      `<div class="xprow"><span>Tu objetivo diario</span><b>${kcal} / ${per.kcal} kcal</b></div>
-       <div class="track"><div class="fill" style="width:${pct}%;background:${col}"></div></div>
-       <div class="sub" style="margin-top:6px">${objetivoTexto()}</div>`;
+      `<div class="xprow"><span>Tu objetivo diario</span><b>~${per.kcal} kcal</b></div>
+       ${reg0?`<div class="xprow" style="margin-top:8px"><span>Estimado de hoy</span><b>≈ ${kcal} kcal</b></div>
+       <div class="track"><div class="fill" style="width:${pct}%;background:${col}"></div></div>`:''}
+       <div class="sub" style="margin-top:6px">${objetivoTexto()}</div>
+       <div class="sub" style="font-size:11px;margin-top:4px;opacity:.7">≈ estimación aproximada por tipo de comida. El conteo exacto llegará con la foto del plato.</div>
+       <button class="tool" style="margin-top:8px" onclick="S.nutriPerfil=null;save();$('nutri-perfil').style.display='block';pintarNutricion()">↻ Recalcular objetivo</button>`;
   } else {
     $('nutri-objetivo').innerHTML=`<div class="sub" style="color:var(--af-texto)">Pon un número a tu día</div>
       <div class="sub">Calcula tu objetivo de calorías personalizado según tu cuerpo y tu meta.</div>
@@ -1552,7 +1556,7 @@ function consejoNutri(macros){
   if((macros.gras||0)>=2) c.push('Mucha <b>grasa</b> hoy: equilibra con verdura y movimiento.');
   if(!c.length) c.push('Plato equilibrado 👌 Mantén esta línea.');
   const o=S.elemento==='fuego'?' Recuerda tu objetivo: ligero déficit + entrenamiento.':S.elemento==='roca'?' Para tu fuerza, asegura proteína en cada comida.':'';
-  return c[0]+o;
+  return c.slice(0,2).join('<br>')+o;   // hasta 2 consejos relevantes
 }
 function comida(k,idx){ const d=nutriHoy(); if(idx==='')delete d[k]; else d[k]=+idx; save(); pintarNutricion(); }
 function agua(n){ const d=nutriHoy(); d.agua=Math.max(0,(d.agua||0)+n); save(); pintarNutricion(); }
