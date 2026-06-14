@@ -310,6 +310,7 @@
           <div class="tool t-tiempo" data-min="5" onclick="tiempo(this)">⚡ 5 min</div>
           <div class="tool t-tiempo" data-min="15" onclick="tiempo(this)" style="border-color:var(--af-primario);color:var(--af-texto)">🕒 15 min</div>
           <div class="tool t-tiempo" data-min="30" onclick="tiempo(this)">💪 30 min</div>
+          <div class="tool t-tiempo" data-min="60" onclick="tiempo(this)">🏆 1 hora</div>
         </div>
         <div class="sub" style="margin-top:8px;font-size:11px">Sin culpa: 5 minutos bien hechos también suman racha y XP. La rutina se amolda a ti.</div>
       </div>
@@ -820,23 +821,45 @@ const EJ=[
  {id:'burpees',nom:'Burpees',det:'AMRAP · 10/ronda',zona:'general',nivel:4,patron:'cardio',como:'Desde de pie: baja a plancha, flexión, recoge y salta arriba con palmada.',cuida:'Mantén el ritmo que puedas sostener. Espalda controlada al bajar.'},
  {id:'mountain',nom:'Mountain climbers',det:'AMRAP · 30/ronda',zona:'general',nivel:4,patron:'cardio',como:'En plancha sobre las manos, lleva las rodillas al pecho alternando rápido, como corriendo.',cuida:'Cadera baja y estable, no la subas.'},
  {id:'thruster',nom:'Thruster con mancuernas',det:'AMRAP · 12/ronda',zona:'general',nivel:4,patron:'fuerza',como:'Sentadilla con mancuernas en hombros; al subir, empuja las mancuernas sobre la cabeza en un solo gesto.',cuida:'Encadena sentadilla y empuje fluido, abdomen firme.'},
+ // ══ CARDIO / ACTIVIDAD (de "empezar a andar" a tiradas largas) ══
+ {id:'andar',nom:'Caminar a buen paso',det:'15-20 min',zona:'general',nivel:0,patron:'cardio',como:'Sal a andar a un ritmo que te active pero te deje hablar. Postura erguida, brazos sueltos.',cuida:'Calzado cómodo. Si te falta el aire, baja el ritmo. Tu primera victoria es moverte.'},
+ {id:'escaleras',nom:'Subir escaleras',det:'5-10 min',zona:'general',nivel:1,patron:'cardio',como:'Sube y baja escaleras a ritmo sostenido, apoyando todo el pie.',cuida:'Agárrate si lo necesitas y baja con cuidado.'},
+ {id:'trote',nom:'Trote suave',det:'15-20 min continuo',zona:'general',nivel:2,patron:'cardio',como:'Carrera suave y continua a ritmo cómodo, en el que aún podrías conversar.',cuida:'Pisada suave, hombros relajados, respira por la nariz.'},
+ {id:'comba',nom:'Saltar a la comba',det:'8 min · 1 min salto / 30s descanso',zona:'general',nivel:3,patron:'cardio',como:'Salta a la comba en intervalos. Saltos bajos y rápidos, cae en la parte delantera del pie.',cuida:'Si no tienes comba, simula el salto. Para si te mareas.'},
+ {id:'carrera',nom:'Carrera continua',det:'30-45 min',zona:'general',nivel:4,patron:'cardio',como:'Tirada a ritmo aeróbico sostenido que puedas mantener todo el rato.',cuida:'Hidrátate, respeta tu ritmo. Sube la distancia poco a poco.'},
+ {id:'bici',nom:'Bici / rodillo',det:'30-50 min',zona:'general',nivel:4,patron:'cardio',como:'Pedalea a intensidad media-alta sostenida.',cuida:'Ajusta el sillín: rodilla casi extendida abajo. Espalda neutra.'},
+ {id:'remo_ergo',nom:'Remo en máquina',det:'15-20 min',zona:'general',nivel:4,patron:'cardio',como:'Empuja primero con las piernas, luego tira con espalda y brazos. Vuelve en orden inverso.',cuida:'No redondees la espalda al tirar; la fuerza sale de las piernas.'},
+ {id:'tabata',nom:'Tabata',det:'20s al máximo / 10s descanso × 8',zona:'general',nivel:4,patron:'cardio',como:'Elige un ejercicio (sentadillas, burpees) y dale a tope 20s, descansa 10s, repite 8 rondas (4 min).',cuida:'Mantén la técnica aunque vayas rápido. Para si te mareas.'},
+ {id:'kb_swing',nom:'Swing con kettlebell',det:'según esquema',zona:'general',nivel:4,patron:'cardio',como:'Bisagra de cadera y proyecta la pesa al frente con el empuje de la cadera, no con los brazos.',cuida:'Espalda recta; el movimiento nace de la cadera, no de la lumbar.'},
+ // ══ FUERZA DE GIMNASIO (días de fuerza completos) ══
+ {id:'sentadilla_barra',nom:'Sentadilla con barra',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Barra en la espalda alta. Baja la cadera entre los talones con el pecho arriba y sube empujando el suelo.',cuida:'Mantén la curva lumbar, rodillas hacia fuera. Técnica antes que peso.'},
+ {id:'press_banca',nom:'Press de banca',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Tumbado, baja la barra al pecho con control y empuja arriba.',cuida:'Escápulas retraídas. Usa seguros o compañero al cargar.'},
+ {id:'peso_muerto',nom:'Peso muerto',det:'según esquema',zona:'general',nivel:5,patron:'fuerza',como:'Barra pegada a las espinillas, espalda recta. Empuja el suelo y extiende la cadera para subir.',cuida:'Espalda NEUTRA en todo el recorrido. La técnica manda sobre el peso.'},
+ {id:'dominadas',nom:'Dominadas',det:'según esquema',zona:'general',nivel:5,patron:'fuerza',como:'Cuélgate y tira del pecho hacia la barra juntando las escápulas. Baja con control.',cuida:'Sin balanceo; si no llegas, asiste con goma.'},
+ {id:'press_militar',nom:'Press militar',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Barra a la altura de los hombros, empuja sobre la cabeza sin arquear la espalda.',cuida:'Abdomen y glúteo firmes, no hiperextiendas la lumbar.'},
+ {id:'hip_thrust',nom:'Hip thrust',det:'según esquema',zona:'general',nivel:3,patron:'fuerza',como:'Espalda alta en un banco, barra/peso en la cadera. Empuja con glúteos hasta alinear el tronco.',cuida:'Mentón metido, aprieta el glúteo 1s arriba.'},
+ {id:'fondos',nom:'Fondos en paralelas',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Apoyo en paralelas, baja flexionando codos hasta 90° y empuja arriba.',cuida:'Hombros abajo, rango sin dolor. Asiste con goma si hace falta.'},
 ];
 
 // ── DIALES DEL MOTOR (ajusta sin tocar la lógica) ──────────────────────────
 const MOTOR={
-  // techo de intensidad que has GANADO según la fase de tu avatar
-  nivelPorFase: f => f<5?1 : f<14?2 : f<21?3 : 4,
-  // tu objetivo (elemento) empuja la intensidad: agua recupera, fuego/rayo/roca aprietan
-  ajusteObjetivo: {agua:-1, hierba:0, roca:1, fuego:1, rayo:1},
-  ejerciciosPorTiempo: {5:2, 15:3, 30:5},   // cuántos ejercicios según el tiempo de hoy
+  // El NIVEL DE CAPACIDAD (0-5) nace de la forma física (vitalidad) y crece con la constancia.
+  // 0=vida activa (andar) · 1=iniciación · 2=base · 3=intermedio · 4=avanzado · 5=atleta/CrossFit
+  nivelBase: aud => aud<35?0 : aud<50?1 : aud<65?2 : aud<80?3 : 4, // suelo según forma física
+  bonusFase: f => f<10?0 : f<18?1 : 2,                             // la constancia suma hasta +2
+  ajusteObjetivo: {agua:-1, hierba:0, roca:1, fuego:1, rayo:0},    // tu meta empuja el techo
+  // qué FOCO de sesión prefiere cada objetivo (entre variantes fuerza/cardio/mixto)
+  focoObjetivo: {fuego:['mixto','cardio','fuerza'], roca:['fuerza','mixto','cardio'],
+                 rayo:['cardio','mixto','fuerza'], hierba:['mixto','fuerza','cardio'], agua:['mixto','fuerza','cardio']},
+  ejerciciosPorTiempo: {5:2, 15:3, 30:5, 60:7}, // para rutinas SIMPLES (terapéuticas)
   diasProgresion: 5,                          // días buenos seguidos para subir nivel
-  // RECETA de patrones por objetivo: qué mezcla de trabajo necesita cada perfil
+  // RECETA de patrones por objetivo (para las rutinas terapéuticas simples)
   receta: {
-    agua:   ['movilidad','estabilidad','fuerza'],   // recuperación: soltar y controlar
-    hierba: ['movilidad','fuerza','estabilidad'],   // hábito: equilibrado
-    roca:   ['fuerza','fuerza','estabilidad'],      // fuerza/hipertrofia
-    fuego:  ['fuerza','cardio','fuerza'],           // transformación: fuerza + quemar
-    rayo:   ['cardio','fuerza','cardio'],           // cardio/resistencia
+    agua:   ['movilidad','estabilidad','fuerza'],
+    hierba: ['movilidad','fuerza','estabilidad'],
+    roca:   ['fuerza','fuerza','estabilidad'],
+    fuego:  ['fuerza','cardio','fuerza'],
+    rayo:   ['cardio','fuerza','cardio'],
   },
 };
 
@@ -861,6 +884,110 @@ function componerRutina(zona, nivel, nEj, soloPatrones, receta){
   return {nombre: zonaLabel(zona)+' · Nivel '+nivel, ejercicios: elegidos.map(e=>({nombre:e.nom,detalle:e.det,video:e.video||'',como:e.como||'',cuida:e.cuida||''}))};
 }
 function zonaLabel(z){return {lumbar:'Zona lumbar',cervical:'Cervicales',hombro:'Hombro',rodilla:'Rodilla',cadera:'Cadera',general:'Cuerpo completo'}[z]||'Tu rutina';}
+
+// ── PLANTILLAS DE SESIÓN: entrenamiento ESTRUCTURADO y bien pensado (editable) ──
+//   Cada nivel tiene VARIANTES con foco (fuerza/cardio/mixto) que rotan día a día y se
+//   eligen según el objetivo del cliente. Bloque: t · pat(patrones) · esquema(series/reps/descanso) · n · min(minutos necesarios).
+//   Filosofía: fuerza + cardio mezclados, dosis adaptada a la capacidad real del cliente.
+// tope = nivel máximo de ejercicio admitido (un calentamiento nunca mete burpees)
+const CAL={t:'Calentamiento',pat:['movilidad'],esquema:'5-8 min de activación',n:2,min:0,tope:1};
+const CALDIN={t:'Calentamiento dinámico',pat:['movilidad','cardio'],esquema:'10 min · sube pulsaciones',n:2,min:0,tope:2};
+const CORE={t:'Core',pat:['estabilidad'],esquema:'3 series × 40s',n:1,min:15};
+const VUELTA={t:'Vuelta a la calma',pat:['movilidad'],esquema:'5-8 min estiramientos',n:1,min:30,tope:1};
+const SESIONES={
+  // N0 · VIDA ACTIVA — el sedentario que empieza. La victoria es MOVERSE.
+  0:[ {foco:'mixto', bloques:[
+    {t:'Activación suave',pat:['movilidad'],esquema:'5 min',n:2,min:0},
+    {t:'Caminar',pat:['cardio'],esquema:'15-20 min a buen paso',n:1,min:0},
+    {t:'Fuerza básica',pat:['fuerza'],esquema:'2 series × 10 · suave, con tu peso',n:2,min:15} ]} ],
+  // N1 · INICIACIÓN — fuerza con peso corporal + cardio suave
+  1:[ {foco:'mixto', bloques:[
+    CAL,
+    {t:'Fuerza con tu peso',pat:['fuerza','estabilidad'],esquema:'3 series × 10 · descanso 45s',n:3,min:0},
+    {t:'Cardio suave',pat:['cardio'],esquema:'8-12 min',n:1,min:15}, VUELTA ]} ],
+  // N2 · BASE — entrenamiento concurrente ligero (mezcla fuerza-cardio)
+  2:[ {foco:'mixto', bloques:[
+    CAL,
+    {t:'Circuito fuerza-cardio',pat:['fuerza','cardio'],esquema:'3 vueltas · 40s trabajo / 20s descanso',n:4,min:0},
+    CORE, VUELTA ]},
+    {foco:'fuerza', bloques:[
+    CAL,
+    {t:'Bloque de fuerza',pat:['fuerza'],esquema:'4 series × 10 · descanso 60s',n:3,min:0},
+    {t:'Cardio moderado',pat:['cardio'],esquema:'15 min sostenido',n:1,min:25}, CORE ]} ],
+  // N3 · INTERMEDIO — fuerza estructurada, cardio en intervalos, metcon suave (3 días distintos)
+  3:[ {foco:'fuerza', bloques:[
+    CALDIN,
+    {t:'Fuerza principal',pat:['fuerza'],esquema:'4 series × 8 · descanso 90s',n:2,min:0},
+    {t:'Accesorios',pat:['fuerza','estabilidad'],esquema:'3 series × 12 · descanso 60s',n:2,min:25}, CORE ]},
+    {foco:'cardio', bloques:[
+    CAL,
+    {t:'Cardio por intervalos',pat:['cardio'],esquema:'20-25 min · alterna fuerte/suave',n:2,min:0},
+    {t:'Fuerza complementaria',pat:['fuerza'],esquema:'3 series × 12',n:2,min:25}, CORE ]},
+    {foco:'mixto', bloques:[
+    CALDIN,
+    {t:'Metcon (AMRAP 15 min)',pat:['fuerza','cardio'],esquema:'rondas a ritmo sostenible',n:3,min:0}, CORE ]} ],
+  // N4 · AVANZADO — día de fuerza pesada / día HIIT-cardio / día mixto fuerza+metcon
+  4:[ {foco:'fuerza', bloques:[
+    CALDIN,
+    {t:'Fuerza pesada',pat:['fuerza'],esquema:'4 series × 8 · descanso 90s · carga exigente',n:3,min:0},
+    {t:'Accesorios',pat:['fuerza','estabilidad'],esquema:'3 series × 12',n:2,min:25},
+    {t:'Finisher metabólico',pat:['cardio'],esquema:'5 min al límite',n:1,min:40}, VUELTA ]},
+    {foco:'cardio', bloques:[
+    CALDIN,
+    {t:'HIIT',pat:['cardio'],esquema:'Tabata / intervalos · 12-15 min',n:2,min:0},
+    {t:'Cardio sostenido',pat:['cardio'],esquema:'20-30 min ritmo medio',n:1,min:30}, CORE ]},
+    {foco:'mixto', bloques:[
+    CALDIN,
+    {t:'Fuerza',pat:['fuerza'],esquema:'5 series × 5 · descanso 2 min',n:2,min:0},
+    {t:'Metcon — AMRAP 12 min',pat:['cardio','fuerza'],esquema:'máximas rondas, sin parar',n:3,min:25}, VUELTA ]} ],
+  // N5 · ATLETA — día de fuerza pesada / tirada larga de cardio / WOD CrossFit
+  5:[ {foco:'fuerza', bloques:[
+    CALDIN,
+    {t:'Fuerza pesada',pat:['fuerza'],esquema:'5 series × 5 · descanso 2-3 min · carga alta',n:3,min:0},
+    {t:'Accesorios',pat:['fuerza'],esquema:'4 series × 8',n:2,min:30}, VUELTA ]},
+    {foco:'cardio', bloques:[
+    CAL,
+    {t:'Tirada larga de cardio',pat:['cardio'],esquema:'35-50 min sostenido',n:1,min:0},
+    {t:'Fuerza complementaria',pat:['fuerza'],esquema:'3 series × 10',n:2,min:35}, VUELTA ]},
+    {foco:'mixto', bloques:[
+    CALDIN,
+    {t:'Fuerza / skill',pat:['fuerza'],esquema:'5 series × 3 · técnica + carga',n:2,min:0},
+    {t:'WOD CrossFit — AMRAP 18 min',pat:['cardio','fuerza'],esquema:'máximas rondas: técnica bajo fatiga',n:4,min:25}, VUELTA ]} ],
+};
+// Elige la VARIANTE según el objetivo del cliente y rota día a día; monta los bloques
+function componerSesion(zona, nivel, minutos, receta){
+  const variantes=SESIONES[nivel]||SESIONES[1];
+  const pref=MOTOR.focoObjetivo[S.elemento||'hierba']||['mixto','fuerza','cardio'];
+  const ordenadas=variantes.slice().sort((a,b)=>pref.indexOf(a.foco)-pref.indexOf(b.foco));
+  const rot=new Date(hoyISO()).getDate();
+  const top=ordenadas.slice(0,Math.min(2,ordenadas.length));   // rota entre las 2 preferidas
+  const variante=top[rot%top.length];
+  let bloques=variante.bloques.filter(b=>minutos>=b.min);
+  if(!bloques.length) bloques=[variante.bloques[0]];
+  // prioriza los ejercicios MÁS AVANZADOS que el cliente puede hacer (los de barra en fuerza pesada),
+  // y desempata por rotación diaria para dar variedad
+  const rota=arr=>arr.slice().sort((a,b)=> (b.nivel-a.nivel) || (((EJ.indexOf(a)+rot)%97)-((EJ.indexOf(b)+rot)%97)));
+  const usados=new Set(), bls=[];
+  for(const b of bloques){
+    const tope=b.tope!=null?Math.min(nivel,b.tope):nivel;   // calentamiento/vuelta no meten alta intensidad
+    let pool=EJ.filter(e=>e.nivel<=tope && (e.zona===zona||e.zona==='general') && b.pat.includes(e.patron) && !usados.has(e.id));
+    if(pool.length<b.n) pool=pool.concat(EJ.filter(e=>e.nivel<=tope && b.pat.includes(e.patron) && !usados.has(e.id) && !pool.includes(e)));
+    if(!pool.length) continue;
+    const ejs=rota(pool).slice(0,b.n); ejs.forEach(e=>usados.add(e.id));
+    bls.push({titulo:b.t, esquema:b.esquema, ejercicios:ejs});
+  }
+  // Esquema APROPIADO a cada ejercicio: en circuitos manda el esquema del bloque (todos igual);
+  // si no, la fuerza lleva series×reps del bloque y el cardio/movilidad su propia duración.
+  const planos=[];
+  bls.forEach(bl=>{
+    const circuito=/AMRAP|WOD|Tabata|Circuito|HIIT|Finisher|vueltas|rondas/i.test(bl.titulo+' '+bl.esquema);
+    bl.ejercicios.forEach(e=>{
+      const det=circuito ? bl.esquema : ((e.patron==='fuerza'||e.patron==='estabilidad') ? bl.esquema : e.det);
+      planos.push({nombre:e.nom,detalle:det,como:e.como||'',cuida:e.cuida||'',video:e.video||'',bloque:bl.titulo});
+    });
+  });
+  return {nombre:zonaLabel(zona)+' · Nivel '+nivel+' · '+variante.foco, ejercicios:planos, bloques:bls, estructurada:true, foco:variante.foco};
+}
 function zonaPaciente(){const z=(S.perfil&&S.perfil.zona)||'';return ['lumbar','cervical','hombro','rodilla','cadera'].find(k=>z.indexOf(k)>=0)|| (z.indexOf('cervical')>=0?'cervical':'general');}
 
 // ── DECISIÓN DEL DÍA: calcula nivel + modo y compone la rutina ─────────────
@@ -874,10 +1001,10 @@ function decidirRutina(){
   const fase=faseDesde({...S}), zona=zonaPaciente();
   const nEj=MOTOR.ejerciciosPorTiempo[S.tiempoHoy||15]||3;
 
-  // techo de intensidad ganado + empuje del objetivo
-  let techo=MOTOR.nivelPorFase(fase)+(MOTOR.ajusteObjetivo[S.elemento||'agua']||0);
-  techo=Math.max(0,Math.min(4,techo));
-  const receta=MOTOR.receta[S.elemento||'agua'];   // mezcla de patrones según su necesidad
+  // NIVEL DE CAPACIDAD: forma física (suelo) + constancia ganada + empuje del objetivo
+  let techo=MOTOR.nivelBase(S.aud)+MOTOR.bonusFase(fase)+(MOTOR.ajusteObjetivo[S.elemento||'agua']||0);
+  techo=Math.max(0,Math.min(5,techo));
+  const receta=MOTOR.receta[S.elemento||'agua'];   // mezcla de patrones (rutinas simples)
 
   // ── MODO TERAPÉUTICO (dolor → movimiento): atacamos la zona, medimos mañana ──
   if(S.dolorHoy>=8) return pres(componerRutina(zona,0,nEj,['movilidad']),'Hoy: descomprimir',
@@ -899,18 +1026,19 @@ function decidirRutina(){
   if(rpe3!==null&&rpe3>=8) return pres(componerRutina(zona,Math.min(2,techo),nEj),'Día de descarga',
     `Tus últimos esfuerzos fueron muy altos (RPE ${rpe3.toFixed(1)}). Hoy descargamos para asimilar.`, false);
 
-  // ── MODO PROGRESIÓN: cuerpo listo para más ──
+  const minutos=S.tiempoHoy||15;
+  // ── MODO PROGRESIÓN: cuerpo listo para más → sesión estructurada de nivel superior ──
   if(u.length>=MOTOR.diasProgresion&&dolor5<=3&&rpe3!==null&&rpe3<=4){
-    const nv=Math.min(4,techo);
-    return pres(componerRutina(zona,nv,nEj,null,receta),nv>=4?'¡Modo cañera! 🔥':'¡Subes de nivel!',
-      nv>=4?'Constancia + cuerpo sin dolor: hoy desbloqueas tu Metcon. Sustituye una sesión de gym.':`${MOTOR.diasProgresion} días sólidos: tu cuerpo pide más. Subimos a nivel ${nv}.`, false);
+    const nv=Math.min(5,techo);
+    return pres(componerSesion(zona,nv,minutos,receta),nv>=5?'¡Sesión de atleta! 🏆':nv>=4?'¡Modo cañera! 🔥':'¡Subes de nivel!',
+      nv>=5?'Estás en tu mejor forma: hoy una sesión de nivel atleta — fuerza, metcon o tirada larga según tu día.':nv>=4?'Constancia + cuerpo sin dolor: sesión completa como en el gym.':`${MOTOR.diasProgresion} días sólidos: tu cuerpo pide más. Subimos a nivel ${nv}.`, false);
   }
-  if(estancado) return pres(componerRutina(zona,techo,nEj),'Tu rutina de hoy',
+  if(estancado) return pres(componerSesion(zona,techo,minutos,receta),'Tu rutina de hoy',
     'Tu dolor lleva 2 semanas sin bajar. Seguimos contigo, pero unas manos expertas podrían encontrar lo que al movimiento se le escapa.', true);
 
-  // ── DÍA NORMAL: a tu nivel ganado, con la mezcla que tu objetivo necesita ──
-  return pres(componerRutina(zona,techo,nEj,null,receta),'Tu rutina de hoy',
-    `Hecha a tu medida hoy: ${zonaLabel(zona).toLowerCase()}, nivel ${techo}.`, false);
+  // ── DÍA NORMAL: sesión estructurada a tu nivel ganado y la mezcla de tu objetivo ──
+  return pres(componerSesion(zona,techo,minutos,receta),'Tu rutina de hoy',
+    `Sesión a tu medida: ${zonaLabel(zona).toLowerCase()}, nivel ${techo}.`, false);
 }
 function pres(pack,titulo,motivo,vender){return {pack,titulo,motivo,vender};}
 function pruebaPendiente(){
@@ -994,13 +1122,16 @@ function cerrarTriaje(){
   $('rut-sub').innerHTML=(dec.motivo?`<span style="color:var(--af-agua)">🤖 ${dec.motivo}</span><br>`:'')
     +`${pack.nombre} · plan digital Anti Frágil`
     +(dec.vender?`<br><a href="upselling.html" style="color:var(--af-dorado);font-weight:700;text-decoration:none">💆 O resuélvelo antes: sesión presencial con ${CONFIG.fisio} →</a>`:'');
-  $('rut-lista').innerHTML=pack.ejercicios.map(e=>
-    `<div class="ej" style="flex-direction:column;align-items:stretch" onclick="this.classList.toggle('ok');revisarRutina()">
+  let lastBloque=null;
+  $('rut-lista').innerHTML=pack.ejercicios.map(e=>{
+    const cab=(e.bloque&&e.bloque!==lastBloque)?`<div class="sub" style="margin:14px 0 2px;color:var(--af-dorado);font-weight:700;letter-spacing:.5px">▸ ${e.bloque}</div>`:'';
+    lastBloque=e.bloque;
+    return cab+`<div class="ej" style="flex-direction:column;align-items:stretch" onclick="this.classList.toggle('ok');revisarRutina()">
        <div style="display:flex;align-items:center;gap:12px"><div class="chk">✓</div><div style="flex:1">
          <div class="t1">${e.nombre}</div><div class="t2">${e.detalle}</div></div>
          ${e.video?`<a href="${e.video}" target="_blank" onclick="event.stopPropagation()" style="font-size:12px;font-weight:700;color:var(--af-agua);text-decoration:none">▶ Ver</a>`:''}</div>
        ${e.como?`<div class="t2" style="margin-top:8px;padding-left:38px;line-height:1.5">📋 ${e.como}${e.cuida?`<br><span style="color:var(--af-ambar)">⚠ ${e.cuida}</span>`:''}</div>`:''}
-     </div>`).join('');
+     </div>`;}).join('');
   window._t0=Date.now();window._nEj=pack.ejercicios.length;   // arranca el reloj de honestidad
   window._packHoy=pack.ejercicios;
   ir('rutina');

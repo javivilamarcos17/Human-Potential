@@ -97,3 +97,20 @@ medición explícita "¿bajó el dolor respecto a ayer?" para progresar o intens
 > Relacionado: [`departamentos/entrenamiento.md`](../departamentos/entrenamiento.md) ·
 > [`departamentos/fisioterapia.md`](../departamentos/fisioterapia.md) ·
 > [`diseño/rutinas-packs.md`](rutinas-packs.md) · migración `0005_arquitectura_modular.sql`.
+
+---
+
+## ✅ Estándar de calidad de rutinas (filtro OBLIGATORIO antes de dar por buena una sesión)
+
+Toda sesión generada debe pasar este checklist (como la revisaría un entrenador):
+1. **Calentamiento apropiado:** movilidad + cardio SUAVE. Nunca burpees/saltos en el calentamiento (tope de nivel).
+2. **Esquema coherente con el ejercicio:** fuerza → series×reps×descanso; cardio → duración; movilidad → tiempo. Jamás "Caminar 5×5".
+3. **Progresión lógica:** calentamiento → trabajo principal → finisher/accesorio → vuelta a la calma.
+4. **Nivel = capacidad real:** sedentario empieza ANDANDO (nivel 0); atleta hace peso muerto/dominadas/WOD (nivel 5). La forma física manda, no solo los días en la app.
+5. **Zona respetada:** con dolor o zona concreta, los ejercicios la cuidan (terapéutico dirigido).
+6. **Mezcla fuerza+cardio adaptada al objetivo:** Fuego mixto/metcon, Roca fuerza, Rayo cardio, Agua recuperación.
+7. **Variedad real:** las variantes (fuerza/cardio/metcon) rotan día a día; no la misma sesión siempre.
+8. **Seguridad:** dolor alto / banderas rojas → para y deriva, nunca intensidad.
+
+> Herramienta de validación: `mockups/prototipo/laboratorio.html` (simula perfiles y días).
+> Cualquier cambio en EJ/SESIONES/MOTOR debe re-pasar este checklist con varios perfiles.
