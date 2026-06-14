@@ -550,8 +550,9 @@ const etapaDe=f=>ETAPAS.find(([a,b])=>f>=a&&f<=b)[2];
 // Línea evolutiva según la valoración inicial (D3): el avatar nace reflejando tu punto de partida.
 // Brote (0-40): viaje de fragilidad a fuerza, estética tierna. Atlas (41-70): equilibrada.
 // Apex (71-100): atlética desde el inicio. La re-Auditoría puede cruzarte de línea (momento wow).
-const lineaDe=aud=>aud<=40?'Mística 🌙':aud<=70?'Heroica ⚔️':'Guerrera 🛡️';
-const lineaKey=aud=>aud<=40?'mistica':aud<=70?'heroica':'guerrera';
+// Línea según la VITALIDAD (1-100): Mística (más baja) · Guerrera (intermedia) · Heroica (la mejor)
+const lineaDe=aud=>aud<=40?'Mística 🌙':aud<=70?'Guerrera 🛡️':'Heroica ⚔️';
+const lineaKey=aud=>aud<=40?'mistica':aud<=70?'guerrera':'heroica';
 /* Los 75 nombres del brief de arte (5 elem x 3 lineas x 5 etapas) */
 const CRIATURAS={
  agua:{mistica:['Axolín','Axolito','Axolaria','Axolunar','Axolótida'],heroica:['Lutrín','Lutreo','Lutrón','Lutramar','Lutramaral'],guerrera:['Orquín','Orkardo','Orkamus','Orktitán','Orkarakón']},
@@ -831,7 +832,7 @@ const EJ=[
  {id:'sent_salto',nom:'Sentadillas con salto',det:'AMRAP · 15/ronda',zona:'general',nivel:4,patron:'cardio',como:'Baja a sentadilla y salta explosivo hacia arriba. Cae suave y encadena.',cuida:'Cae con rodillas flexionadas amortiguando. Para si te falta el aire.'},
  {id:'burpees',nom:'Burpees',det:'AMRAP · 10/ronda',zona:'general',nivel:4,patron:'cardio',como:'Desde de pie: baja a plancha, flexión, recoge y salta arriba con palmada.',cuida:'Mantén el ritmo que puedas sostener. Espalda controlada al bajar.'},
  {id:'mountain',nom:'Mountain climbers',det:'AMRAP · 30/ronda',zona:'general',nivel:4,patron:'cardio',como:'En plancha sobre las manos, lleva las rodillas al pecho alternando rápido, como corriendo.',cuida:'Cadera baja y estable, no la subas.'},
- {id:'thruster',nom:'Thruster con mancuernas',det:'AMRAP · 12/ronda',zona:'general',nivel:4,patron:'fuerza',como:'Sentadilla con mancuernas en hombros; al subir, empuja las mancuernas sobre la cabeza en un solo gesto.',cuida:'Encadena sentadilla y empuje fluido, abdomen firme.'},
+ {id:'thruster',riesgo:['lumbar'],nom:'Thruster con mancuernas',det:'AMRAP · 12/ronda',zona:'general',nivel:4,patron:'fuerza',como:'Sentadilla con mancuernas en hombros; al subir, empuja las mancuernas sobre la cabeza en un solo gesto.',cuida:'Encadena sentadilla y empuje fluido, abdomen firme.'},
  // ══ CARDIO / ACTIVIDAD (de "empezar a andar" a tiradas largas) ══
  {id:'andar',nom:'Caminar a buen paso',det:'15-20 min',zona:'general',nivel:0,patron:'cardio',como:'Sal a andar a un ritmo que te active pero te deje hablar. Postura erguida, brazos sueltos.',cuida:'Calzado cómodo. Si te falta el aire, baja el ritmo. Tu primera victoria es moverte.'},
  {id:'escaleras',nom:'Subir escaleras',det:'5-10 min',zona:'general',nivel:1,patron:'cardio',como:'Sube y baja escaleras a ritmo sostenido, apoyando todo el pie.',cuida:'Agárrate si lo necesitas y baja con cuidado.'},
@@ -843,11 +844,11 @@ const EJ=[
  {id:'tabata',nom:'Tabata',det:'20s al máximo / 10s descanso × 8',zona:'general',nivel:4,patron:'cardio',como:'Elige un ejercicio (sentadillas, burpees) y dale a tope 20s, descansa 10s, repite 8 rondas (4 min).',cuida:'Mantén la técnica aunque vayas rápido. Para si te mareas.'},
  {id:'kb_swing',nom:'Swing con kettlebell',det:'según esquema',zona:'general',nivel:4,patron:'cardio',como:'Bisagra de cadera y proyecta la pesa al frente con el empuje de la cadera, no con los brazos.',cuida:'Espalda recta; el movimiento nace de la cadera, no de la lumbar.'},
  // ══ FUERZA DE GIMNASIO (días de fuerza completos) ══
- {id:'sentadilla_barra',nom:'Sentadilla con barra',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Barra en la espalda alta. Baja la cadera entre los talones con el pecho arriba y sube empujando el suelo.',cuida:'Mantén la curva lumbar, rodillas hacia fuera. Técnica antes que peso.'},
+ {id:'sentadilla_barra',riesgo:['lumbar'],nom:'Sentadilla con barra',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Barra en la espalda alta. Baja la cadera entre los talones con el pecho arriba y sube empujando el suelo.',cuida:'Mantén la curva lumbar, rodillas hacia fuera. Técnica antes que peso.'},
  {id:'press_banca',nom:'Press de banca',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Tumbado, baja la barra al pecho con control y empuja arriba.',cuida:'Escápulas retraídas. Usa seguros o compañero al cargar.'},
- {id:'peso_muerto',nom:'Peso muerto',det:'según esquema',zona:'general',nivel:5,patron:'fuerza',como:'Barra pegada a las espinillas, espalda recta. Empuja el suelo y extiende la cadera para subir.',cuida:'Espalda NEUTRA en todo el recorrido. La técnica manda sobre el peso.'},
+ {id:'peso_muerto',riesgo:['lumbar'],nom:'Peso muerto',det:'según esquema',zona:'general',nivel:5,patron:'fuerza',como:'Barra pegada a las espinillas, espalda recta. Empuja el suelo y extiende la cadera para subir.',cuida:'Espalda NEUTRA en todo el recorrido. La técnica manda sobre el peso.'},
  {id:'dominadas',nom:'Dominadas',det:'según esquema',zona:'general',nivel:5,patron:'fuerza',como:'Cuélgate y tira del pecho hacia la barra juntando las escápulas. Baja con control.',cuida:'Sin balanceo; si no llegas, asiste con goma.'},
- {id:'press_militar',nom:'Press militar',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Barra a la altura de los hombros, empuja sobre la cabeza sin arquear la espalda.',cuida:'Abdomen y glúteo firmes, no hiperextiendas la lumbar.'},
+ {id:'press_militar',riesgo:['lumbar'],nom:'Press militar',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Barra a la altura de los hombros, empuja sobre la cabeza sin arquear la espalda.',cuida:'Abdomen y glúteo firmes, no hiperextiendas la lumbar.'},
  {id:'hip_thrust',nom:'Hip thrust',det:'según esquema',zona:'general',nivel:3,patron:'fuerza',como:'Espalda alta en un banco, barra/peso en la cadera. Empuja con glúteos hasta alinear el tronco.',cuida:'Mentón metido, aprieta el glúteo 1s arriba.'},
  {id:'fondos',nom:'Fondos en paralelas',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Apoyo en paralelas, baja flexionando codos hasta 90° y empuja arriba.',cuida:'Hombros abajo, rango sin dolor. Asiste con goma si hace falta.'},
 ];
@@ -875,13 +876,16 @@ const MOTOR={
 };
 
 // ── COMPOSITOR: elige los ejercicios ideales para hoy ──────────────────────
-function componerRutina(zona, nivel, nEj, soloPatrones, receta){
-  let pool=EJ.filter(e=>e.nivel<=nivel && (e.zona===zona || e.zona==='general'));
+function componerRutina(zona, nivel, nEj, soloPatrones, receta, estricto){
+  // estricto = solo ejercicios de la zona dolorida (terapéutico), sin generales
+  const enZona=e=> estricto&&zona!=='general' ? e.zona===zona : (e.zona===zona||e.zona==='general');
+  let pool=EJ.filter(e=>e.nivel<=nivel && enZona(e));
   if(soloPatrones) pool=pool.filter(e=>soloPatrones.includes(e.patron));
-  // Fallbacks que SIEMPRE respetan el nivel (nunca meter intensidad alta en un día terapéutico)
-  if(!pool.length) pool=EJ.filter(e=>e.nivel<=nivel && (e.zona===zona||e.zona==='general'));
-  if(!pool.length) pool=EJ.filter(e=>e.nivel<=nivel && e.zona==='general');
-  if(!pool.length) pool=EJ.filter(e=>e.nivel<=Math.max(0,nivel) && e.patron==='movilidad');
+  // Fallbacks: respetan nivel Y zona (nunca colar ejercicios de otra zona en una rutina)
+  if(!pool.length) pool=EJ.filter(e=>e.nivel<=nivel && enZona(e));
+  if(!pool.length && !estricto) pool=EJ.filter(e=>e.nivel<=nivel && e.zona==='general');
+  if(!pool.length) pool=EJ.filter(e=>e.nivel<=Math.max(1,nivel) && e.zona===zona && e.patron==='movilidad');
+  if(!pool.length) pool=EJ.filter(e=>e.nivel<=Math.max(0,nivel) && e.zona==='general' && e.patron==='movilidad');
   const rot=new Date(hoyISO()).getDate();
   const rota=arr=>arr.slice().sort((a,b)=> ((EJ.indexOf(a)+rot)%97) - ((EJ.indexOf(b)+rot)%97));
   const elegidos=[], usados=new Set();
@@ -1004,8 +1008,10 @@ function componerSesion(zona, nivel, minutos, receta, focoDia){
   const usados=new Set(), bls=[];
   for(const b of bloques){
     const tope=b.tope!=null?Math.min(nivel,b.tope):nivel;   // calentamiento/vuelta no meten alta intensidad
-    let pool=EJ.filter(e=>e.nivel<=tope && (e.zona===zona||e.zona==='general') && b.pat.includes(e.patron) && !usados.has(e.id));
-    if(pool.length<b.n) pool=pool.concat(EJ.filter(e=>e.nivel<=tope && b.pat.includes(e.patron) && !usados.has(e.id) && !pool.includes(e)));
+    // respeta la zona del cliente y evita ejercicios de riesgo para esa zona (ej. peso muerto si cuida la lumbar)
+    const ok=e=> (e.zona===zona||e.zona==='general') && !(e.riesgo&&zona!=='general'&&e.riesgo.includes(zona));
+    let pool=EJ.filter(e=>e.nivel<=tope && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id));
+    if(pool.length<b.n) pool=pool.concat(EJ.filter(e=>e.nivel<=tope && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id) && !pool.includes(e)));
     if(!pool.length) continue;
     const ejs=rota(pool).slice(0,b.n); ejs.forEach(e=>usados.add(e.id));
     bls.push({titulo:b.t, esquema:b.esquema, ejercicios:ejs});
@@ -1046,11 +1052,11 @@ function decidirRutina(){
   const receta=MOTOR.receta[S.elemento||'agua'];   // mezcla de patrones (rutinas simples)
 
   // ── MODO TERAPÉUTICO (dolor → movimiento): atacamos la zona, medimos mañana ──
-  if(S.dolorHoy>=8) return pres(componerRutina(zona,0,nEj,['movilidad']),'Hoy: descomprimir',
+  if(S.dolorHoy>=8) return pres(componerRutina(zona,0,nEj,['movilidad'],null,true),'Hoy: descomprimir',
     `Dolor alto en tu ${zonaLabel(zona).toLowerCase()}. Movimiento muy suave dirigido a la zona — moverse bien también cura. Mañana medimos.`, true);
-  if(molestiaAyer) return pres(componerRutina(zona,0,nEj,['movilidad','estabilidad']),'Hoy: consolidar',
+  if(molestiaAyer) return pres(componerRutina(zona,0,nEj,['movilidad','estabilidad'],null,true),'Hoy: consolidar',
     'Ayer notaste algo nuevo. Hoy movilidad de la zona, sin apretar. Si mañana sigue, llamamos a tu profesional.', true);
-  if(S.dolorHoy>=5) return pres(componerRutina(zona,Math.min(1,techo),nEj,['movilidad','estabilidad','fuerza']),'Hoy: movimiento terapéutico',
+  if(S.dolorHoy>=5) return pres(componerRutina(zona,Math.min(1,techo),nEj,['movilidad','estabilidad','fuerza'],null,true),'Hoy: movimiento terapéutico',
     `Dolor moderado: trabajamos tu ${zonaLabel(zona).toLowerCase()} a baja intensidad para soltarla. El movimiento correcto es parte de la solución.`, false);
 
   // ── MODO RECUPERACIÓN (vida/estado) ──

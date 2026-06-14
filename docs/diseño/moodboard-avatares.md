@@ -390,3 +390,7 @@ Reglas de dirección de arte (estilo "Pokémon moderno"):
   a la rama superior (momento "wow" máximo). La línea no es jaula.
 - Elementos: MVP 3 (Agua/Tierra/Viento — D4); visión 5 (+ Fuego, Rayo/Roca…). Configurable.
 - BBDD: `avatares.linea` (campo nuevo, Season 1+). Season 0 lanza con 1 línea por elemento.
+
+
+## ⚠️ Orden de líneas por Vitalidad (corregido 2026-06-14)
+Mística 🌙 = Vitalidad 0-40 (más baja) · **Guerrera 🛡️ = 41-70 (intermedia)** · **Heroica ⚔️ = 71-100 (la mejor)**.
