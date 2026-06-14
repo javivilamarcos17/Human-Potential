@@ -851,6 +851,37 @@ const EJ=[
  {id:'press_militar',riesgo:['lumbar'],nom:'Press militar',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Barra a la altura de los hombros, empuja sobre la cabeza sin arquear la espalda.',cuida:'Abdomen y glúteo firmes, no hiperextiendas la lumbar.'},
  {id:'hip_thrust',nom:'Hip thrust',det:'según esquema',zona:'general',nivel:3,patron:'fuerza',como:'Espalda alta en un banco, barra/peso en la cadera. Empuja con glúteos hasta alinear el tronco.',cuida:'Mentón metido, aprieta el glúteo 1s arriba.'},
  {id:'fondos',nom:'Fondos en paralelas',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Apoyo en paralelas, baja flexionando codos hasta 90° y empuja arriba.',cuida:'Hombros abajo, rango sin dolor. Asiste con goma si hace falta.'},
+ // ── FUERZA · EMPUJE ──
+ {id:'press_inclinado',nom:'Press inclinado mancuernas',det:'según esquema',zona:'general',nivel:3,patron:'fuerza',como:'Banco inclinado 30-45°. Baja las mancuernas a la altura del pecho y empuja arriba.',cuida:'No despegues la lumbar del banco; controla la bajada.'},
+ {id:'press_mancuernas',nom:'Press de pecho con mancuernas',det:'según esquema',zona:'general',nivel:2,patron:'fuerza',como:'Tumbado, mancuernas sobre el pecho. Empuja arriba juntándolas un poco y baja con control.',cuida:'Muñecas firmes, no choques las mancuernas arriba.'},
+ {id:'flexion_diamante',nom:'Flexiones diamante (tríceps)',det:'según esquema',zona:'general',nivel:3,patron:'fuerza',como:'Flexión con las manos juntas formando un rombo bajo el pecho. Codos pegados al bajar.',cuida:'Cuerpo recto; si pesa, apoya rodillas.'},
+ {id:'pike_pushup',nom:'Flexión pica (hombro)',det:'según esquema',zona:'general',nivel:3,patron:'fuerza',como:'En V invertida con la cadera arriba, baja la cabeza entre las manos flexionando codos y empuja.',cuida:'Mira entre las manos; controla la bajada.'},
+ // ── FUERZA · TRACCIÓN ──
+ {id:'remo_mancuerna',nom:'Remo con mancuerna',det:'según esquema',zona:'general',nivel:2,patron:'fuerza',como:'Apoya una mano y rodilla en un banco. Rema la mancuerna hacia la cadera llevando el codo atrás.',cuida:'Espalda recta y paralela al suelo; no gires el tronco.'},
+ {id:'pull_australian',nom:'Remo australiano',det:'según esquema',zona:'general',nivel:2,patron:'fuerza',como:'Bajo una barra a la altura de la cadera, cuerpo recto. Tira del pecho a la barra y baja.',cuida:'Cuerpo en tabla, aprieta glúteo y abdomen.'},
+ {id:'curl_biceps',nom:'Curl de bíceps',det:'según esquema',zona:'general',nivel:2,patron:'fuerza',como:'De pie, sube la mancuerna flexionando el codo sin mover el hombro. Baja con control.',cuida:'No balancees el cuerpo para subir el peso.'},
+ {id:'jalon_goma',nom:'Jalón con goma',det:'según esquema',zona:'general',nivel:2,patron:'fuerza',como:'Goma anclada arriba. Tira hacia el pecho llevando los codos abajo y juntando escápulas.',cuida:'No encojas los hombros; pecho arriba.'},
+ // ── FUERZA · PIERNA (rodilla) ──
+ {id:'sentadilla_goblet',nom:'Sentadilla goblet',det:'según esquema',zona:'general',nivel:2,patron:'fuerza',como:'Sujeta una mancuerna pegada al pecho. Baja en sentadilla profunda con el pecho arriba y sube.',cuida:'Talones firmes, rodillas siguiendo los pies.'},
+ {id:'prensa',nom:'Prensa de piernas',det:'según esquema',zona:'general',nivel:3,patron:'fuerza',como:'En la máquina, baja flexionando hasta 90° y empuja sin bloquear de golpe las rodillas.',cuida:'No despegues la zona lumbar del respaldo.'},
+ {id:'zancada_atras',nom:'Zancada hacia atrás',det:'según esquema',zona:'general',nivel:2,patron:'fuerza',como:'Da un paso atrás y baja la rodilla casi al suelo. Empuja con la pierna de delante para volver.',cuida:'Tronco erguido, rodilla de delante estable.'},
+ {id:'sentadilla_frontal',nom:'Sentadilla frontal',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',como:'Barra apoyada en los hombros por delante, codos altos. Baja vertical y sube.',cuida:'Codos arriba todo el rato; tronco erguido.'},
+ {id:'elevacion_gemelo',nom:'Elevación de gemelos',det:'según esquema',zona:'general',nivel:1,patron:'fuerza',como:'De pie, sube sobre las puntas de los pies lo más alto posible y baja despacio.',cuida:'Sube y baja controlado, aprieta arriba 1s.'},
+ // ── FUERZA · CADERA (bisagra) ──
+ {id:'peso_muerto_rumano',nom:'Peso muerto rumano',det:'según esquema',zona:'general',nivel:3,patron:'fuerza',riesgo:['lumbar'],como:'Piernas casi rectas, baja el peso pegado a las piernas llevando la cadera atrás. Sube apretando glúteo.',cuida:'Espalda recta; notas estiramiento en isquios, no en la lumbar.'},
+ {id:'buenos_dias',nom:'Buenos días con barra',det:'según esquema',zona:'general',nivel:4,patron:'fuerza',riesgo:['lumbar'],como:'Barra en la espalda alta. Lleva la cadera atrás inclinando el tronco con la espalda recta y sube.',cuida:'Carga ligera. Espalda NEUTRA siempre.'},
+ {id:'patada_gluteo',nom:'Patada de glúteo',det:'según esquema',zona:'general',nivel:1,patron:'fuerza',como:'A cuatro patas, lleva un talón hacia el techo manteniendo la rodilla a 90°. Aprieta el glúteo.',cuida:'No arquees la lumbar; el movimiento sale del glúteo.'},
+ // ── CORE ──
+ {id:'russian_twist',nom:'Giro ruso',det:'según esquema',zona:'core',nivel:2,patron:'estabilidad',como:'Sentado, tronco algo atrás y pies elevados. Gira el tronco tocando el suelo a cada lado.',cuida:'Gira desde el tronco, espalda no redondeada.'},
+ {id:'elevacion_piernas',nom:'Elevación de piernas',det:'según esquema',zona:'core',nivel:2,patron:'estabilidad',como:'Tumbado, sube las piernas rectas hasta la vertical y baja sin tocar el suelo.',cuida:'Lumbar pegada al suelo; si se despega, flexiona las rodillas.'},
+ {id:'ab_rollout',nom:'Rueda abdominal',det:'según esquema',zona:'core',nivel:4,patron:'estabilidad',como:'De rodillas, rueda hacia delante extendiendo el cuerpo y vuelve con el abdomen.',cuida:'No dejes que la lumbar se arquee; rango que controles.'},
+ // ── CARDIO / METCON (variedad) ──
+ {id:'jumping_jacks',nom:'Jumping jacks',det:'según esquema',zona:'general',nivel:2,patron:'cardio',como:'Salta abriendo piernas y subiendo los brazos, y vuelve. Ritmo constante.',cuida:'Cae suave con rodillas algo flexionadas.'},
+ {id:'box_jump',nom:'Salto al cajón',det:'según esquema',zona:'general',nivel:4,patron:'cardio',como:'Salta a un cajón cayendo con ambos pies y rodillas flexionadas. Baja con control.',cuida:'Empieza con cajón bajo. Cae amortiguando.'},
+ {id:'escalador_rapido',nom:'Escalador rápido',det:'según esquema',zona:'general',nivel:3,patron:'cardio',como:'En plancha, lleva las rodillas al pecho alternando rápido, como corriendo en el sitio.',cuida:'Cadera baja y estable; no la subas.'},
+ {id:'sprint',nom:'Series cortas / sprints',det:'según esquema',zona:'general',nivel:4,patron:'cardio',como:'Tras calentar, corre a máxima intensidad 20-30s y camina 60s para recuperar. Repite.',cuida:'Calienta bien antes. Para si notas tirones.'},
+ {id:'wall_ball',nom:'Wall ball',det:'según esquema',zona:'general',nivel:4,patron:'cardio',como:'Sentadilla con balón al pecho; al subir, lánzalo a un punto alto de la pared y recógelo.',cuida:'Encadena sentadilla y lanzamiento; abdomen firme.'},
+ {id:'pistol_squat',nom:'Sentadilla pistol',det:'según esquema',zona:'general',nivel:5,patron:'fuerza',como:'Sentadilla a una pierna con la otra extendida al frente. Baja controlado y sube.',cuida:'Asiste con apoyo al principio; rodilla alineada.'},
 ];
 
 // ── DIALES DEL MOTOR (ajusta sin tocar la lógica) ──────────────────────────
@@ -985,7 +1016,10 @@ const SESIONES={
 // Repeticiones por ejercicio dentro de un circuito/AMRAP/WOD (editable)
 const REPS_CIRCUITO={sentadilla:'15',flexiones:'10',zancadas:'10 por pierna',plancha_remo:'10 por lado',
  sent_salto:'15',burpees:'10',mountain:'30',thruster:'12',kb_swing:'15',remo_invertido:'10',
- dominadas:'8',fondos:'10',hip_thrust:'12',stepup:'10 por pierna',sent_pared:'30s'};
+ dominadas:'8',fondos:'10',hip_thrust:'12',stepup:'10 por pierna',sent_pared:'30s',
+ jumping_jacks:'30',box_jump:'10',escalador_rapido:'30',wall_ball:'12',sentadilla_goblet:'12',
+ zancada_atras:'10 por pierna',russian_twist:'20',elevacion_piernas:'12',flexion_diamante:'10',
+ remo_mancuerna:'10 por lado',pistol_squat:'6 por pierna',jumping:'30'};
 // Qué actividad de Lidomare equivale a cada foco de sesión
 const LIDOMARE_EQUIV={fuerza:'Sala de fuerza guiada',cardio:'Clase de cardio / spinning',mixto:'CrossFit (WOD)'};
 // Elige la VARIANTE según el objetivo del cliente y rota día a día; monta los bloques
@@ -1002,15 +1036,14 @@ function componerSesion(zona, nivel, minutos, receta, focoDia){
   }
   let bloques=variante.bloques.filter(b=>minutos>=b.min);
   if(!bloques.length) bloques=[variante.bloques[0]];
-  // prioriza los ejercicios MÁS AVANZADOS que el cliente puede hacer (los de barra en fuerza pesada),
-  // y desempata por rotación diaria para dar variedad
-  const rota=arr=>arr.slice().sort((a,b)=> (b.nivel-a.nivel) || (((EJ.indexOf(a)+rot)%97)-((EJ.indexOf(b)+rot)%97)));
+  // rotación REAL por día (no fija siempre los mismos): da variedad de sesión en sesión
+  const rota=arr=>arr.slice().sort((a,b)=> ((EJ.indexOf(a)*7+rot)%101)-((EJ.indexOf(b)*7+rot)%101));
   const usados=new Set(), bls=[];
   for(const b of bloques){
     const tope=b.tope!=null?Math.min(nivel,b.tope):nivel;   // calentamiento/vuelta no meten alta intensidad
-    // respeta la zona del cliente y evita ejercicios de riesgo para esa zona (ej. peso muerto si cuida la lumbar)
     const ok=e=> (e.zona===zona||e.zona==='general') && !(e.riesgo&&zona!=='general'&&e.riesgo.includes(zona));
-    let pool=EJ.filter(e=>e.nivel<=tope && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id));
+    // primero los ejercicios EXIGENTES para su nivel (rango [tope-2, tope]) y se rota entre ellos
+    let pool=EJ.filter(e=>e.nivel<=tope && e.nivel>=Math.max(0,tope-2) && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id));
     if(pool.length<b.n) pool=pool.concat(EJ.filter(e=>e.nivel<=tope && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id) && !pool.includes(e)));
     if(!pool.length) continue;
     const ejs=rota(pool).slice(0,b.n); ejs.forEach(e=>usados.add(e.id));
