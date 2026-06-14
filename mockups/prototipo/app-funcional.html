@@ -808,6 +808,9 @@ const EJ=[
  {id:'plancha_lat',nom:'Plancha lateral',det:'2×20s por lado',zona:'core',nivel:2,patron:'estabilidad',como:'De lado, apoyo en antebrazo y pies. Sube la cadera y mantén el cuerpo recto.',cuida:'Si pesa, apoya la rodilla de abajo.'},
  {id:'hollow',nom:'Hollow hold',det:'3×20s',zona:'core',nivel:3,patron:'estabilidad',como:'Boca arriba, brazos y piernas estirados despegados del suelo formando una banana. Lumbar pegada.',cuida:'Si la lumbar se despega, sube brazos y piernas.'},
  // ══ GENERAL / FITNESS (sustituye el gym) ══
+ {id:'mov_general',nom:'Movilidad articular',det:'2 min · cuello, hombros, cadera, tobillos',zona:'general',nivel:0,patron:'movilidad',como:'De pie, haz círculos suaves en cada articulación de arriba a abajo: cuello, hombros, caderas, rodillas y tobillos.',cuida:'Rango cómodo, sin forzar. Ideal para empezar o en días flojos.'},
+ {id:'respira_full',nom:'Respiración diafragmática',det:'3 min · tumbado',zona:'general',nivel:0,patron:'movilidad',como:'Tumbado, una mano en el pecho y otra en la barriga. Respira hinchando la barriga (no el pecho) y suelta despacio.',cuida:'Relaja hombros y mandíbula. Calma el sistema nervioso.'},
+ {id:'estira_full',nom:'Estiramiento de cuerpo completo',det:'5 min · suave',zona:'general',nivel:0,patron:'movilidad',como:'Encadena estiramientos suaves: isquios, cuádriceps, espalda, pecho y cuello. 20-30s cada uno.',cuida:'Hasta notar tensión cómoda, nunca dolor. No rebotes.'},
  {id:'sentadilla',nom:'Sentadilla',det:'3×15',zona:'general',nivel:1,patron:'fuerza',como:'Pies al ancho de hombros. Baja llevando la cadera atrás como para sentarte, pecho arriba. Sube apretando glúteos.',cuida:'Talones firmes, rodillas hacia fuera siguiendo los pies.'},
  {id:'flexiones',nom:'Flexiones',det:'3×10',zona:'general',nivel:2,patron:'fuerza',como:'Manos algo más anchas que los hombros. Baja el pecho con el cuerpo recto y empuja arriba.',cuida:'Cuerpo en línea, sin hundir la cadera. Puedes apoyar rodillas.'},
  {id:'zancadas',nom:'Zancadas alternas',det:'3×10 por pierna',zona:'general',nivel:2,patron:'fuerza',como:'Da un paso largo al frente y baja hasta casi tocar el suelo con la rodilla de atrás. Empuja para volver.',cuida:'Rodilla de delante sobre el tobillo, no la pases del pie.'},
@@ -841,7 +844,10 @@ const MOTOR={
 function componerRutina(zona, nivel, nEj, soloPatrones, receta){
   let pool=EJ.filter(e=>e.nivel<=nivel && (e.zona===zona || e.zona==='general'));
   if(soloPatrones) pool=pool.filter(e=>soloPatrones.includes(e.patron));
-  if(!pool.length) pool=EJ.filter(e=>e.zona===zona||e.zona==='general');
+  // Fallbacks que SIEMPRE respetan el nivel (nunca meter intensidad alta en un día terapéutico)
+  if(!pool.length) pool=EJ.filter(e=>e.nivel<=nivel && (e.zona===zona||e.zona==='general'));
+  if(!pool.length) pool=EJ.filter(e=>e.nivel<=nivel && e.zona==='general');
+  if(!pool.length) pool=EJ.filter(e=>e.nivel<=Math.max(0,nivel) && e.patron==='movilidad');
   const rot=new Date(hoyISO()).getDate();
   const rota=arr=>arr.slice().sort((a,b)=> ((EJ.indexOf(a)+rot)%97) - ((EJ.indexOf(b)+rot)%97));
   const elegidos=[], usados=new Set();
