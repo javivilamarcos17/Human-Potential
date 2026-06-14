@@ -259,7 +259,7 @@
         <button class="cta" style="margin-top:10px" onclick="calcularObjetivo()">Calcular mi objetivo</button>
       </div>
 
-      <div class="panel"><div class="sub" style="color:var(--af-texto);margin-bottom:4px">¿Qué has comido hoy?</div><div id="nutri-comidas"></div></div>
+      <div class="panel"><div class="sub" style="color:var(--af-texto);margin-bottom:4px">¿Qué has comido hoy? <span style="font-weight:400">Añade varios alimentos a cada comida — te digo cantidades y mejoras.</span></div><div id="nutri-comidas"></div></div>
       <div class="panel" id="nutri-analisis"></div>
       <div class="panel">
         <div class="sub" style="color:var(--af-texto)">💧 Vasos de agua hoy</div>
@@ -1431,143 +1431,134 @@ function verGuardian(){
 /* ── NUTRICIÓN (editable) — acompañar, no recetar. Ver diseño/nutricion-mvp.md ── */
 const NUTRI={
   momentos:[['desayuno','Desayuno'],['comida','Comida'],['cena','Cena'],['snack','Snack / picoteo']],
-  // El cliente elige QUÉ comió (fácil) y la app le dice si es sano (le educa).
-  // Edita la lista para afinar la guía nutricional. color: verde|ambar|rojo
-  // kcal = estimación de una COMIDA completa de ese estilo (no una ración suelta).
-  // Es aproximado: el conteo exacto llegará con la foto del plato (IA). macro para el análisis.
-  tipos:[
-    {t:'Verdura / ensalada',      color:'verde', kcal:280, macro:'verd'},
-    {t:'Pollo / pescado / huevo', color:'verde', kcal:450, macro:'prot'},
-    {t:'Legumbres',               color:'verde', kcal:500, macro:'prot'},
-    {t:'Fruta',                   color:'verde', kcal:130, macro:'verd'},
-    {t:'Lácteo natural / yogur',  color:'verde', kcal:200, macro:'prot'},
-    {t:'Frutos secos',            color:'verde', kcal:200, macro:'gras'},
-    {t:'Pasta / arroz / pan',     color:'ambar', kcal:550, macro:'carb'},
-    {t:'Carne roja',              color:'ambar', kcal:550, macro:'prot'},
-    {t:'Bocadillo',               color:'ambar', kcal:450, macro:'carb'},
-    {t:'Zumo / lácteo azucarado', color:'ambar', kcal:180, macro:'azuc'},
-    {t:'Frito / rebozado',        color:'rojo',  kcal:650, macro:'gras'},
-    {t:'Dulce / bollería',        color:'rojo',  kcal:400, macro:'azuc'},
-    {t:'Pizza / comida rápida',   color:'rojo',  kcal:800, macro:'carb'},
-    {t:'Snack salado / patatas',  color:'rojo',  kcal:300, macro:'gras'},
-    {t:'Refresco / alcohol',      color:'rojo',  kcal:180, macro:'azuc'},
-    {t:'Me la salté',             color:'ambar', kcal:0,   macro:''},
+  // BASE DE ALIMENTOS (editable). kcal por 100g (o por unidad si u='ud'). racion = porción
+  // orientativa típica. cat: carbo|prot|verd|grasa|extra · color para la guía de calidad.
+  alimentos:[
+    {n:'Arroz (en seco)',     cat:'carbo', kcal:350, u:'g', racion:70,  color:'ambar'},
+    {n:'Pasta (en seco)',     cat:'carbo', kcal:360, u:'g', racion:80,  color:'ambar'},
+    {n:'Pan / tostadas',      cat:'carbo', kcal:265, u:'g', racion:60,  color:'ambar'},
+    {n:'Patata',              cat:'carbo', kcal:80,  u:'g', racion:200, color:'ambar'},
+    {n:'Avena',               cat:'carbo', kcal:380, u:'g', racion:50,  color:'verde'},
+    {n:'Pollo / pavo',        cat:'prot',  kcal:165, u:'g', racion:150, color:'verde'},
+    {n:'Pescado',             cat:'prot',  kcal:120, u:'g', racion:150, color:'verde'},
+    {n:'Huevo',               cat:'prot',  kcal:78,  u:'ud',racion:2,   color:'verde'},
+    {n:'Carne roja',          cat:'prot',  kcal:250, u:'g', racion:120, color:'ambar', alt:'Alterna con pollo o pescado: igual de proteicos, menos grasa.'},
+    {n:'Bacon',               cat:'grasa', kcal:540, u:'g', racion:30,  color:'rojo',  alt:'Cambialo por pavo o jamon cocido: mucha menos grasa para el mismo sabor.'},
+    {n:'Pavo / jamon cocido', cat:'prot',  kcal:110, u:'g', racion:60,  color:'verde'},
+    {n:'Legumbres (cocidas)', cat:'prot',  kcal:120, u:'g', racion:180, color:'verde'},
+    {n:'Yogur / lácteo',      cat:'prot',  kcal:60,  u:'g', racion:200, color:'verde'},
+    {n:'Verdura / ensalada',  cat:'verd',  kcal:30,  u:'g', racion:200, color:'verde'},
+    {n:'Fruta',               cat:'verd',  kcal:60,  u:'g', racion:150, color:'verde'},
+    {n:'Aguacate',            cat:'grasa', kcal:160, u:'g', racion:75,  color:'verde'},
+    {n:'Aceite de oliva',     cat:'grasa', kcal:900, u:'g', racion:10,  color:'verde'},
+    {n:'Frutos secos',        cat:'grasa', kcal:600, u:'g', racion:30,  color:'verde'},
+    {n:'Queso',               cat:'grasa', kcal:350, u:'g', racion:40,  color:'ambar', alt:'El queso es grasa: usalo de toque, no de base. Mejor poca cantidad.'},
+    {n:'Bolleria / dulce',    cat:'extra', kcal:450, u:'g', racion:50,  color:'rojo',  alt:'Cambiala por fruta, avena o yogur natural con miel.'},
+    {n:'Frito / rebozado',    cat:'extra', kcal:300, u:'g', racion:120, color:'rojo',  alt:'Mejor a la plancha, horno o air-fryer: mismo plato, mitad de calorias.'},
+    {n:'Pizza',               cat:'extra', kcal:270, u:'g', racion:200, color:'rojo',  alt:'Casera, base fina y cargada de verduras y proteina.'},
+    {n:'Patatas chips',       cat:'extra', kcal:540, u:'g', racion:50,  color:'rojo',  alt:'Para picar, mejor frutos secos o fruta.'},
+    {n:'Refresco azucarado',  cat:'extra', kcal:42,  u:'ml',racion:330, color:'rojo',  alt:'Son calorias vacias: mejor agua o su version zero.'},
+    {n:'Cerveza / alcohol',   cat:'extra', kcal:45,  u:'ml',racion:330, color:'rojo'},
+    {n:'Zumo',                cat:'extra', kcal:45,  u:'ml',racion:200, color:'ambar'},
   ],
-  // factores de actividad para el gasto calórico (Mifflin-St Jeor × factor)
-  actividad:[['1.2','Sedentario'],['1.375','Ligero (1-3 días)'],['1.55','Activo (3-5 días)'],['1.725','Muy activo']],
-  // ajuste del objetivo según el elemento (perfil de salud)
-  ajusteObjetivo:{agua:1.0, hierba:1.0, roca:1.10, fuego:0.82, rayo:1.0},
-  macroNom:{prot:'Proteína',verd:'Verduras/fruta',carb:'Carbohidrato',gras:'Grasa',azuc:'Azúcar'},
-  emoji:{verde:'🟢',ambar:'🟡',rojo:'🔴'},
-  // el micro-consejo que EDUCA al cliente sobre lo que acaba de elegir
-  consejo:{
-    verde:'💚 Buena elección: nutritivo y poco procesado.',
-    ambar:'🟡 Correcto con moderación — ojo a la cantidad.',
-    rojo:'🔴 Un capricho. No pasa nada: compénsalo con agua y movimiento.',
+  catNom:{carbo:'Carbohidrato',prot:'Proteína',verd:'Verdura/fruta',grasa:'Grasa',extra:'Extra/capricho'},
+  repartoComida:{desayuno:.25, comida:.35, cena:.25, snack:.15},   // % del objetivo por comida
+  // factor de cantidad por objetivo (elemento) y categoría: ajusta la ración recomendada
+  factorObjetivo:{
+    carbo:{fuego:.75, rayo:1.2, roca:1.1, agua:1.0, hierba:1.0},
+    prot: {roca:1.3, fuego:1.15, rayo:1.0, agua:1.0, hierba:1.0},
+    grasa:{fuego:.8, roca:1.0, rayo:1.0, agua:1.0, hierba:1.0},
+    verd: {fuego:1.2, roca:1.0, rayo:1.0, agua:1.0, hierba:1.0},
+    extra:{fuego:.6, roca:.8, rayo:.8, agua:.8, hierba:.8},
   },
+  actividad:[['1.2','Sedentario'],['1.375','Ligero (1-3 días)'],['1.55','Activo (3-5 días)'],['1.725','Muy activo']],
+  ajusteObjetivo:{agua:1.0, hierba:1.0, roca:1.10, fuego:0.82, rayo:1.0},
   metaAgua:8,
-  mensaje:(verde,rojo,total)=> total===0 ? 'Dinos qué comiste y te decimos si va bien — sin culpa.'
-    : verde>=total*0.7 ? '💚 Día redondo. Tu cuerpo y tu Guardián lo notan.'
-    : rojo>=total*0.6 ? 'Un día flojo no borra tu progreso. Mañana: agua y movimiento, y a seguir.'
-    : 'Equilibrio es esto: ni perfecto ni mal. Vas bien.',
 };
-function nutriHoy(){S.nutri=S.nutri||{};S.nutri[hoyISO()]=S.nutri[hoyISO()]||{agua:0};return S.nutri[hoyISO()];}
+function nutriHoy(){S.nutri=S.nutri||{};const h=hoyISO();S.nutri[h]=S.nutri[h]||{agua:0};
+  NUTRI.momentos.forEach(([k])=>{if(!Array.isArray(S.nutri[h][k]))S.nutri[h][k]=[];}); return S.nutri[h];}
 function verNutricion(){ nutriHoy();
   $('np-act').innerHTML=NUTRI.actividad.map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
   pintarNutricion(); ir('nutricion'); }
-// Objetivo calórico con Mifflin-St Jeor × actividad × ajuste del objetivo (elemento)
 function calcularObjetivo(){
-  const p=+$('np-peso').value, a=+$('np-altura').value, e=+$('np-edad').value, sx=$('np-sexo').value, act=+$('np-act').value;
-  if(!p||!a||!e){alert('Rellena peso, altura y edad.');return;}
-  const basal=10*p+6.25*a-5*e+(sx==='h'?5:-161);
+  const pp=+$('np-peso').value,a=+$('np-altura').value,e=+$('np-edad').value,sx=$('np-sexo').value,act=+$('np-act').value;
+  if(!pp||!a||!e){alert('Rellena peso, altura y edad.');return;}
+  const basal=10*pp+6.25*a-5*e+(sx==='h'?5:-161);
   const kcal=Math.round(basal*act*(NUTRI.ajusteObjetivo[S.elemento||'agua']||1)/10)*10;
-  S.nutriPerfil={peso:p,altura:a,edad:e,sexo:sx,act,kcal}; save();
-  $('nutri-perfil').style.display='none'; pintarNutricion();
+  S.nutriPerfil={peso:pp,altura:a,edad:e,sexo:sx,act,kcal};save();
+  $('nutri-perfil').style.display='none';pintarNutricion();
 }
-function kcalDia(d){return NUTRI.momentos.reduce((t,[k])=>t+(d[k]!=null?NUTRI.tipos[d[k]].kcal:0),0);}
+function kcalItem(it){const al=NUTRI.alimentos[it.a];if(!al)return 0;return Math.round(al.u==='ud'?al.kcal*it.c:al.kcal*it.c/100);}
+function kcalComida(arr){return (arr||[]).reduce((t,it)=>t+kcalItem(it),0);}
+function kcalDia(d){return NUTRI.momentos.reduce((t,[k])=>t+kcalComida(d[k]),0);}
+function recomendar(aliIdx){const al=NUTRI.alimentos[aliIdx];
+  let f=(NUTRI.factorObjetivo[al.cat]&&NUTRI.factorObjetivo[al.cat][S.elemento||'hierba'])||1;
+  if((S.racha||0)>=4 && (al.cat==='carbo'||al.cat==='prot')) f*=1.1;
+  const paso=al.u==='ud'?1:5; return Math.max(paso, Math.round(al.racion*f/paso)*paso);
+}
+function addAlim(k,idx){if(idx==='')return;const d=nutriHoy();d[k].push({a:+idx,c:recomendar(+idx)});save();pintarNutricion();}
+function setCant(k,i,v){const d=nutriHoy();if(d[k][i])d[k][i].c=Math.max(0,+v||0);save();pintarNutricion();}
+function delAlim(k,i){const d=nutriHoy();d[k].splice(i,1);save();pintarNutricion();}
 function pintarNutricion(){
   const d=nutriHoy();
   $('nutri-comidas').innerHTML=NUTRI.momentos.map(([k,lbl])=>{
-    const sel=d[k];               // índice del tipo elegido (o undefined)
-    const tipo=sel!=null?NUTRI.tipos[sel]:null;
-    const opts='<option value="">— elige —</option>'+NUTRI.tipos.map((t,i)=>`<option value="${i}" ${sel==i?'selected':''}>${t.t}</option>`).join('');
-    return `<div style="margin-bottom:14px">
-      <div class="sub" style="color:var(--af-texto);font-weight:600">${lbl}</div>
-      <select onchange="comida('${k}',this.value)" style="width:100%;margin-top:6px;padding:11px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:14px">${opts}</select>
-      ${tipo?`<div class="sub" style="margin-top:6px;line-height:1.45">${NUTRI.consejo[tipo.color]}</div>`:''}
+    const items=d[k]||[], sub=kcalComida(items);
+    const filas=items.map((it,i)=>{const al=NUTRI.alimentos[it.a], rec=recomendar(it.a);
+      const exceso=al.u!=='ud'&&it.c>rec*1.5;
+      return `<div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+        <div style="flex:1;font-size:13.5px">${al.n}${al.alt?' <span style="color:var(--af-ambar)">&#9888;</span>':''}</div>
+        <input type="number" value="${it.c}" onchange="setCant('${k}',${i},this.value)" style="width:58px;padding:6px;border-radius:8px;border:1px solid ${exceso?'var(--af-ambar)':'var(--af-line)'};background:rgba(0,0,0,.25);color:var(--af-texto);text-align:right">
+        <span class="sub" style="width:22px">${al.u}</span>
+        <span class="sub" style="width:50px;text-align:right">${kcalItem(it)}</span>
+        <span onclick="delAlim('${k}',${i})" style="cursor:pointer;color:var(--af-texto-suave);padding:0 4px">&#10005;</span></div>
+        ${al.alt?`<div class="sub" style="font-size:11px;margin:2px 0 0 4px;line-height:1.4">&#128161; ${al.alt}</div>`:(exceso?`<div class="sub" style="font-size:11px;margin-left:4px;color:var(--af-ambar)">&#8593; Para tu objetivo, ~${rec}${al.u} seria suficiente.</div>`:'')}`;}).join('');
+    const opts='<option value="">+ anadir alimento...</option>'+NUTRI.alimentos.map((a,i)=>`<option value="${i}">${a.n}</option>`).join('');
+    return `<div style="margin-bottom:14px;border-bottom:1px solid var(--af-line);padding-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:14px">${lbl}</b>${items.length?`<span class="sub">${sub} kcal</span>`:''}</div>
+      ${filas}
+      <select onchange="addAlim('${k}',this.value);this.value=''" style="width:100%;margin-top:8px;padding:9px;border-radius:10px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:13px">${opts}</select>
     </div>`;}).join('');
-  // ── OBJETIVO CALÓRICO (panel superior) ──
-  const per=S.nutriPerfil, kcal=kcalDia(d), reg0=NUTRI.momentos.filter(([k])=>d[k]!=null).length;
-  if(per){
-    const pct=Math.min(100,Math.round(kcal/per.kcal*100));
-    const col=kcal>per.kcal*1.1?'var(--af-ambar)':'var(--af-primario)';
-    $('nutri-objetivo').innerHTML=
-      `<div class="xprow"><span>Tu objetivo diario</span><b>~${per.kcal} kcal</b></div>
-       ${reg0?`<div class="xprow" style="margin-top:8px"><span>Estimado de hoy</span><b>≈ ${kcal} kcal</b></div>
-       <div class="track"><div class="fill" style="width:${pct}%;background:${col}"></div></div>`:''}
-       <div class="sub" style="margin-top:6px">${objetivoTexto()}</div>
-       <div class="sub" style="font-size:11px;margin-top:4px;opacity:.7">≈ estimación aproximada por tipo de comida. El conteo exacto llegará con la foto del plato.</div>
-       <button class="tool" style="margin-top:8px" onclick="S.nutriPerfil=null;save();$('nutri-perfil').style.display='block';pintarNutricion()">↻ Recalcular objetivo</button>`;
-  } else {
-    $('nutri-objetivo').innerHTML=`<div class="sub" style="color:var(--af-texto)">Pon un número a tu día</div>
-      <div class="sub">Calcula tu objetivo de calorías personalizado según tu cuerpo y tu meta.</div>
-      <button class="cta" style="margin-top:10px" onclick="$('nutri-perfil').style.display='block'">Calcular mi objetivo</button>`;
-  }
-  // ── ANÁLISIS DEL PLATO (macros) + consejo personalizado ──
-  const macros={}; NUTRI.momentos.forEach(([k])=>{ if(d[k]!=null){const m=NUTRI.tipos[d[k]].macro; if(m)macros[m]=(macros[m]||0)+1;} });
-  const reg=NUTRI.momentos.filter(([k])=>d[k]!=null).length;
-  if(reg){
-    const chips=Object.keys(macros).map(m=>`<span style="display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin:3px 4px 0 0;background:rgba(46,204,143,.12);color:var(--af-primario);border:1px solid rgba(46,204,143,.3)">${NUTRI.macroNom[m]} ×${macros[m]}</span>`).join('');
-    $('nutri-analisis').innerHTML=`<div class="sub" style="color:var(--af-texto)">Análisis de tu día</div><div style="margin-top:6px">${chips}</div>
-      <div class="sub" style="margin-top:8px;line-height:1.5">${consejoNutri(macros)}</div>`;
-  } else $('nutri-analisis').innerHTML=`<div class="sub">Registra tus comidas y verás el análisis de tu plato y un consejo a tu medida.</div>`;
-
+  const per=S.nutriPerfil, kcal=kcalDia(d), reg=NUTRI.momentos.some(([k])=>(d[k]||[]).length);
+  if(per){const pct=Math.min(100,Math.round(kcal/per.kcal*100)), col=kcal>per.kcal*1.1?'var(--af-ambar)':'var(--af-primario)';
+    $('nutri-objetivo').innerHTML=`<div class="xprow"><span>Tu objetivo (${(S.elemento||'').toUpperCase()}, ${per.peso}kg)</span><b>~${per.kcal} kcal</b></div>
+      ${reg?`<div class="xprow" style="margin-top:8px"><span>Hoy llevas</span><b>${kcal} kcal</b></div><div class="track"><div class="fill" style="width:${pct}%;background:${col}"></div></div>`:''}
+      <div class="sub" style="margin-top:6px">${objetivoTexto()}</div>
+      <button class="tool" style="margin-top:8px" onclick="S.nutriPerfil=null;save();$('nutri-perfil').style.display='block';pintarNutricion()">&#8635; Recalcular objetivo</button>`;
+  } else $('nutri-objetivo').innerHTML=`<div class="sub" style="color:var(--af-texto)">Para recomendarte cantidades necesito tus datos</div>
+    <button class="cta" style="margin-top:10px" onclick="$('nutri-perfil').style.display='block'">Calcular mi objetivo</button>`;
+  const cons=consejosNutri(d);
+  $('nutri-analisis').innerHTML=reg?`<div class="sub" style="color:var(--af-texto)">Consejo de hoy</div><div class="sub" style="margin-top:6px;line-height:1.55">${cons.join('<br>')}</div>`
+    :`<div class="sub">Anade lo que comes y te recomiendo cantidades y mejoras segun tus datos.</div>`;
   $('nutri-agua').textContent=d.agua||0;
   $('nutri-agua-meta').textContent=(d.agua||0)>=NUTRI.metaAgua?'✓ Objetivo de hoy cumplido':`Objetivo: ${NUTRI.metaAgua} vasos`;
-  const colores=NUTRI.momentos.map(([k])=>d[k]!=null?NUTRI.tipos[d[k]].color:null).filter(Boolean);
-  const verde=colores.filter(c=>c==='verde').length, rojo=colores.filter(c=>c==='rojo').length;
-  // Mirada SEMANAL: un día flojo no rompe nada — se compensa con el resto y con tu actividad
   const sem=semanaNutri();
-  const lineaSem=sem.dias>=3
-    ? `<div class="sub" style="margin-top:8px">Tu semana: <b style="color:var(--af-primario)">${sem.buenos}/${sem.dias} días cuidándote</b>.${rojo>0?' Hoy flojeaste — no pasa nada: tu actividad y los buenos días lo compensan.':''}</div>`
-    : '';
-  $('nutri-balance').innerHTML=`<div style="font-size:14px;color:var(--af-texto);line-height:1.5">${NUTRI.mensaje(verde,rojo,colores.length)}</div>${lineaSem}`;
+  $('nutri-balance').innerHTML=sem.dias>=3?`<div class="sub" style="line-height:1.5">Tu semana: <b style="color:var(--af-primario)">${sem.buenos}/${sem.dias} dias cuidandote</b>. Sin culpa: lo que cuenta es la tendencia, y tu entrenamiento compensa.</div>`:`<div class="sub">Registra unos dias y veras tu resumen semanal.</div>`;
 }
-function semanaNutri(){
-  const dias=Object.keys(S.nutri||{}).sort().slice(-7); let buenos=0;
-  dias.forEach(f=>{ const dd=S.nutri[f];
-    const cs=NUTRI.momentos.map(([k])=>dd[k]!=null?NUTRI.tipos[dd[k]].color:null).filter(Boolean);
-    if(cs.length && cs.filter(c=>c==='verde').length>=cs.length*0.5) buenos++; });
-  return {dias:dias.length, buenos};
-}
-function objetivoTexto(){
-  const o={fuego:'Tu meta de transformación pide un ligero déficit: come bien y entrena para quemar.',
-    roca:'Para ganar fuerza necesitas algo de superávit y proteína suficiente.',
-    rayo:'Resistencia: prioriza buenos carbohidratos para tener energía.',
-    agua:'Recuperación: alimentación equilibrada que ayude a tu cuerpo a repararse.',
-    hierba:'Construir el hábito: come variado y sostenible, sin extremos.'};
-  return o[S.elemento||'agua']||o.agua;
-}
-function consejoNutri(macros){
-  // consejo PERSONALIZADO según lo que le falta/sobra hoy y su objetivo
+function consejosNutri(d){
+  const cats={};let extras=0;const alts=[];
+  NUTRI.momentos.forEach(([k])=>(d[k]||[]).forEach(it=>{const al=NUTRI.alimentos[it.a];if(!al)return;cats[al.cat]=(cats[al.cat]||0)+1;if(al.cat==='extra')extras++;if(al.alt&&!alts.includes(al.alt))alts.push(al.alt);}));
   const c=[];
-  if(!macros.prot) c.push('Te falta <b>proteína</b> hoy: añade pollo, huevo, pescado o legumbres.');
-  if(!macros.verd) c.push('Hoy faltan <b>verduras o fruta</b>: suma color a tu plato.');
-  if((macros.azuc||0)>=2) c.push('Llevas bastante <b>azúcar</b>: cámbialo por fruta y agua.');
-  if((macros.gras||0)>=2) c.push('Mucha <b>grasa</b> hoy: equilibra con verdura y movimiento.');
-  if(!c.length) c.push('Plato equilibrado 👌 Mantén esta línea.');
-  const o=S.elemento==='fuego'?' Recuerda tu objetivo: ligero déficit + entrenamiento.':S.elemento==='roca'?' Para tu fuerza, asegura proteína en cada comida.':'';
-  return c.slice(0,2).join('<br>')+o;   // hasta 2 consejos relevantes
+  if(!cats.prot)c.push('Te falta <b>proteina</b> hoy: pollo, huevo, pescado o legumbres.');
+  if(!cats.verd)c.push('Suma <b>verduras o fruta</b>: apunta a 2 raciones al dia.');
+  if(extras>=2)c.push('Varios <b>caprichos</b> hoy. No pasa nada: tu entrenamiento ayuda a compensarlo.');
+  if(S.elemento==='roca'&&(cats.prot||0)<3)c.push('Para tu <b>fuerza</b>, asegura proteina en cada comida.');
+  if(S.elemento==='fuego'&&(cats.grasa||0)>=2)c.push('Para tu <b>deficit</b>, modera las grasas hoy.');
+  alts.slice(0,2).forEach(a=>c.push('&#128161; '+a));
+  if(!c.length)c.push('Plato equilibrado. Vas muy bien.');
+  return c.slice(0,3);
 }
-function comida(k,idx){ const d=nutriHoy(); if(idx==='')delete d[k]; else d[k]=+idx; save(); pintarNutricion(); }
-function agua(n){ const d=nutriHoy(); d.agua=Math.max(0,(d.agua||0)+n); save(); pintarNutricion(); }
-function guardarNutri(){
-  const d=nutriHoy();
-  if(d._xp){ alert('Ya registraste tu nutrición de hoy. ¡Mañana más!'); ir('home'); return; }
-  d._xp=true; S.xp+=5; save();
-  sync('nutricion',{comidas:NUTRI.momentos.map(([k])=>({m:k,v:d[k]||null})),agua:d.agua||0});
-  alert('Día de nutrición guardado · +5 XP. Cuidarte por dentro también hace crecer a tu Guardián.');
-  pintar(); ir('home');
+function objetivoTexto(){const o={fuego:'Meta de transformacion: ligero deficit, mucha proteina y verdura.',roca:'Ganar fuerza: algo de superavit y proteina suficiente.',rayo:'Resistencia: prioriza buenos carbohidratos para tener energia.',agua:'Recuperacion: alimentacion equilibrada que ayude a reparar.',hierba:'Construir el habito: come variado y sostenible, sin extremos.'};return o[S.elemento||'agua']||o.agua;}
+function semanaNutri(){const dias=Object.keys(S.nutri||{}).sort().slice(-7);let buenos=0;
+  dias.forEach(f=>{const dd=S.nutri[f];const cats={};let ex=0;NUTRI.momentos.forEach(([k])=>(dd[k]||[]).forEach(it=>{const al=NUTRI.alimentos[it.a];if(al){cats[al.cat]=1;if(al.cat==='extra')ex++;}}));
+    if(cats.prot&&cats.verd&&ex<2)buenos++;});
+  return {dias:dias.length,buenos};}
+function agua(n){const d=nutriHoy();d.agua=Math.max(0,(d.agua||0)+n);save();pintarNutricion();}
+function guardarNutri(){const d=nutriHoy();
+  if(d._xp){alert('Ya registraste tu nutricion de hoy. Manana mas!');ir('home');return;}
+  d._xp=true;S.xp+=5;save();
+  sync('nutricion',{kcal:kcalDia(d),agua:d.agua||0,comidas:NUTRI.momentos.map(([k])=>({m:k,items:(d[k]||[]).map(it=>({a:NUTRI.alimentos[it.a].n,c:it.c}))}))});
+  alert('Dia de nutricion guardado · +5 XP. Cuidarte por dentro tambien hace crecer a tu Guardian.');
+  pintar();ir('home');
 }
 function verSemana(){
   const dias=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
