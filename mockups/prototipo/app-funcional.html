@@ -933,12 +933,13 @@ function zonaLabel(z){return {lumbar:'Zona lumbar',cervical:'Cervicales',hombro:
 
 // ── SPLIT SEMANAL: cómo se reparte la semana según el objetivo (editable) ──
 //   0=Lun..6=Dom · focos: fuerza · cardio · mixto(HIIT/metcon) · activo(descanso activo) · movilidad · descanso
+// Creemos en moverse casi todos los días + mucho descanso ACTIVO. Solo 1 descanso total (Dom).
 const SPLIT={
-  roca:   ['fuerza','activo','fuerza','cardio','fuerza','activo','descanso'],
-  fuego:  ['fuerza','mixto','cardio','fuerza','mixto','activo','descanso'],
-  rayo:   ['cardio','fuerza','cardio','mixto','cardio','activo','descanso'],
-  hierba: ['fuerza','cardio','activo','fuerza','mixto','activo','descanso'],
-  agua:   ['activo','movilidad','activo','fuerza','activo','descanso','descanso'],
+  roca:   ['fuerza','activo','fuerza','activo','fuerza','cardio','descanso'],
+  fuego:  ['fuerza','mixto','activo','fuerza','mixto','cardio','descanso'],
+  rayo:   ['cardio','activo','cardio','fuerza','mixto','cardio','descanso'],
+  hierba: ['fuerza','activo','cardio','fuerza','activo','cardio','descanso'],
+  agua:   ['movilidad','activo','movilidad','activo','fuerza','activo','descanso'],
 };
 const FOCO_INFO={fuerza:['🏋️','Fuerza'],cardio:['🏃','Cardio'],mixto:['⚡','HIIT / Metcon'],
   activo:['🚶','Descanso activo'],movilidad:['🧘','Movilidad'],descanso:['😴','Descanso']};
@@ -1569,18 +1570,23 @@ function guardarNutri(){
   pintar(); ir('home');
 }
 function verSemana(){
-  const dias=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const dias=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
   const split=SPLIT[S.elemento||'hierba']||SPLIT.hierba;
   const hoyIdx=(new Date(hoyISO()).getDay()+6)%7;
   const c=miCentro();
-  $('semana-sub').innerHTML=`Plan equilibrado para tu objetivo (${(S.elemento||'').toUpperCase()}). No tienes que pensar: cada día sabes lo que toca.${c?` Y las clases de ${c.nombre}.`:''}`;
+  const col={fuerza:'var(--af-primario)',cardio:'var(--af-agua)',mixto:'var(--af-dorado)',activo:'#FFA726',movilidad:'#B8C6F2',descanso:'var(--af-texto-suave)'};
+  // resumen
+  const entreno=split.filter(f=>['fuerza','cardio','mixto'].includes(f)).length;
+  const activo=split.filter(f=>['activo','movilidad'].includes(f)).length;
+  const desc=split.filter(f=>f==='descanso').length;
+  $('semana-sub').innerHTML=`<b style="color:var(--af-texto)">${entreno} días de entreno · ${activo} de descanso activo · ${desc} de descanso.</b><br>Creemos en moverte casi cada día. No tienes que pensar: aquí ves lo que toca.${c?` Con las clases de ${c.nombre}.`:''}`;
   $('semana-lista').innerHTML=split.map((foco,i)=>{
-    const fi=FOCO_INFO[foco]||['•',foco], hoy=i===hoyIdx;
-    const clase=c&&c.horario&&c.horario[i]?`<div class="sub" style="color:var(--af-dorado);font-size:11.5px">🏋️ ${c.nombre}: ${c.horario[i]}</div>`:'';
-    return `<div style="display:flex;align-items:center;gap:12px;background:${hoy?'rgba(46,204,143,.1)':'var(--af-panel)'};border:1px solid ${hoy?'var(--af-primario)':'var(--af-line)'};border-radius:var(--af-radio-m);padding:12px 14px;margin-bottom:8px">
-      <div style="font-size:24px">${fi[0]}</div>
-      <div style="flex:1"><div style="font-weight:700;font-size:14.5px">${dias[i]}${hoy?' · HOY':''}</div>
-        <div class="sub">${fi[1]}</div>${clase}</div></div>`;
+    const fi=FOCO_INFO[foco]||['•',foco], hoy=i===hoyIdx, cc=col[foco]||'var(--af-line)';
+    const clase=c&&c.horario&&c.horario[i]?`<div style="color:var(--af-dorado);font-size:11.5px;margin-top:2px">🏋️ ${c.nombre}: ${c.horario[i]}</div>`:'';
+    return `<div style="display:flex;align-items:center;gap:12px;background:${hoy?'rgba(46,204,143,.12)':'var(--af-panel)'};border:1px solid ${hoy?'var(--af-primario)':'var(--af-line)'};border-left:4px solid ${cc};border-radius:var(--af-radio-m);padding:12px 14px;margin-bottom:8px">
+      <div style="font-size:26px;width:34px;text-align:center">${fi[0]}</div>
+      <div style="flex:1"><div style="font-weight:700;font-size:14.5px">${dias[i]}${hoy?' <span style="color:var(--af-primario);font-size:11px">· HOY</span>':''}</div>
+        <div style="font-size:13px;color:${cc};font-weight:600">${fi[1]}</div>${clase}</div></div>`;
   }).join('');
   ir('semana');
 }
