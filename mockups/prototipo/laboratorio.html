@@ -166,9 +166,17 @@ function addDia(esc,dec,comida,nota,err){
   let cont='';
   if(err){cont=`<div class="mo err">${dec.motivo}</div>`;}
   else if(dec){
-    cont=`<div class="tt">${dec.titulo}</div><div class="mo">🗣️ ${dec.motivo||'(día normal)'}</div>
-      <div class="ej">🏋️ ${dec.pack.ejercicios.map(e=>e.nombre).join(' · ')}</div>
-      ${dec.vender?'<div class="ej vender">💆 + la app sugiere una sesión presencial</div>':''}`;
+    let lastB=null;
+    const lista=dec.pack.ejercicios.map(e=>{
+      const cab=(e.bloque&&e.bloque!==lastB)?`<div style="color:#F4C430;font-weight:700;margin-top:7px;font-size:12.5px">▸ ${e.bloque}</div>`:'';
+      lastB=e.bloque;
+      return cab+`<div style="margin-top:3px">• <b>${e.nombre}</b> · ${e.detalle}`
+        +(e.como?`<div style="color:var(--af-texto-suave);font-size:11.5px;margin:2px 0 0 12px;line-height:1.45">📋 ${e.como}${e.cuida?`<br>⚠ ${e.cuida}`:''}</div>`:'')+`</div>`;
+    }).join('');
+    cont=`<div class="tt">${dec.titulo}</div><div class="mo">🗣️ ${dec.motivo||'(día normal)'}</div>`
+      +(dec.pack.lidomare?`<div style="color:#F4C430;font-size:12.5px;margin-top:3px">🏋️ ≈ ${dec.pack.lidomare} en ${dec.pack.centro}</div>`:'')
+      +`<div class="ej">${lista}</div>`
+      +(dec.vender?'<div class="ej vender">💆 + la app sugiere una sesión presencial</div>':'');
   } else {
     cont=`<div class="tt">Descanso</div><div class="mo">🗣️ Hoy no toca entrenar. Mañana retomamos — un día libre también cuida.</div>`;
   }

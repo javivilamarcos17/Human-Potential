@@ -1134,8 +1134,11 @@ function cerrarTriaje(){
     +`${pack.nombre} · plan digital Anti Frágil`
     +(pack.lidomare?`<br><span style="color:var(--af-dorado)">🏋️ Equivale a: <b>${pack.lidomare}</b> en ${pack.centro}</span>`:'')
     +(dec.vender?`<br><a href="upselling.html" style="color:var(--af-dorado);font-weight:700;text-decoration:none">💆 O resuélvelo antes: sesión presencial con ${CONFIG.fisio} →</a>`:'');
+  // Guía de carga para quien no sabe entrenar (autorregulación, sin saber tu 1RM)
+  const tieneFuerza=pack.ejercicios.some(e=>/series ×/.test(e.detalle));
+  const ayudaCarga=tieneFuerza?`<div class="panel" style="background:rgba(46,204,143,.08);border-color:rgba(46,204,143,.3);margin-bottom:10px"><div class="t2" style="line-height:1.5">💡 <b>¿Cuánto peso?</b> Elige una carga con la que las <b>últimas 1-2 repeticiones cuesten</b> pero mantengas la técnica perfecta. Si te sobran muchas, sube algo; si no llegas a las reps, baja. Empieza conservador — mejor quedarse corto que lesionarse.</div></div>`:'';
   let lastBloque=null;
-  $('rut-lista').innerHTML=pack.ejercicios.map(e=>{
+  $('rut-lista').innerHTML=ayudaCarga+pack.ejercicios.map(e=>{
     const cab=(e.bloque&&e.bloque!==lastBloque)?`<div class="sub" style="margin:14px 0 2px;color:var(--af-dorado);font-weight:700;letter-spacing:.5px">▸ ${e.bloque}</div>`:'';
     lastBloque=e.bloque;
     return cab+`<div class="ej" style="flex-direction:column;align-items:stretch" onclick="this.classList.toggle('ok');revisarRutina()">
