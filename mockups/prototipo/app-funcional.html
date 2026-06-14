@@ -954,6 +954,12 @@ const SESIONES={
     {t:'Fuerza / skill',pat:['fuerza'],esquema:'5 series × 3 · técnica + carga',n:2,min:0},
     {t:'WOD CrossFit — AMRAP 18 min',pat:['cardio','fuerza'],esquema:'máximas rondas: técnica bajo fatiga',n:4,min:25}, VUELTA ]} ],
 };
+// Repeticiones por ejercicio dentro de un circuito/AMRAP/WOD (editable)
+const REPS_CIRCUITO={sentadilla:'15',flexiones:'10',zancadas:'10 por pierna',plancha_remo:'10 por lado',
+ sent_salto:'15',burpees:'10',mountain:'30',thruster:'12',kb_swing:'15',remo_invertido:'10',
+ dominadas:'8',fondos:'10',hip_thrust:'12',stepup:'10 por pierna',sent_pared:'30s'};
+// Qué actividad de Lidomare equivale a cada foco de sesión
+const LIDOMARE_EQUIV={fuerza:'Sala de fuerza guiada',cardio:'Clase de cardio / spinning',mixto:'CrossFit (WOD)'};
 // Elige la VARIANTE según el objetivo del cliente y rota día a día; monta los bloques
 function componerSesion(zona, nivel, minutos, receta){
   const variantes=SESIONES[nivel]||SESIONES[1];
@@ -982,11 +988,16 @@ function componerSesion(zona, nivel, minutos, receta){
   bls.forEach(bl=>{
     const circuito=/AMRAP|WOD|Tabata|Circuito|HIIT|Finisher|vueltas|rondas/i.test(bl.titulo+' '+bl.esquema);
     bl.ejercicios.forEach(e=>{
-      const det=circuito ? bl.esquema : ((e.patron==='fuerza'||e.patron==='estabilidad') ? bl.esquema : e.det);
+      let det;
+      if(circuito) det=REPS_CIRCUITO[e.id]?REPS_CIRCUITO[e.id]+(/s$/.test(REPS_CIRCUITO[e.id])?'':' reps'):e.det; // reps por ronda
+      else if(e.patron==='fuerza'||e.patron==='estabilidad') det=bl.esquema;  // series × reps × descanso
+      else det=e.det;                                                          // cardio/movilidad: su duración
       planos.push({nombre:e.nom,detalle:det,como:e.como||'',cuida:e.cuida||'',video:e.video||'',bloque:bl.titulo});
     });
   });
-  return {nombre:zonaLabel(zona)+' · Nivel '+nivel+' · '+variante.foco, ejercicios:planos, bloques:bls, estructurada:true, foco:variante.foco};
+  // si el cliente viene de un centro, indica a qué actividad de Lidomare equivale esta sesión
+  const c=miCentro(); const lidomare=c?(LIDOMARE_EQUIV[variante.foco]||null):null;
+  return {nombre:zonaLabel(zona)+' · Nivel '+nivel+' · '+variante.foco, ejercicios:planos, bloques:bls, estructurada:true, foco:variante.foco, lidomare, centro:c?c.nombre:null};
 }
 function zonaPaciente(){const z=(S.perfil&&S.perfil.zona)||'';return ['lumbar','cervical','hombro','rodilla','cadera'].find(k=>z.indexOf(k)>=0)|| (z.indexOf('cervical')>=0?'cervical':'general');}
 
@@ -1121,6 +1132,7 @@ function cerrarTriaje(){
   $('rut-titulo').textContent=dec.titulo;
   $('rut-sub').innerHTML=(dec.motivo?`<span style="color:var(--af-agua)">🤖 ${dec.motivo}</span><br>`:'')
     +`${pack.nombre} · plan digital Anti Frágil`
+    +(pack.lidomare?`<br><span style="color:var(--af-dorado)">🏋️ Equivale a: <b>${pack.lidomare}</b> en ${pack.centro}</span>`:'')
     +(dec.vender?`<br><a href="upselling.html" style="color:var(--af-dorado);font-weight:700;text-decoration:none">💆 O resuélvelo antes: sesión presencial con ${CONFIG.fisio} →</a>`:'');
   let lastBloque=null;
   $('rut-lista').innerHTML=pack.ejercicios.map(e=>{
