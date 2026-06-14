@@ -24,7 +24,7 @@ const LOG=[];
 
 // ── cargar la app ───────────────────────────────────────────────────
 const ctx={};
-new Function(js+'\n;Object.assign(this,{S,save,altaSubmit,cerrarTriaje,terminarJornada,diaSiguiente,faseDesde,etapaDe,nivelDesdeXp,registrarPrueba,pruebaPendiente,abrirPrueba,CONFIG,hoyISO,verPC,cerrarSeason,verRetos,verProgreso,mostrarBienvenida,abrirPlayer,plSiguiente,enviarResumen,verNutricion});').call(ctx);
+new Function(js+'\n;Object.assign(this,{S,save,altaSubmit,cerrarTriaje,terminarJornada,diaSiguiente,faseDesde,etapaDe,nivelDesdeXp,registrarPrueba,pruebaPendiente,abrirPrueba,CONFIG,hoyISO,verPC,cerrarSeason,verRetos,verProgreso,mostrarBienvenida,abrirPlayer,plSiguiente,enviarResumen,verNutricion,verSemana});').call(ctx);
 const A=ctx;
 
 // ── helpers de interacción ──────────────────────────────────────────
@@ -94,7 +94,7 @@ const ui=[['verRetos',()=>A.verRetos()],['verPC',()=>A.verPC()],['verProgreso',(
   ['mostrarBienvenida',()=>{A.mostrarBienvenida&&A.mostrarBienvenida();}],
   ['abrirPlayer',()=>{window._packHoy=A.CONFIG.pack.ejercicios;A.abrirPlayer&&A.abrirPlayer();}],
   ['plSiguiente x6',()=>{for(let i=0;i<6;i++)A.plSiguiente&&A.plSiguiente();}],
-  ['enviarResumen',()=>A.enviarResumen&&A.enviarResumen()],['verNutricion',()=>A.verNutricion&&A.verNutricion()]];
+  ['enviarResumen',()=>A.enviarResumen&&A.enviarResumen()],['verNutricion',()=>A.verNutricion&&A.verNutricion()],['verSemana',()=>A.verSemana&&A.verSemana()]];
 ui.forEach(([n,fn])=>{try{fn();check(true,'UI '+n+' no peta');}catch(e){fallos++;console.log('❌ UI '+n+' PETA:',e.message);}});
 
 console.log('\n'+(fallos?('🔴 '+fallos+' FALLOS'):'🟢 TODO OK')+' — últimos avisos de la app:');

@@ -180,6 +180,7 @@
       </div>
       <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
       <div class="toolbar">
+        <div class="tool" onclick="verSemana()">📅 Mi semana</div>
         <div class="tool" onclick="verNutricion()">🥗 Nutrición</div>
         <div class="tool" onclick="verRetos()">🏆 Logros</div>
         <div class="tool" onclick="verPC()">🗃 PC</div>
@@ -227,6 +228,14 @@
       <div class="h1">🗃 PC</div>
       <div class="sub">Cada forma que conquistas se guarda aquí para siempre. Al cerrar la temporada, tu Guardián completo se archivará en el PC y empezarás una nueva historia.</div>
       <div id="pc-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"></div>
+      <button class="cta" onclick="ir('home')">Volver</button>
+    </div>
+
+    <!-- VISTA SEMANAL (plan equilibrado) -->
+    <div class="scr" id="semana">
+      <div class="h1">Tu semana</div>
+      <div class="sub" id="semana-sub"></div>
+      <div id="semana-lista" style="margin-top:14px"></div>
       <button class="cta" onclick="ir('home')">Volver</button>
     </div>
 
@@ -457,6 +466,8 @@ const CONFIG = {
     'LIDOMARE26': {
       nombre: 'Lidomare',
       whatsapp: '',                       // los resúmenes y alertas del cliente van aquí
+      // clases programadas del centro por día (0=Lun..6=Dom) — se ven en la vista semanal
+      horario: {0:'Sala de fuerza 19:00', 1:'Spinning 18:30', 2:'CrossFit (WOD) 19:00', 3:'Pilates 18:00', 4:'CrossFit (WOD) 19:00', 5:'Funcional 11:00'},
       actividades: [
         {nombre:'CrossFit (WOD)',        detalle:'La sesión cañera · ¿no puedes ir? hazla en casa con tu Metcon', cta:'Me interesa', nivel:4, equivalenteCasa:'packMetcon'},
         {nombre:'Sala de fuerza guiada', detalle:'Tu pack de progresión, con supervisión · lun-vie',  cta:'Me interesa', nivel:3, equivalenteCasa:'packAvanzado'},
@@ -885,6 +896,19 @@ function componerRutina(zona, nivel, nEj, soloPatrones, receta){
 }
 function zonaLabel(z){return {lumbar:'Zona lumbar',cervical:'Cervicales',hombro:'Hombro',rodilla:'Rodilla',cadera:'Cadera',general:'Cuerpo completo'}[z]||'Tu rutina';}
 
+// ── SPLIT SEMANAL: cómo se reparte la semana según el objetivo (editable) ──
+//   0=Lun..6=Dom · focos: fuerza · cardio · mixto(HIIT/metcon) · activo(descanso activo) · movilidad · descanso
+const SPLIT={
+  roca:   ['fuerza','activo','fuerza','cardio','fuerza','activo','descanso'],
+  fuego:  ['fuerza','mixto','cardio','fuerza','mixto','activo','descanso'],
+  rayo:   ['cardio','fuerza','cardio','mixto','cardio','activo','descanso'],
+  hierba: ['fuerza','cardio','activo','fuerza','mixto','activo','descanso'],
+  agua:   ['activo','movilidad','activo','fuerza','activo','descanso','descanso'],
+};
+const FOCO_INFO={fuerza:['🏋️','Fuerza'],cardio:['🏃','Cardio'],mixto:['⚡','HIIT / Metcon'],
+  activo:['🚶','Descanso activo'],movilidad:['🧘','Movilidad'],descanso:['😴','Descanso']};
+function focoDelDia(fechaISO){const ds=(new Date(fechaISO).getDay()+6)%7; return (SPLIT[S.elemento||'hierba']||SPLIT.hierba)[ds];}
+
 // ── PLANTILLAS DE SESIÓN: entrenamiento ESTRUCTURADO y bien pensado (editable) ──
 //   Cada nivel tiene VARIANTES con foco (fuerza/cardio/mixto) que rotan día a día y se
 //   eligen según el objetivo del cliente. Bloque: t · pat(patrones) · esquema(series/reps/descanso) · n · min(minutos necesarios).
@@ -961,13 +985,17 @@ const REPS_CIRCUITO={sentadilla:'15',flexiones:'10',zancadas:'10 por pierna',pla
 // Qué actividad de Lidomare equivale a cada foco de sesión
 const LIDOMARE_EQUIV={fuerza:'Sala de fuerza guiada',cardio:'Clase de cardio / spinning',mixto:'CrossFit (WOD)'};
 // Elige la VARIANTE según el objetivo del cliente y rota día a día; monta los bloques
-function componerSesion(zona, nivel, minutos, receta){
+function componerSesion(zona, nivel, minutos, receta, focoDia){
   const variantes=SESIONES[nivel]||SESIONES[1];
-  const pref=MOTOR.focoObjetivo[S.elemento||'hierba']||['mixto','fuerza','cardio'];
-  const ordenadas=variantes.slice().sort((a,b)=>pref.indexOf(a.foco)-pref.indexOf(b.foco));
   const rot=new Date(hoyISO()).getDate();
-  const top=ordenadas.slice(0,Math.min(2,ordenadas.length));   // rota entre las 2 preferidas
-  const variante=top[rot%top.length];
+  let variante;
+  if(focoDia && ['fuerza','cardio','mixto'].includes(focoDia)) variante=variantes.find(v=>v.foco===focoDia);
+  if(!variante){
+    const pref=MOTOR.focoObjetivo[S.elemento||'hierba']||['mixto','fuerza','cardio'];
+    const ordenadas=variantes.slice().sort((a,b)=>pref.indexOf(a.foco)-pref.indexOf(b.foco));
+    const top=ordenadas.slice(0,Math.min(2,ordenadas.length));
+    variante=top[rot%top.length];
+  }
   let bloques=variante.bloques.filter(b=>minutos>=b.min);
   if(!bloques.length) bloques=[variante.bloques[0]];
   // prioriza los ejercicios MÁS AVANZADOS que el cliente puede hacer (los de barra en fuerza pesada),
@@ -1038,18 +1066,27 @@ function decidirRutina(){
     `Tus últimos esfuerzos fueron muy altos (RPE ${rpe3.toFixed(1)}). Hoy descargamos para asimilar.`, false);
 
   const minutos=S.tiempoHoy||15;
-  // ── MODO PROGRESIÓN: cuerpo listo para más → sesión estructurada de nivel superior ──
+  // ── PLAN SEMANAL: el foco del día lo marca tu split (semana equilibrada) ──
+  const foco=focoDelDia(hoyISO());
+  if(foco==='descanso') return pres(componerRutina(zona,0,2,['movilidad']),'Día de descanso 😴',
+    'Tu plan marca descanso hoy. Recuperar ES progresar — esto es opcional, solo si te apetece moverte suave.', false);
+  if(foco==='activo') return pres(componerRutina(zona,Math.min(1,techo),nEj,['movilidad','cardio']),'Descanso activo 🚶',
+    'Hoy toca movimiento suave: una caminata o movilidad. Mantenemos el cuerpo activo sin cargarlo.', false);
+  if(foco==='movilidad') return pres(componerRutina(zona,Math.min(1,techo),nEj,['movilidad','estabilidad']),'Día de movilidad 🧘',
+    'Día de movilidad y cuidado articular — clave para que el resto de la semana rinda.', false);
+
+  // ── MODO PROGRESIÓN: cuerpo listo para más → sesión del foco de hoy, nivel superior ──
   if(u.length>=MOTOR.diasProgresion&&dolor5<=3&&rpe3!==null&&rpe3<=4){
     const nv=Math.min(5,techo);
-    return pres(componerSesion(zona,nv,minutos,receta),nv>=5?'¡Sesión de atleta! 🏆':nv>=4?'¡Modo cañera! 🔥':'¡Subes de nivel!',
-      nv>=5?'Estás en tu mejor forma: hoy una sesión de nivel atleta — fuerza, metcon o tirada larga según tu día.':nv>=4?'Constancia + cuerpo sin dolor: sesión completa como en el gym.':`${MOTOR.diasProgresion} días sólidos: tu cuerpo pide más. Subimos a nivel ${nv}.`, false);
+    return pres(componerSesion(zona,nv,minutos,receta,foco),nv>=5?'¡Sesión de atleta! 🏆':nv>=4?'¡Modo cañera! 🔥':'¡Subes de nivel!',
+      nv>=5?'Estás en tu mejor forma: hoy sesión de nivel atleta según tu plan semanal.':nv>=4?'Constancia + cuerpo sin dolor: sesión completa como en el gym.':`${MOTOR.diasProgresion} días sólidos: tu cuerpo pide más. Subimos a nivel ${nv}.`, false);
   }
-  if(estancado) return pres(componerSesion(zona,techo,minutos,receta),'Tu rutina de hoy',
+  if(estancado) return pres(componerSesion(zona,techo,minutos,receta,foco),'Tu rutina de hoy',
     'Tu dolor lleva 2 semanas sin bajar. Seguimos contigo, pero unas manos expertas podrían encontrar lo que al movimiento se le escapa.', true);
 
-  // ── DÍA NORMAL: sesión estructurada a tu nivel ganado y la mezcla de tu objetivo ──
-  return pres(componerSesion(zona,techo,minutos,receta),'Tu rutina de hoy',
-    `Sesión a tu medida: ${zonaLabel(zona).toLowerCase()}, nivel ${techo}.`, false);
+  // ── DÍA NORMAL: sesión del foco de hoy, a tu nivel ──
+  return pres(componerSesion(zona,techo,minutos,receta,foco),'Tu rutina de hoy',
+    `Sesión de ${(FOCO_INFO[foco]||['','tu medida'])[1].toLowerCase()}: ${zonaLabel(zona).toLowerCase()}, nivel ${techo}.`, false);
 }
 function pres(pack,titulo,motivo,vender){return {pack,titulo,motivo,vender};}
 function pruebaPendiente(){
@@ -1487,6 +1524,22 @@ function guardarNutri(){
   sync('nutricion',{comidas:NUTRI.momentos.map(([k])=>({m:k,v:d[k]||null})),agua:d.agua||0});
   alert('Día de nutrición guardado · +5 XP. Cuidarte por dentro también hace crecer a tu Guardián.');
   pintar(); ir('home');
+}
+function verSemana(){
+  const dias=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const split=SPLIT[S.elemento||'hierba']||SPLIT.hierba;
+  const hoyIdx=(new Date(hoyISO()).getDay()+6)%7;
+  const c=miCentro();
+  $('semana-sub').innerHTML=`Plan equilibrado para tu objetivo (${(S.elemento||'').toUpperCase()}). No tienes que pensar: cada día sabes lo que toca.${c?` Y las clases de ${c.nombre}.`:''}`;
+  $('semana-lista').innerHTML=split.map((foco,i)=>{
+    const fi=FOCO_INFO[foco]||['•',foco], hoy=i===hoyIdx;
+    const clase=c&&c.horario&&c.horario[i]?`<div class="sub" style="color:var(--af-dorado);font-size:11.5px">🏋️ ${c.nombre}: ${c.horario[i]}</div>`:'';
+    return `<div style="display:flex;align-items:center;gap:12px;background:${hoy?'rgba(46,204,143,.1)':'var(--af-panel)'};border:1px solid ${hoy?'var(--af-primario)':'var(--af-line)'};border-radius:var(--af-radio-m);padding:12px 14px;margin-bottom:8px">
+      <div style="font-size:24px">${fi[0]}</div>
+      <div style="flex:1"><div style="font-weight:700;font-size:14.5px">${dias[i]}${hoy?' · HOY':''}</div>
+        <div class="sub">${fi[1]}</div>${clase}</div></div>`;
+  }).join('');
+  ir('semana');
 }
 function verRetos(){
   S.retosLog=S.retosLog||[];
