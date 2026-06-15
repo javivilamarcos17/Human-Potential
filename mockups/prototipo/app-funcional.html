@@ -470,6 +470,7 @@
       <div class="toolbar" id="sim-linea"></div>
       <div style="text-align:center;margin-top:16px"><div id="sim-ava"></div>
         <div class="chip" id="sim-chip" style="margin-top:8px"></div></div>
+      <div class="panel" id="sim-perfil" style="margin-top:10px;text-align:left"></div>
       <div class="sub" style="margin:14px 0 4px">Fase <b id="sim-fnum">1</b> de 30 — arrastra para ver toda la evolución</div>
       <input type="range" id="sim-fase" min="1" max="30" value="1" style="width:100%" oninput="simPreviewFase(this.value)">
       <div class="panel" style="margin-top:16px">
@@ -635,6 +636,36 @@ const CRIATURAS={
  rayo:{mistica:['Nimbín','Nimbela','Nimbalia','Nimborea','Nimborealis'],heroica:['Falquín','Falzel','Falkaro','Falkorre','Falkorayo'],guerrera:['Herkín','Herkelo','Herkarno','Herkanor','Herkulón']},
  hierba:{mistica:['Cervín','Cervila','Cervalia','Cervandor','Cervaflor'],heroica:['Rufín','Rufelo','Rufambú','Rufandor','Rufandai'],guerrera:['Urzín','Urzal','Urzonco','Urzondor','Urzontor']},
  roca:{mistica:['Geolín','Geolume','Geodara','Geodonte','Geodralia'],heroica:['Tatuín','Taturel','Taturok','Taturokar','Taturokón'],guerrera:['Bisaltín','Bisaltor','Bisalkor','Bisaltonte','Bisaltitán']}};
+
+/* ════ LOS 15 PERFILES DE CLIENTE (EDITABLE) — elemento × línea ════════════════════
+   El ELEMENTO define el TIPO de entrenamiento (estilo + objetivo + gustos + capacidad).
+   La LÍNEA define DESDE DÓNDE partes de salud: mística (más bajo) · guerrera (medio) · heroica (la mejor).
+   vidaActiva:true = el track de "vida activa" (para quien no puede/quiere hacer deporte) es el protagonista.
+   Cambia personas, criaturas, enfoque o tono aquí — sin tocar la lógica. */
+const PERFILES = {
+  agua: { emoji:'💧', objetivo:'Volver a moverte sin dolor', capacidad:'Movilidad', lineas:{
+    mistica:  {criatura:'Axolín (axolote)', persona:'Vengo de lesión, dolor o años parado: empiezo casi de cero', entrena:'Caminar, movilidad muy suave, respiración, recuperar rango sin dolor', tono:'Paciencia infinita, cero culpa, celebrar lo mínimo', vidaActiva:true},
+    guerrera: {criatura:'Orquín (orca)',    persona:'Ya me muevo pero descompensado o con molestias',        entrena:'Control, core, fuerza que protege la zona, movilidad activa',          tono:'Firme y cuidadoso', vidaActiva:false},
+    heroica:  {criatura:'Lutrín (nutria)',  persona:'Lesión superada: quiero rendir y prevenir',              entrena:'Funcional fluido, movilidad avanzada, fuerza sin impacto',             tono:'De atleta', vidaActiva:false} }},
+  fuego: { emoji:'🔥', objetivo:'Transformar tu cuerpo', capacidad:'Metabólico / quema', lineas:{
+    mistica:  {criatura:'Fenín (fénix)',          persona:'Parto de muy poca forma o sobrepeso: empiezo mi cambio de cero', entrena:'Caminar a diario, primeros circuitos suaves, mover sin machacar', tono:'Renacimiento, sin vergüenza, cada día arde', vidaActiva:true},
+    guerrera: {criatura:'Brasín (minotauro)',     persona:'Ya entreno algo y quiero acelerar el cambio',                   entrena:'Circuitos metabólicos, fuerza + cardio mezclados, intensidad creciente', tono:'Reto, garra', vidaActiva:false},
+    heroica:  {criatura:'Ibrín (carnero de cumbre)', persona:'Ya en forma: busco definición y rendimiento',                 entrena:'Metcon exigente, HIIT, retos diarios',                          tono:'Élite, una cumbre cada día', vidaActiva:false} }},
+  rayo: { emoji:'⚡', objetivo:'Más resistencia y energía', capacidad:'Aeróbica', lineas:{
+    mistica:  {criatura:'Nimbín (nube de tormenta)', persona:'Poco fondo, me ahogo rápido, sedentario', entrena:'Andar más rápido, escaleras, ampliar el aliento poco a poco', tono:'Calma que crece', vidaActiva:true},
+    guerrera: {criatura:'Herkín (escarabajo Hércules)', persona:'Quiero aguante y resistencia muscular',   entrena:'Intervalos suaves, fondo + core, resistencia muscular',      tono:'Tenaz', vidaActiva:false},
+    heroica:  {criatura:'Falquín (halcón peregrino)', persona:'Ya tengo fondo: quiero velocidad',          entrena:'Intervalos de alta intensidad, velocidad, agilidad',         tono:'Velocidad = disciplina', vidaActiva:false} }},
+  hierba: { emoji:'🌿', objetivo:'Crear hábito y soltar estrés', capacidad:'Constancia / equilibrio', lineas:{
+    mistica:  {criatura:'Cervín (ciervo del bosque)', persona:'Sin hábito, con estrés o ansiedad: parto de cero', entrena:'Paseos, movilidad, respiración, yoga suave', tono:'Crecemos juntos, naturaleza, paciencia', vidaActiva:true},
+    guerrera: {criatura:'Urzín (oso)',                persona:'Ya tengo cierto hábito y quiero robustez',        entrena:'Funcional equilibrado, fuerza-resistencia, rutina sólida', tono:'Protección, capa a capa', vidaActiva:false},
+    heroica:  {criatura:'Rufín (panda rojo)',         persona:'En forma: busco equilibrio cuerpo-mente',         entrena:'Funcional ágil, movilidad-fuerza, variedad',              tono:'Arte, fluidez', vidaActiva:false} }},
+  roca: { emoji:'🪨', objetivo:'Ganar fuerza', capacidad:'Fuerza', lineas:{
+    mistica:  {criatura:'Geolín (geoda)',     persona:'Nunca he entrenado fuerza, muy débil',      entrena:'Levantarse de la silla, peso del cuerpo, sentadillas asistidas', tono:'Descubrir la fuerza que ya llevas dentro', vidaActiva:true},
+    guerrera: {criatura:'Bisaltín (bisonte)', persona:'Ya levanto algo y quiero fuerza sólida',     entrena:'Básicos progresivos (sentadilla, peso muerto, empuje), técnica', tono:'Base que se construye, montaña', vidaActiva:false},
+    heroica:  {criatura:'Tatuín (armadillo)', persona:'Ya fuerte: busco fuerza máxima y potencia',  entrena:'Fuerza pesada, potencia, progresión avanzada',                  tono:'De la defensa al ataque', vidaActiva:false} }},
+};
+function perfilDe(el,aud){const P=PERFILES[el||'agua']||PERFILES.agua, L=P.lineas[lineaKey(aud)]||P.lineas.guerrera;
+  return Object.assign({elemento:el||'agua',emoji:P.emoji,objetivo:P.objetivo,capacidad:P.capacidad,linea:lineaDe(aud)},L);}
 function nombreCriatura(fase){
   if(etapaDe(fase)==='Huevo')return '???';
   const idx={'Cría':0,'Juvenil':1,'Desarrollo':2,'Adulto':3,'Apex':4}[etapaDe(fase)]||0;
@@ -1611,6 +1642,9 @@ function simPreviewFase(f){f=+f;$('sim-fnum').textContent=f;
   const et=etapaDe(f), EMO={agua:'💧',fuego:'🔥',rayo:'⚡',hierba:'🌿',roca:'🪨'};
   const nom=et==='Huevo'?'??? (huevo misterioso)':(CRIATURAS[S.elemento||'agua']||CRIATURAS.agua)[lineaKey(S.aud)][{'Cría':0,'Juvenil':1,'Desarrollo':2,'Adulto':3,'Apex':4}[et]||0];
   $('sim-chip').textContent=`${EMO[S.elemento||'agua']} ${(S.elemento||'agua').toUpperCase()} · ${lineaDe(S.aud)} · Fase ${f}/30 · ${et} · ${nom}`;
+  const pf=perfilDe(S.elemento,S.aud), sp=$('sim-perfil');
+  if(sp)sp.innerHTML=`<div class="sub" style="color:var(--af-texto)"><b>${pf.emoji} ${(S.elemento||'agua').toUpperCase()} · ${pf.linea}</b> — ${pf.criatura}${pf.vidaActiva?' · 🚶 vida activa':''}</div>
+    <div class="sub" style="margin-top:6px;line-height:1.55">🎯 <b>Objetivo:</b> ${pf.objetivo}<br>🙋 <b>Soy:</b> ${pf.persona}<br>🏋️ <b>Entrena:</b> ${pf.entrena}<br>🗣️ <b>Tono:</b> ${pf.tono}</div>`;
 }
 function simEscenario(tipo){
   if(tipo==='no'){$('sim-escena').innerHTML=`<div class="sub" style="color:var(--af-texto);line-height:1.5"><b>🚫 Hoy no entrena.</b><br>La app no castiga: «Hoy descansas, ${CONFIG.paciente}. Un día libre también cuida. Mañana, 5 minutos y seguimos — tu racha te espera.»</div>`;return;}
