@@ -166,6 +166,7 @@
         <div class="track"><div class="fill" id="xp-fill" style="width:0%"></div></div>
       </div>
       <div class="hecho-hoy" id="hecho-hoy" style="display:none">✓ Jornada de hoy completada. Tu Guardián descansa contigo.</div>
+      <div id="dolor-card" style="display:none;margin-top:10px;background:rgba(255,167,38,.08);border:1px solid rgba(255,167,38,.35);border-radius:var(--af-radio-m);padding:10px 12px"></div>
       <div id="eclosion" style="display:none;margin-top:14px;background:linear-gradient(135deg,rgba(244,196,48,.13),rgba(91,208,232,.08));border:1.5px solid rgba(244,196,48,.4);border-radius:var(--af-radio-l);padding:14px;cursor:pointer" onclick="abrirPrueba()">
         <div style="font-family:var(--af-font-display);font-weight:800;font-size:15px;color:var(--af-dorado)" id="ec-titulo">🥚 Semana de Eclosión</div>
         <div class="sub" id="ec-sub"></div>
@@ -179,6 +180,7 @@
         <div id="centro-lista"></div>
       </div>
       <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
+      <button class="sec" id="btn-activo" onclick="verActivo()" style="margin-top:-4px">🚶 Hoy me muevo suave — descanso activo (cuenta para la racha)</button>
       <div class="toolbar">
         <div class="tool" onclick="verSemana()">📅 Mi semana</div>
         <div class="tool" onclick="verNutricion()">🥗 Nutrición</div>
@@ -187,7 +189,9 @@
         <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
         <div class="tool" onclick="verProgreso()">📈 Mi progreso</div>
         <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
+        <div class="tool" onclick="verValoracionSemana()">🏁 Cierre de semana</div>
         <div class="tool" id="dbg-dia" style="display:none" onclick="diaSiguiente()">⏭ Simular día</div>
+        <div class="tool" id="dbg-perfil" style="display:none" onclick="simPerfil()">🎛 Simular perfil</div>
         <div class="tool" id="dbg-reset" style="display:none" onclick="reset()">↺ Reiniciar</div>
       </div>
       <a class="volver" href="../demo.html">← Hub de demo · <span style="opacity:.6">v0.9 piloto</span></a>
@@ -237,6 +241,31 @@
       <div class="sub" id="semana-sub"></div>
       <div id="semana-lista" style="margin-top:14px"></div>
       <button class="cta" onclick="ir('home')">Volver</button>
+    </div>
+
+    <!-- CIERRE DE SEMANA (valoración final: entreno + nutrición) -->
+    <div class="scr" id="valsemana">
+      <div class="h1">Cierre de tu semana</div>
+      <div class="sub">Una conclusión honesta de tu entreno y tu nutrición. Sin culpa: cuenta la tendencia.</div>
+      <div id="valsemana-card" style="margin-top:8px"></div>
+      <button class="cta" onclick="ir('home')">Volver con mi Guardián</button>
+    </div>
+
+    <!-- DESCANSO ACTIVO (moverse suave cuenta para la racha) -->
+    <div class="scr" id="activo">
+      <div class="h1">Descanso activo 🚶</div>
+      <div class="sub">Moverte suave también es entrenar — y <b>mantiene tu racha</b>. Tu cuerpo se recupera moviéndose, no parándose del todo.</div>
+      <div class="panel">
+        <div class="sub" style="color:var(--af-texto)">¿Qué has hecho (o vas a hacer) hoy?</div>
+        <div class="toolbar" id="activo-ops" style="margin-top:8px"></div>
+      </div>
+      <div class="panel">
+        <div class="sub">¿Cuántos minutos, más o menos?</div>
+        <div class="t-num" id="activo-min" style="color:var(--af-primario)">20</div>
+        <input type="range" min="5" max="90" value="20" step="5" oninput="activoMin=+this.value;document.getElementById('activo-min').textContent=this.value">
+      </div>
+      <button class="cta" onclick="registrarActivo()">Registrar mi movimiento · mantener racha</button>
+      <button class="sec" onclick="ir('home')">Volver</button>
     </div>
 
     <!-- NUTRICIÓN (acompañamiento profesional, sin agobio) -->
@@ -315,6 +344,17 @@
         <div class="t-num" id="v-energia" style="color:var(--af-agua)">7</div>
         <input type="range" min="1" max="10" value="7" oninput="energia(this.value)">
         <div class="scale"><span>Agotado</span><span>A tope</span></div>
+      </div>
+      <div class="panel" id="dolor-seg" style="display:none;border-color:rgba(255,167,38,.35)">
+        <div class="sub" id="seg-titulo" style="color:var(--af-texto)"></div>
+        <div class="sub" style="margin-top:10px">¿Dónde te molesta hoy? <span style="opacity:.6">(puedes marcar varias)</span></div>
+        <div class="toolbar" id="seg-zonas" style="margin-top:6px"></div>
+        <div class="sub" style="margin-top:10px">¿Qué notas?</div>
+        <div class="toolbar" id="seg-tipos" style="margin-top:6px"></div>
+        <div id="seg-vs-wrap" style="display:none">
+          <div class="sub" style="margin-top:10px">¿Cómo va respecto a los días anteriores?</div>
+          <div class="toolbar" id="seg-vs" style="margin-top:6px"></div>
+        </div>
       </div>
       <div class="panel" id="pd-panel">
         <div class="sub" id="pd-q"></div>
@@ -418,6 +458,34 @@
     <div id="bv-texto" style="font-size:14.5px;color:var(--af-texto-suave);margin-top:12px;line-height:1.6;max-width:300px"></div>
     <button class="cta" id="bv-btn" style="max-width:260px;margin-top:24px" onclick="bvSiguiente()"></button>
     <div id="bv-dots" style="margin-top:14px;color:var(--af-texto-suave);letter-spacing:4px"></div>
+  </div>
+  <!-- SIMULADOR (demo/debug): ver TODO sin tener que vivir 30 días -->
+  <div id="simlab" style="display:none;position:absolute;inset:0;z-index:12;background:linear-gradient(160deg,#0A1626,#0d2b22);overflow-y:auto;padding:22px 18px 40px">
+    <div style="max-width:440px;margin:0 auto">
+      <div class="h1" style="font-size:20px">🎛 Simular perfil <span class="sub" style="font-weight:400">· verlo todo</span></div>
+      <div class="sub" style="margin:4px 0 14px;line-height:1.5">Elige un elemento y una línea, recorre sus 30 fases y simula el día a día para ver cómo te responde la app. (Aún no está definido qué cliente va a cada línea — aquí lo pruebas.)</div>
+      <div class="sub" style="margin-bottom:6px">Elemento</div>
+      <div class="toolbar" id="sim-el"></div>
+      <div class="sub" style="margin:14px 0 6px">Línea — por nivel de salud (Heroica = la mejor)</div>
+      <div class="toolbar" id="sim-linea"></div>
+      <div style="text-align:center;margin-top:16px"><div id="sim-ava"></div>
+        <div class="chip" id="sim-chip" style="margin-top:8px"></div></div>
+      <div class="sub" style="margin:14px 0 4px">Fase <b id="sim-fnum">1</b> de 30 — arrastra para ver toda la evolución</div>
+      <input type="range" id="sim-fase" min="1" max="30" value="1" style="width:100%" oninput="simPreviewFase(this.value)">
+      <div class="panel" style="margin-top:16px">
+        <div class="sub" style="color:var(--af-texto)">¿Qué pasa hoy? — mira cómo se adapta y te habla</div>
+        <div class="toolbar" style="margin-top:8px">
+          <div class="tool" onclick="simEscenario('normal')">🏋️ Normal</div>
+          <div class="tool" onclick="simEscenario('dolor')">😣 Dolor</div>
+          <div class="tool" onclick="simEscenario('dormir')">🛌 Sin dormir</div>
+          <div class="tool" onclick="simEscenario('no')">🚫 No entrené</div>
+        </div>
+        <div id="sim-escena" style="margin-top:10px"></div>
+      </div>
+      <button class="cta" style="margin-top:16px" onclick="simSemana()">▶ Simular 1 semana entrenando (avanza de verdad)</button>
+      <button class="cta" style="margin-top:8px;background:linear-gradient(135deg,var(--af-dorado),#E0A800);color:#062018" onclick="$('simlab').style.display='none';verValoracionSemana()">🏁 Ver cierre de semana</button>
+      <button class="sec" onclick="$('simlab').style.display='none';pintar()">Cerrar y volver a mi Guardián</button>
+    </div>
   </div>
   <div id="celebra" onclick="this.style.display='none'" style="display:none;position:absolute;inset:0;z-index:9;background:radial-gradient(circle at 50% 42%,rgba(244,196,48,.30),rgba(6,13,24,.96) 65%);backdrop-filter:blur(6px);text-align:center;cursor:pointer">
     <div style="margin-top:120px;animation:resp 3s ease-in-out infinite" id="celebra-ava"></div>
@@ -746,7 +814,8 @@ function pintar(){
   const hecho=S.hechoHoy && S.ultDia===hoyISO();
   $('hecho-hoy').style.display=hecho?'block':'none';
   $('btn-empezar').style.display=hecho?'none':'block';
-  pintarPreguntaDia();
+  {var _ba=$('btn-activo');if(_ba)_ba.style.display=hecho?'none':'block';}
+  pintarPreguntaDia(); pintarSeguimientoDolor(); pintarDolorCard();
   if(gap<2||hecho) $('saludo').innerHTML=hecho?`Hasta mañana, ${CONFIG.paciente}.`
     :(S.racha>0?`<b style="color:var(--af-ambar)">🔥 Tu racha de ${S.racha} días se apaga a medianoche.</b><br>5 minutos bastan para mantenerla viva, ${CONFIG.paciente}.`
     :`Tu Guardián te espera, ${CONFIG.paciente}.`);
@@ -782,7 +851,8 @@ function dolor(v){const e=$('v-dolor');e.textContent=v;e.style.color=v>=8?'var(-
   const wa=$('wa-alerta');
   if(v>=8 && waDestino()){wa.style.display='block';
     wa.href="https://wa.me/"+waDestino()+'?text='+encodeURIComponent(`⚠ Anti Frágil — ${CONFIG.paciente}: dolor ${v}/10 en ${CONFIG.zona} hoy (${hoyISO()}). Rutina adaptada a suave.`);}
-  else wa.style.display='none';}
+  else wa.style.display='none';
+  pintarSeguimientoDolor();}
 function energia(v){$('v-energia').textContent=v;}
 /* ── MOTOR DE ADAPTACIÓN DIGITAL ─────────────────────────────────────────
    La app decide la rutina con los datos del paciente y explica el porqué.
@@ -1201,9 +1271,61 @@ function respDia(id,val,el){
 function tiempo(el){S.tiempoHoy=+el.dataset.min;
   document.querySelectorAll('.t-tiempo').forEach(t=>{t.style.borderColor='';t.style.color='';});
   el.style.borderColor='var(--af-primario)';el.style.color='var(--af-texto)';}
+
+/* ════ SEGUIMIENTO DE PATOLOGÍA — tras el primer aviso de dolor, la app se centra en ESA molestia ════ */
+const DOLOR_UMBRAL=4;
+const SEG_ZONAS=['Lumbar','Cervical','Hombro','Rodilla','Cadera','Espalda alta','Mano/muñeca','Tobillo/pie','Otra'];
+const SEG_TIPOS=['Rigidez','Pinchazo','Dolor sordo','Tirón','Hormigueo'];
+const SEG_VS=['🙂 Mejor','😐 Igual','🙁 Peor'];
+let segSel={zonas:[],tipo:'',vs:''};
+function dolorActivo(){return (S.dolorActivo&&S.dolorActivo.activa)?S.dolorActivo:null;}
+function pintarSeguimientoDolor(){
+  const ve=$('v-dolor'); const v=ve?(+ve.textContent||0):(S.dolorHoy||0);
+  const act=dolorActivo(), mostrar=v>=DOLOR_UMBRAL||!!act;
+  const segEl=$('dolor-seg'), pdEl=$('pd-panel');
+  if(segEl)segEl.style.display=mostrar?'block':'none';
+  if(pdEl)pdEl.style.display=mostrar?'none':'block';   // nos centramos: se oculta la pregunta genérica
+  if(!mostrar||!segEl)return;
+  if(act&&!segSel.zonas.length)segSel.zonas=(act.zonas||[]).slice();
+  if(act&&!segSel.tipo)segSel.tipo=act.tipo||'';
+  const tit=$('seg-titulo'); if(tit)tit.innerHTML=act?`<b>Seguimiento de tu molestia</b> · día ${(act.dias||[]).length+1}. Nos centramos en esto hasta que mejore.`:`<b>Has avisado de dolor.</b> Cuéntanos para centrarnos en ello (y avisar a tu profesional si hace falta).`;
+  const zc=$('seg-zonas'); if(zc)zc.innerHTML=SEG_ZONAS.map(z=>`<div class="tool" onclick="segZona('${z}')" style="${segSel.zonas.includes(z)?'border-color:var(--af-primario);color:var(--af-texto)':''}">${z}</div>`).join('');
+  const tc=$('seg-tipos'); if(tc)tc.innerHTML=SEG_TIPOS.map(t=>`<div class="tool" onclick="segTipo('${t}')" style="${segSel.tipo===t?'border-color:var(--af-primario);color:var(--af-texto)':''}">${t}</div>`).join('');
+  const hayHist=act&&(act.dias||[]).length>0, vsw=$('seg-vs-wrap');
+  if(vsw)vsw.style.display=hayHist?'block':'none';
+  if(hayHist){const vc=$('seg-vs'); if(vc)vc.innerHTML=SEG_VS.map(o=>`<div class="tool" onclick="segVs('${o}')" style="${segSel.vs===o?'border-color:var(--af-primario);color:var(--af-texto)':''}">${o}</div>`).join('');}
+}
+function segZona(z){const i=segSel.zonas.indexOf(z);if(i>=0)segSel.zonas.splice(i,1);else segSel.zonas.push(z);pintarSeguimientoDolor();}
+function segTipo(t){segSel.tipo=segSel.tipo===t?'':t;pintarSeguimientoDolor();}
+function segVs(v){segSel.vs=v;pintarSeguimientoDolor();}
+function registrarSeguimiento(){
+  const v=S.dolorHoy||0, act=dolorActivo();
+  if(v<DOLOR_UMBRAL&&!act){segSel={zonas:[],tipo:'',vs:''};return;}
+  if(!act)S.dolorActivo={activa:true,desde:hoyISO(),zonas:segSel.zonas.slice(),tipo:segSel.tipo,dias:[]};
+  const A=S.dolorActivo;
+  if(segSel.zonas.length)A.zonas=segSel.zonas.slice();
+  if(segSel.tipo)A.tipo=segSel.tipo;
+  A.dias=A.dias||[];A.dias.push({f:hoyISO(),dolor:v,vs:segSel.vs||null,zonas:(A.zonas||[]).slice()});
+  if(A.dias.length>40)A.dias.shift();
+  const ult=A.dias.slice(-3);
+  if(ult.length>=3&&ult.every(d=>d.dolor<=2)){
+    S.dolorLog=S.dolorLog||[];S.dolorLog.push({zonas:A.zonas,desde:A.desde,hasta:hoyISO(),dias:A.dias.length});
+    S.dolorActivo=null; sync('dolor_resuelto',{zonas:A.zonas,dias:A.dias.length});
+  } else sync('dolor_seguimiento',{zonas:A.zonas,tipo:A.tipo,dolor:v,vs:segSel.vs,dia:A.dias.length});
+  segSel={zonas:[],tipo:'',vs:''}; save();
+}
+function pintarDolorCard(){const c=$('dolor-card'); if(!c)return; const A=dolorActivo();
+  if(!A){c.style.display='none';return;}
+  const ult=(A.dias||[]).slice(-1)[0]||{};
+  c.style.display='block';
+  c.innerHTML=`<div style="font-weight:700;color:var(--af-ambar);font-size:13.5px">🩹 Seguimiento: ${(A.zonas||[]).join(', ')||'tu molestia'}</div>
+    <div class="sub" style="font-size:12px;margin-top:2px;line-height:1.45">Día ${(A.dias||[]).length} siguiéndola${ult.vs?` · va ${ult.vs}`:''}. La app se centra en esto hasta que mejore.</div>`;}
+function textoSeguimiento(){const A=dolorActivo(); if(!A)return ''; const ult=(A.dias||[]).slice(-1)[0]||{};
+  return `\n— Molestia ACTIVA en seguimiento: ${(A.zonas||[]).join(', ')||'sin zona'}${A.tipo?' ('+A.tipo+')':''} · ${(A.dias||[]).length} días · hoy ${ult.dolor||'-'}/10${ult.vs?' · '+ult.vs:''}`;}
 function cerrarTriaje(){
   // Leer SIEMPRE el valor visible del slider (no el estado, que podría ser de ayer)
   S.dolorHoy=+$('v-dolor').textContent;
+  registrarSeguimiento();   // tras un aviso de dolor, la app sigue esa molestia día a día
   // SEGURIDAD: banderas rojas → la app para el juego y deriva a un profesional
   const bs=[...document.querySelectorAll('.bandera:checked')];
   if(S.dolorHoy>=9 && bs.length){
@@ -1377,6 +1499,147 @@ function terminarJornada(){
 function prevISO(iso){const d=new Date(iso);d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
 function diaSiguiente(){try{const d=new Date(hoyISO());d.setDate(d.getDate()+1);S.fechaSim=d.toISOString().slice(0,10);S.hechoHoy=false;save();pintar();}catch(err){alert('Error: '+err.message+'. Pulsa Reiniciar.');}}
 function reset(){localStorage.removeItem(K);location.reload();}
+
+/* ════ DESCANSO ACTIVO — moverse suave cuenta para la racha (recuperación = parte del plan) ════ */
+const ACTIVO_OPS=[['caminar','🚶 Caminar'],['trote','🏃 Trote muy suave'],['bici','🚴 Bici suave'],['nadar','🏊 Nadar suave'],['movilidad','🧘 Movilidad / estiramientos']];
+let activoSel='caminar', activoMin=20;
+function verActivo(){activoSel='caminar';activoMin=20;
+  $('activo-ops').innerHTML=ACTIVO_OPS.map(([k,l])=>`<div class="tool" data-k="${k}" onclick="activoPick('${k}')" style="${k===activoSel?'border-color:var(--af-primario);color:var(--af-texto)':''}">${l}</div>`).join('');
+  ir('activo');}
+function activoPick(k){activoSel=k;document.querySelectorAll('#activo-ops .tool').forEach(e=>{const on=e.dataset.k===k;e.style.borderColor=on?'var(--af-primario)':'var(--af-line)';e.style.color=on?'var(--af-texto)':'';});}
+function registrarActivo(){
+  const hoy=hoyISO(), ayer=prevISO(S.fechaSim?S.fechaSim:new Date().toISOString().slice(0,10));
+  const faseAntes=faseDesde({...S});
+  S.racha=(S.ultDia===ayer)?(S.racha||0)+1:1; S.rachaMax=Math.max(S.rachaMax||0,S.racha);
+  const bonus=Math.min(S.racha*XP.porDiaRacha,XP.topeBonus), ganada=XP.triaje+12+bonus;
+  S.xp=(S.xp||0)+ganada; S.ses=(S.ses||0)+1; S.ultDia=hoy; S.hechoHoy=true;
+  S.hist=S.hist||[]; S.hist.push({f:hoy,d:S.dolorHoy||2,e:6,r:3,m:false,t:activoMin,s:false,activo:true,tipo:activoSel});
+  if(S.hist.length>30)S.hist.shift();
+  sync('descanso_activo',{tipo:activoSel,min:activoMin,racha:S.racha,xp:S.xp});
+  save();
+  const faseAhora=faseDesde({...S}), lbl=(ACTIVO_OPS.find(o=>o[0]===activoSel)||['','movimiento'])[1];
+  $('xp-ganada').textContent='+'+ganada+' XP';
+  $('desglose').innerHTML=`<div class="fila"><span>Descanso activo · ${lbl} (${activoMin} min)</span><b>+12</b></div>
+     <div class="fila"><span>Check-in del día</span><b>+${XP.triaje}</b></div>
+     <div class="fila"><span>Bonus racha (${S.racha} días × 2, tope 20)</span><b>+${bonus}</b></div>
+     <div class="fila"><span style="color:var(--af-primario)">🔥 Racha mantenida — recuperarte también cuenta</span><b></b></div>`;
+  const evo=$('evo-aviso');
+  if(faseAhora>faseAntes){evo.style.display='block';evo.innerHTML=`✨ <b>¡${nombreCriatura(faseAhora)} evolucionó!</b> Fase ${faseAntes} → <b>${faseAhora} (${etapaDe(faseAhora)})</b>. Hasta moviéndote suave, sumas.`;
+    $('celebra-ava').innerHTML=avatarSvg(faseAhora);$('celebra-txt').textContent=`Fase ${faseAhora} de 30 · ${etapaDe(faseAhora)}. La constancia también se construye descansando bien.`;
+    if(etapaDe(faseAhora)!==etapaDe(faseAntes)){S.pc=S.pc||[];S.pc.push({fase:faseAhora,etapa:etapaDe(faseAhora),elemento:S.elemento,aud:S.aud,fecha:hoy,season:S.season||0});save();}
+    $('celebra').style.display='block';}
+  else evo.style.display='none';
+  ir('premio');
+}
+
+/* ════ CIERRE DE SEMANA — valoración final (entreno + nutrición) ════ */
+function semanaEntreno(){
+  const hoy=hoyISO(), dias=[];
+  for(let i=6;i>=0;i--){const d=new Date(hoy);d.setDate(d.getDate()-i);dias.push(d.toISOString().slice(0,10));}
+  const h=(S.hist||[]).filter(x=>dias.includes(x.f));
+  const med=a=>a.length?+(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1):null;
+  const mitad=Math.floor(h.length/2);
+  return {dias, entrenados:h.length, dolor:med(h.map(x=>x.d)), energia:med(h.map(x=>x.e)), rpe:med(h.map(x=>x.r)),
+    molestias:h.filter(x=>x.m).length,
+    dolorIni:h.length>=4?med(h.slice(0,mitad).map(x=>x.d)):null,
+    dolorFin:h.length>=4?med(h.slice(mitad).map(x=>x.d)):null};
+}
+function verValoracionSemana(){
+  const t=semanaEntreno();
+  const hayNutri=S.nutri&&Object.keys(S.nutri).length;
+  if(t.entrenados===0 && !hayNutri){alert('Aún no hay datos de esta semana. Entrena o registra tu nutrición unos días y aquí tendrás tu cierre.');return;}
+  const scoreDias=t.dias.map(f=>S.nutri&&S.nutri[f]&&S.nutri[f]._score).filter(x=>typeof x==='number');
+  const nutriScore=scoreDias.length?Math.round(scoreDias.reduce((a,b)=>a+b,0)/scoreDias.length):null;
+  const diasNutri=t.dias.filter(f=>S.nutri&&S.nutri[f]&&NUTRI.momentos.some(([k])=>(S.nutri[f][k]||[]).length)).length;
+  const metaDias=5, adher=Math.min(100,Math.round(t.entrenados/metaDias*100));
+  const partes=[adher]; if(nutriScore!=null)partes.push(nutriScore);
+  const overall=Math.round(partes.reduce((a,b)=>a+b,0)/partes.length);
+  const N=overall>=85?['🏆','Semana de campeón','var(--af-dorado)']:overall>=70?['💚','Gran semana','var(--af-primario)']
+    :overall>=50?['👍','Semana sólida','var(--af-agua)']:['💪','Semana de menos a más','var(--af-ambar)'];
+  const dolorBaja=t.dolorIni!=null&&t.dolorFin!=null&&t.dolorFin<t.dolorIni;
+  let concl;
+  if(t.entrenados>=metaDias&&nutriScore!=null&&nutriScore>=70) concl=`Moviste el cuerpo ${t.entrenados} días y comiste bien la mayoría. Entreno y nutrición remando juntos: así crece tu Guardián de verdad.`;
+  else if(t.entrenados>=3&&(nutriScore==null||nutriScore<70)) concl=`Buen trabajo en el entrenamiento (${t.entrenados} días). La comida fue más floja, y no pasa nada: tu actividad ayuda a compensarlo. Un pequeño ajuste y la próxima semana suma por los dos lados.`;
+  else if(t.entrenados<3&&nutriScore!=null&&nutriScore>=70) concl=`Esta semana cuidaste bien la comida aunque entrenaste menos. Tu cuerpo lo nota. La semana que viene, un par de sesiones cortas y tendrás el combo completo.`;
+  else concl=`Semana tranquila. Un día —o una semana— floja no borra tu progreso. Lo importante es volver: mañana, 5 minutos y agua, y a seguir.`;
+  const tips=[];
+  if(t.entrenados<metaDias) tips.push(`Suma ${metaDias-t.entrenados} sesión(es) más — valen aunque sean de 5 minutos.`);
+  if(nutriScore!=null&&nutriScore<70) tips.push('En la comida, apunta a proteína + verdura en cada plato.');
+  if(nutriScore==null) tips.push('Registra tu nutrición un par de días: te diremos si vas bien.');
+  if(t.molestias>0) tips.push('Tuviste alguna molestia nueva: si sigue, coméntalo con tu profesional.');
+  if(dolorBaja) tips.push('Tu dolor fue a menos esta semana ✅ — el movimiento está funcionando.');
+  if(!tips.length) tips.push('Mantén exactamente lo que hiciste: está funcionando.');
+  const fmt=v=>v==null?'—':v;
+  $('valsemana-card').innerHTML=`
+   <div style="text-align:center;padding:10px 0">
+     <div style="font-size:46px">${N[0]}</div>
+     <div style="font-size:58px;font-weight:900;color:${N[2]};line-height:1.05">${overall}<span style="font-size:22px;color:var(--af-texto-suave)">/100</span></div>
+     <div style="font-size:19px;font-weight:700">${N[1]}</div></div>
+   <div class="panel">
+     <div class="sub" style="color:var(--af-texto);font-weight:700;margin-bottom:6px">🏋️ Entrenamiento</div>
+     <div class="fila"><span>Días en movimiento</span><b>${t.entrenados}/7</b></div>
+     <div class="fila"><span>Racha actual</span><b>${S.racha||0} días 🔥</b></div>
+     <div class="fila"><span>Dolor medio</span><b>${fmt(t.dolor)}/10${dolorBaja?' ↓':''}</b></div>
+     <div class="fila"><span>Energía media</span><b>${fmt(t.energia)}/10</b></div>
+     ${t.molestias?`<div class="fila"><span style="color:var(--af-rojo)">Molestias nuevas</span><b>${t.molestias}</b></div>`:''}</div>
+   <div class="panel">
+     <div class="sub" style="color:var(--af-texto);font-weight:700;margin-bottom:6px">🥗 Nutrición</div>
+     <div class="fila"><span>Días registrados</span><b>${diasNutri}/7</b></div>
+     <div class="fila"><span>Nota media de tus platos</span><b>${nutriScore!=null?nutriScore+'/100':'sin datos'}</b></div></div>
+   <div class="panel" style="border-color:rgba(46,204,143,.35)"><div class="sub" style="color:var(--af-texto);line-height:1.55">${concl}</div></div>
+   <div class="panel"><div class="sub" style="color:var(--af-texto);font-weight:700;margin-bottom:4px">Para la semana que viene</div>
+     <div class="sub" style="line-height:1.6">${tips.map(x=>'• '+x).join('<br>')}</div></div>`;
+  ir('valsemana');
+}
+
+/* ════ SIMULADOR DE PERFIL (demo/debug) — ver todo sin vivir 30 días ════ */
+const SIM_EL=[['agua','💧 Agua'],['fuego','🔥 Fuego'],['rayo','⚡ Rayo'],['hierba','🌿 Hierba'],['roca','🪨 Roca']];
+const SIM_LINEA=[['mistica','🌙 Mística',30],['guerrera','🛡️ Guerrera',55],['heroica','⚔️ Heroica',85]];
+function simPerfil(){
+  if(!S.elemento)S.elemento='agua';
+  $('sim-el').innerHTML=SIM_EL.map(([k,l])=>`<div class="tool" onclick="simSetEl('${k}')">${l}</div>`).join('');
+  $('sim-linea').innerHTML=SIM_LINEA.map(([k,l,a])=>`<div class="tool" onclick="simSetLinea(${a})">${l}</div>`).join('');
+  $('sim-fase').value=Math.max(1,faseDesde({...S}));
+  $('sim-escena').innerHTML='';
+  simPreviewFase($('sim-fase').value);
+  $('simlab').style.display='block';
+}
+function simSetEl(el){S.elemento=el;save();simPreviewFase($('sim-fase').value);pintar();}
+function simSetLinea(aud){S.aud=aud;S.audInicial=aud;save();simPreviewFase($('sim-fase').value);pintar();}
+function simPreviewFase(f){f=+f;$('sim-fnum').textContent=f;
+  $('sim-ava').innerHTML=avatarSvg(f);
+  const et=etapaDe(f), EMO={agua:'💧',fuego:'🔥',rayo:'⚡',hierba:'🌿',roca:'🪨'};
+  const nom=et==='Huevo'?'??? (huevo misterioso)':(CRIATURAS[S.elemento||'agua']||CRIATURAS.agua)[lineaKey(S.aud)][{'Cría':0,'Juvenil':1,'Desarrollo':2,'Adulto':3,'Apex':4}[et]||0];
+  $('sim-chip').textContent=`${EMO[S.elemento||'agua']} ${(S.elemento||'agua').toUpperCase()} · ${lineaDe(S.aud)} · Fase ${f}/30 · ${et} · ${nom}`;
+}
+function simEscenario(tipo){
+  if(tipo==='no'){$('sim-escena').innerHTML=`<div class="sub" style="color:var(--af-texto);line-height:1.5"><b>🚫 Hoy no entrena.</b><br>La app no castiga: «Hoy descansas, ${CONFIG.paciente}. Un día libre también cuida. Mañana, 5 minutos y seguimos — tu racha te espera.»</div>`;return;}
+  let dol=3,ene=7,rpe=5,nota='Día normal';
+  if(tipo==='dolor'){dol=7;nota='Le duele bastante hoy';}
+  if(tipo==='dormir'){ene=4;nota='No ha dormido / estrés alto';S.vida=S.vida||{};S.vida[hoyISO()]={sueno:'Mal',estres:'Alto'};}
+  S.dolorHoy=dol; $('v-energia').textContent=ene; $('v-dolor').textContent=dol; $('v-rpe').textContent=rpe;
+  let dec; try{dec=decidirRutina();}catch(e){$('sim-escena').innerHTML='<div class="sub" style="color:var(--af-ambar)">Error: '+e.message+'</div>';return;}
+  $('sim-escena').innerHTML=`<div class="sub" style="color:var(--af-texto);font-weight:700">${dec.titulo}</div>
+    <div class="sub" style="color:var(--af-agua);line-height:1.45;margin-top:3px">🗣️ ${dec.motivo||'(día normal)'}</div>
+    <div class="sub" style="margin-top:5px">🏋️ ${dec.pack.ejercicios.map(e=>e.nombre).join(' · ')}</div>
+    ${dec.vender?'<div class="sub" style="color:var(--af-dorado);margin-top:4px">💆 + la app sugiere una sesión presencial</div>':''}
+    <div class="sub" style="font-size:11px;margin-top:5px;opacity:.65">${nota}</div>`;
+}
+function simSemana(){
+  for(let i=0;i<7;i++){
+    const hoy=hoyISO(), ayer=prevISO(hoy);
+    S.racha=(S.ultDia===ayer)?(S.racha||0)+1:1; S.rachaMax=Math.max(S.rachaMax||0,S.racha);
+    S.xp=(S.xp||0)+30; S.ses=(S.ses||0)+1; S.ultDia=hoy; S.hechoHoy=true;
+    S.hist=S.hist||[]; S.hist.push({f:hoy,d:S.dolorHoy||3,e:7,r:6,m:false,t:15,s:false}); if(S.hist.length>30)S.hist.shift();
+    S.nutri=S.nutri||{}; S.nutri[hoy]={agua:8,desayuno:[{a:4,c:50}],comida:[{a:5,c:150},{a:13,c:200}],cena:[{a:6,c:150},{a:13,c:150}],snack:[{a:14,c:150}],_score:82};
+    try{evaluarRetos();}catch(e){}
+    const d=new Date(hoy);d.setDate(d.getDate()+1);S.fechaSim=d.toISOString().slice(0,10);S.hechoHoy=false;
+  }
+  S.mejora=Math.max(0,(S.aud||0)-(S.audInicial!=null?S.audInicial:S.aud));
+  save();
+  $('sim-fase').value=faseDesde({...S}); simPreviewFase($('sim-fase').value); pintar();
+  alert('Simulada 1 semana entrenando bien.\nFase del Guardián ahora: '+faseDesde({...S})+'/30 ('+etapaDe(faseDesde({...S}))+').\nSigue simulando, mira el cierre de semana, o cierra para verlo en tu Guardián.');
+}
 function altaSubmit(){
   const n=$('a-nombre').value.trim(); if(!n){alert('Dinos tu nombre 🙂');return;}
   if(!$('a-consent').checked){alert('Necesitamos tu consentimiento para guardar tus datos de salud — sin él no podemos acompañarte.');return;}
@@ -1725,7 +1988,7 @@ function enviarResumen(){
   const txt=`Anti Frágil — resumen de ${CONFIG.paciente} (últimos ${u.length} días)\n`+
     `Racha: ${S.racha} días · Sesiones totales: ${S.ses} · Nivel ${nivelDesdeXp(S.xp)}\n`+
     `Dolor medio: ${med(u.map(x=>x.d))}/10 · Energía media: ${med(u.map(x=>x.e))}/10 · RPE medio: ${med(u.map(x=>x.r))}\n`+
-    u.map(x=>`${x.f}: dolor ${x.d}, energía ${x.e}, RPE ${x.r}${x.t!=null?' ('+x.t+' min)':''}${x.m?' ⚠ molestia nueva':''}${x.s?' ⚠ sesión exprés (revisar)':''}`).join('\n');
+    u.map(x=>`${x.f}: dolor ${x.d}, energía ${x.e}, RPE ${x.r}${x.t!=null?' ('+x.t+' min)':''}${x.m?' ⚠ molestia nueva':''}${x.s?' ⚠ sesión exprés (revisar)':''}`).join('\n') + textoSeguimiento();
   if(waDestino()) window.open("https://wa.me/"+waDestino()+'?text='+encodeURIComponent(txt));
   else{navigator.clipboard&&navigator.clipboard.writeText(txt);alert('Resumen copiado al portapapeles (configura whatsappFisio en CONFIG para envío directo):\n\n'+txt);}
 }
@@ -1736,7 +1999,7 @@ try{
   if(!S.perfil) ir('alta');
   if(S.perfil && !S.tutorialVisto) mostrarBienvenida();
   // Modo demo (?debug=1): muestra herramientas de simulación. Pacientes reales NO las ven.
-  if(location.search.indexOf('debug=1')>=0){var _d=$('dbg-dia'),_r=$('dbg-reset');if(_d)_d.style.display='block';if(_r)_r.style.display='block';}
+  if(location.search.indexOf('debug=1')>=0){['dbg-dia','dbg-perfil','dbg-reset'].forEach(id=>{var e=$(id);if(e)e.style.display='block';});}
 }catch(err){
   document.querySelector('.content').innerHTML='<div style="padding:40px 20px;text-align:center"><div style="font-size:40px">💚</div><div class="h1" style="margin-top:10px">Algo se atascó</div><div class="sub" style="margin-top:8px">Pulsa para reiniciar tu sesión (tu progreso en la nube no se pierde).</div><button class="cta" onclick="localStorage.removeItem(\''+K+'\');location.reload()">Reiniciar</button></div>';
 }
