@@ -271,8 +271,15 @@
         <div class="sub" style="text-align:center" id="nutri-agua-meta"></div>
       </div>
       <div class="panel" id="nutri-balance" style="text-align:center"></div>
-      <button class="cta" onclick="guardarNutri()">Guardar mi día · +5 XP</button>
+      <button class="cta" onclick="guardarNutri()">Valorar mi día</button>
       <button class="sec" onclick="ir('home')">Volver con mi Guardián</button>
+    </div>
+
+    <!-- VALORACIÓN DEL DÍA NUTRICIONAL (cierre emocional) -->
+    <div class="scr" id="nutri-score">
+      <div class="h1">Tu plato de hoy</div>
+      <div id="score-card"></div>
+      <button class="cta" onclick="pintar();ir('home')">Continuar con mi Guardián</button>
     </div>
 
     <!-- RETOS MAESTROS (álbum de logros) -->
@@ -1553,12 +1560,44 @@ function semanaNutri(){const dias=Object.keys(S.nutri||{}).sort().slice(-7);let 
     if(cats.prot&&cats.verd&&ex<2)buenos++;});
   return {dias:dias.length,buenos};}
 function agua(n){const d=nutriHoy();d.agua=Math.max(0,(d.agua||0)+n);save();pintarNutricion();}
+// VALORA el día: nota 0-100 según equilibrio, moderación, calorías e hidratación
+function valorarDia(d){
+  const cats={};let extras=0,saludables=0;
+  NUTRI.momentos.forEach(([k])=>(d[k]||[]).forEach(it=>{const al=NUTRI.alimentos[it.a];if(!al)return;cats[al.cat]=(cats[al.cat]||0)+1;if(al.cat==='extra')extras++;if(al.color==='verde')saludables++;}));
+  let s=0;const det=[];
+  if(cats.prot){s+=15;det.push(['Proteína en tu día',true]);}else det.push(['Te faltó proteína',false]);
+  if(cats.verd){s+=15;det.push(['Verduras o fruta',true]);}else det.push(['Faltaron verduras/fruta',false]);
+  if(cats.carbo){s+=10;det.push(['Energía (carbohidratos)',true]);}else det.push(['Pocos carbohidratos',false]);
+  if(cats.grasa||saludables>=3){s+=10;det.push(['Grasas / comida real',true]);}
+  s+= extras===0?25:extras===1?16:extras===2?8:0;
+  det.push([extras===0?'Sin caprichos hoy':extras+' capricho(s) — sin culpa',extras<=1]);
+  const per=S.nutriPerfil;
+  if(per){const dif=Math.abs(kcalDia(d)-per.kcal)/per.kcal; s+= dif<=.15?15:dif<=.3?8:3;
+    det.push([dif<=.15?'Calorías en tu objetivo':dif<=.3?'Calorías casi en objetivo':'Calorías lejos del objetivo',dif<=.3]);
+  } else s+=10;
+  s+=Math.min(10,Math.round((d.agua||0)/NUTRI.metaAgua*10));
+  det.push([(d.agua||0)>=NUTRI.metaAgua?'Bien hidratado':'Bebe más agua',(d.agua||0)>=NUTRI.metaAgua]);
+  s=Math.max(0,Math.min(100,Math.round(s)));
+  const N=s>=85?['🏆','¡Plato de campeón!','var(--af-primario)','Tu Guardián está orgulloso. Así se construye.']
+    :s>=70?['💚','Muy bien','var(--af-primario)','Buen día de nutrición. Mantén la línea.']
+    :s>=50?['👍','Equilibrado','var(--af-agua)','Ni perfecto ni mal: esto es lo sostenible.']
+    :['💪','Día flojo, sin culpa','var(--af-ambar)','Un día flojo no borra tu progreso. Mañana: agua, verdura y a seguir.'];
+  return {score:s,emoji:N[0],titulo:N[1],color:N[2],msg:N[3],det};
+}
+function pintarScore(v){
+  $('score-card').innerHTML=`<div style="text-align:center;padding:14px 0">
+     <div style="font-size:46px">${v.emoji}</div>
+     <div style="font-size:60px;font-weight:900;color:${v.color};line-height:1.05">${v.score}<span style="font-size:22px;color:var(--af-texto-suave)">/100</span></div>
+     <div style="font-size:19px;font-weight:700;margin-top:2px">${v.titulo}</div>
+     <div class="sub" style="margin:8px auto 0;max-width:300px;line-height:1.5">${v.msg}</div></div>
+   <div class="panel">${v.det.map(([l,ok])=>`<div style="display:flex;gap:8px;padding:5px 0;font-size:13.5px"><span>${ok?'✅':'▫️'}</span><span style="color:${ok?'var(--af-texto)':'var(--af-texto-suave)'}">${l}</span></div>`).join('')}</div>`;
+}
 function guardarNutri(){const d=nutriHoy();
-  if(d._xp){alert('Ya registraste tu nutricion de hoy. Manana mas!');ir('home');return;}
-  d._xp=true;S.xp+=5;save();
-  sync('nutricion',{kcal:kcalDia(d),agua:d.agua||0,comidas:NUTRI.momentos.map(([k])=>({m:k,items:(d[k]||[]).map(it=>({a:NUTRI.alimentos[it.a].n,c:it.c}))}))});
-  alert('Dia de nutricion guardado · +5 XP. Cuidarte por dentro tambien hace crecer a tu Guardian.');
-  pintar();ir('home');
+  const v=valorarDia(d);
+  if(!d._xp){d._xp=true;S.xp+=5+(v.score>=85?5:v.score>=70?3:0);}  // bonus por buen día
+  d._score=v.score;save();
+  sync('nutricion',{score:v.score,kcal:kcalDia(d),agua:d.agua||0,comidas:NUTRI.momentos.map(([k])=>({m:k,items:(d[k]||[]).map(it=>({a:NUTRI.alimentos[it.a].n,c:it.c}))}))});
+  pintarScore(v);ir('nutri-score');
 }
 function verSemana(){
   const dias=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
