@@ -24,7 +24,7 @@ const LOG=[];
 
 // ── cargar la app ───────────────────────────────────────────────────
 const ctx={};
-new Function(js+'\n;Object.assign(this,{S,save,altaSubmit,cerrarTriaje,terminarJornada,diaSiguiente,faseDesde,etapaDe,nivelDesdeXp,registrarPrueba,pruebaPendiente,abrirPrueba,CONFIG,hoyISO,verPC,cerrarSeason,verRetos,verProgreso,mostrarBienvenida,abrirPlayer,plSiguiente,enviarResumen,verNutricion,verSemana,verValoracionSemana,semanaEntreno,simPerfil,simPreviewFase,simEscenario,simSemana,verActivo,activoPick,registrarActivo});').call(ctx);
+new Function(js+'\n;Object.assign(this,{S,save,altaSubmit,cerrarTriaje,terminarJornada,diaSiguiente,faseDesde,etapaDe,nivelDesdeXp,registrarPrueba,pruebaPendiente,abrirPrueba,CONFIG,hoyISO,verPC,cerrarSeason,verRetos,verProgreso,mostrarBienvenida,abrirPlayer,plSiguiente,enviarResumen,verNutricion,verSemana,verValoracionSemana,semanaEntreno,simPerfil,simPreviewFase,simEscenario,simSemana,verActivo,activoPick,registrarActivo,decidirRutina,pintarListaRutina,cambiarEjercicio});').call(ctx);
 const A=ctx;
 
 // ── helpers de interacción ──────────────────────────────────────────
@@ -97,7 +97,8 @@ const ui=[['verRetos',()=>A.verRetos()],['verPC',()=>A.verPC()],['verProgreso',(
   ['enviarResumen',()=>A.enviarResumen&&A.enviarResumen()],['verNutricion',()=>A.verNutricion&&A.verNutricion()],['verSemana',()=>A.verSemana&&A.verSemana()],
   ['verValoracionSemana',()=>A.verValoracionSemana&&A.verValoracionSemana()],['simPerfil',()=>A.simPerfil&&A.simPerfil()],
   ['simEscenario(dolor)',()=>A.simEscenario&&A.simEscenario('dolor')],['simSemana',()=>A.simSemana&&A.simSemana()],
-  ['verActivo',()=>A.verActivo&&A.verActivo()],['registrarActivo',()=>{A.activoPick&&A.activoPick('caminar');A.registrarActivo&&A.registrarActivo();}]];
+  ['verActivo',()=>A.verActivo&&A.verActivo()],['registrarActivo',()=>{A.activoPick&&A.activoPick('caminar');A.registrarActivo&&A.registrarActivo();}],
+  ['cambiarEjercicio',()=>{const d=A.decidirRutina&&A.decidirRutina();if(d){global.window._packHoy=d.pack.ejercicios;A.cambiarEjercicio&&A.cambiarEjercicio(0);}}]];
 ui.forEach(([n,fn])=>{try{fn();check(true,'UI '+n+' no peta');}catch(e){fallos++;console.log('❌ UI '+n+' PETA:',e.message);}});
 
 console.log('\n'+(fallos?('🔴 '+fallos+' FALLOS'):'🟢 TODO OK')+' — últimos avisos de la app:');
