@@ -741,7 +741,7 @@ const save=()=>{try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}};
 /* ════ AVATAR SVG por etapa (placeholder D5) ════ */
 /* IMÁGENES REALES (brief de arte): coloca los PNG en mockups/avatares/<elemento>-<linea>/<etapa>.png
    (ej. agua-mistica/cria.png). Si el archivo existe, la app lo usa; si no, cae al SVG placeholder. */
-const _imgCache={};
+const _imgCache={}, ART_V='4';   // sube ART_V cuando cambies el arte (fuerza recarga, evita caché vieja)
 function avatarHTML(fase){
   const et={'Huevo':'huevo','Cría':'cria','Juvenil':'juvenil','Desarrollo':'desarrollo','Adulto':'adulto','Apex':'apex'}[etapaDe(fase)];
   // HUEVO: 4 estados que progresan igual en todo elemento. Fases 1-2 comunes (misterio total),
@@ -754,6 +754,7 @@ function avatarHTML(fase){
   } else {
     ruta='../avatares/'+(S.elemento||'agua')+'-'+lineaKey(S.aud)+'/'+et+'.png';
   }
+  ruta+='?v='+ART_V;
   if(_imgCache[ruta]===false) return avatarSvg(fase);
   if(_imgCache[ruta]===true)  return '<img src="'+ruta+'" width="150" height="150" style="object-fit:contain">';
   const im=new Image();im.onload=()=>{_imgCache[ruta]=true;pintar();};im.onerror=()=>{_imgCache[ruta]=false;};im.src=ruta;
@@ -1407,7 +1408,7 @@ function avatarArte(f){
   const e=S.elemento||'agua';
   const ruta = et==='huevo' ? (f<=2?'../avatares/huevo/'+f+'.png':'../avatares/huevo/'+e+'-'+f+'.png')
                             : '../avatares/'+e+'-'+lineaKey(S.aud)+'/'+et+'.png';
-  return '<img src="'+ruta+'" width="150" height="150" style="object-fit:contain" onerror="this.onerror=null;this.outerHTML=decodeURIComponent(\''+encodeURIComponent(avatarSvg(f))+'\')">';
+  return '<img src="'+ruta+'?v='+ART_V+'" width="150" height="150" style="object-fit:contain" onerror="this.onerror=null;this.outerHTML=decodeURIComponent(\''+encodeURIComponent(avatarSvg(f))+'\')">';
 }
 
 /* ════ SEGUIMIENTO DE PATOLOGÍA — tras el primer aviso de dolor, la app se centra en ESA molestia ════ */
