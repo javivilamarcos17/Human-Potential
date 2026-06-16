@@ -889,8 +889,14 @@ function pintar(){
   $('fecha-sim').textContent=hoyISO();
   const hecho=S.hechoHoy && S.ultDia===hoyISO();
   $('hecho-hoy').style.display=hecho?'block':'none';
-  $('btn-empezar').style.display=hecho?'none':'block';
-  {var _ba=$('btn-activo');if(_ba)_ba.style.display=hecho?'none':'block';}
+  {const focoHoy=focoDelDia(hoyISO()), be=$('btn-empezar'), ba=$('btn-activo');
+   if(be){
+     if(focoHoy==='descanso'){be.textContent='😴 Hoy toca descansar';be.onclick=diaDescanso;}
+     else if(focoHoy==='activo'||focoHoy==='movilidad'){be.textContent='🚶 Tu descanso activo de hoy';be.onclick=verActivo;}
+     else{be.textContent='🏋️ Entrenar hoy';be.onclick=function(){ir('triaje');};}
+     be.style.display=hecho?'none':'block';
+   }
+   if(ba) ba.style.display=(hecho||focoHoy==='activo'||focoHoy==='movilidad')?'none':'block';}
   pintarPreguntaDia(); pintarSeguimientoDolor(); pintarDolorCard(); pintarContexto(); pintarMol();
   if(gap<2||hecho) $('saludo').innerHTML=hecho?`Hasta mañana, ${CONFIG.paciente}.`
     :(S.racha>0?`<b style="color:var(--af-ambar)">🔥 Tu racha de ${S.racha} días se apaga a medianoche.</b><br>5 minutos bastan para mantenerla viva, ${CONFIG.paciente}.`
@@ -1132,7 +1138,18 @@ const SPLIT={
 };
 const FOCO_INFO={fuerza:['🏋️','Fuerza'],cardio:['🏃','Cardio'],mixto:['⚡','HIIT / Metcon'],
   activo:['🚶','Descanso activo'],movilidad:['🧘','Movilidad'],descanso:['😴','Descanso']};
-function focoDelDia(fechaISO){const ds=(new Date(fechaISO).getDay()+6)%7; return (SPLIT[S.elemento||'hierba']||SPLIT.hierba)[ds];}
+function fechaDeDia(i){const b=new Date(hoyISO()); b.setDate(b.getDate()-((b.getDay()+6)%7)+i); return b.toISOString().slice(0,10);}
+// El foco del día respeta lo que el cliente haya marcado en su semana (descanso total / activo)
+function focoDelDia(fechaISO){const ov=S.planSemana&&S.planSemana[fechaISO]; if(ov==='descanso'||ov==='activo')return ov;
+  const ds=(new Date(fechaISO).getDay()+6)%7; return (SPLIT[S.elemento||'hierba']||SPLIT.hierba)[ds];}
+// El cliente marca un día de su semana: entreno → descanso activo → descanso total → entreno
+function planDia(fecha){S.planSemana=S.planSemana||{};const cur=S.planSemana[fecha];
+  const next=cur==='activo'?'descanso':cur==='descanso'?null:'activo';
+  if(next)S.planSemana[fecha]=next;else delete S.planSemana[fecha];
+  save();verSemana();}
+function diaDescanso(){alert('Hoy tu plan marca DESCANSO total. Recuperar también es progresar 💚\nSi te apetece moverte suave, abajo tienes el descanso activo.');}
+// "Voy a la clase de Lidomare": esa clase ES la sesión de hoy (no se hace rutina en casa)
+function irAClase(){window._t0=Date.now()-15*60000;const vr=$('v-rpe');if(vr)vr.textContent='6';const mo=$('molestia');if(mo)mo.checked=false;terminarJornada();}
 
 // ── PLANTILLAS DE SESIÓN: entrenamiento ESTRUCTURADO y bien pensado (editable) ──
 //   Cada nivel tiene VARIANTES con foco (fuerza/cardio/mixto) que rotan día a día y se
@@ -1499,7 +1516,10 @@ function pintarListaRutina(){
   const tieneFuerza=ejs.some(e=>/series ×/.test(e.detalle||''));
   const ayudaCarga=tieneFuerza?`<div class="panel" style="background:rgba(46,204,143,.08);border-color:rgba(46,204,143,.3);margin-bottom:10px"><div class="t2" style="line-height:1.55">💡 <b>¿Cuánto peso? Trabajamos por sensación (RPE, del 1 al 10):</b><br>• <b>RPE 7</b> = al acabar la serie podrías hacer ~3 reps más<br>• <b>RPE 8</b> = podrías hacer ~2 más<br>• <b>RPE 9</b> = solo te quedaría 1<br>Elige el peso que te deje en el RPE indicado, <b>con técnica perfecta</b>. Si te sobra, sube; si no llegas, baja. Empieza conservador.</div></div>`:'';
   let lastBloque=null;
-  $('rut-lista').innerHTML=ayudaCarga+ejs.map((e,i)=>{
+  let claseCard='';
+  if(S.contextoHoy==='gym'){const cl=claseLidomare(focoDelDia(hoyISO()));
+    if(cl)claseCard=`<div class="panel" style="border-color:rgba(244,196,48,.45);margin-bottom:10px"><div style="font-weight:700;color:var(--af-dorado);font-size:14px">🏋️ Hoy en ${cl.centro}: ${cl.clase}${cl.horario?' · '+cl.horario.split(' · ')[0]:''}</div><div class="t2" style="margin-top:2px">Esa es tu sesión de hoy. Si vas, no necesitas la rutina de casa.</div><button class="cta" style="margin-top:8px" onclick="irAClase()">✓ Voy a la clase</button><div class="sub" style="font-size:11px;margin-top:6px">¿No puedes ir? Abajo tienes la versión equivalente en casa.</div></div>`;}
+  $('rut-lista').innerHTML=claseCard+ayudaCarga+ejs.map((e,i)=>{
     const cab=(e.bloque&&e.bloque!==lastBloque)?`<div class="sub" style="margin:14px 0 2px;color:var(--af-dorado);font-weight:700;letter-spacing:.5px">▸ ${e.bloque}</div>`:'';
     lastBloque=e.bloque;
     return cab+`<div class="ej" style="flex-direction:column;align-items:stretch" onclick="this.classList.toggle('ok');revisarRutina()">
@@ -2096,22 +2116,22 @@ function guardarNutri(){const d=nutriHoy();
 }
 function verSemana(){
   const dias=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-  const split=SPLIT[S.elemento||'hierba']||SPLIT.hierba;
   const hoyIdx=(new Date(hoyISO()).getDay()+6)%7;
   const c=miCentro();
   const col={fuerza:'var(--af-primario)',cardio:'var(--af-agua)',mixto:'var(--af-dorado)',activo:'#FFA726',movilidad:'#B8C6F2',descanso:'var(--af-texto-suave)'};
-  // resumen
-  const entreno=split.filter(f=>['fuerza','cardio','mixto'].includes(f)).length;
-  const activo=split.filter(f=>['activo','movilidad'].includes(f)).length;
-  const desc=split.filter(f=>f==='descanso').length;
-  $('semana-sub').innerHTML=`<b style="color:var(--af-texto)">${entreno} días de entreno · ${activo} de descanso activo · ${desc} de descanso.</b><br>Creemos en moverte casi cada día. No tienes que pensar: aquí ves lo que toca.${c?` Con las clases de ${c.nombre}.`:''}`;
-  $('semana-lista').innerHTML=split.map((foco,i)=>{
-    const fi=FOCO_INFO[foco]||['•',foco], hoy=i===hoyIdx, cc=col[foco]||'var(--af-line)';
-    const clase=c&&c.horario&&c.horario[i]?`<div style="color:var(--af-dorado);font-size:11.5px;margin-top:2px">🏋️ ${c.nombre}: ${c.horario[i]}</div>`:'';
-    return `<div style="display:flex;align-items:center;gap:12px;background:${hoy?'rgba(46,204,143,.12)':'var(--af-panel)'};border:1px solid ${hoy?'var(--af-primario)':'var(--af-line)'};border-left:4px solid ${cc};border-radius:var(--af-radio-m);padding:12px 14px;margin-bottom:8px">
+  const focos=dias.map((_,i)=>focoDelDia(fechaDeDia(i)));   // respeta lo que el cliente haya marcado
+  const entreno=focos.filter(f=>['fuerza','cardio','mixto'].includes(f)).length;
+  const activo=focos.filter(f=>['activo','movilidad'].includes(f)).length;
+  const desc=focos.filter(f=>f==='descanso').length;
+  $('semana-sub').innerHTML=`<b style="color:var(--af-texto)">${entreno} entreno · ${activo} descanso activo · ${desc} descanso.</b><br>👆 Toca un día para marcar <b>descanso activo</b> (poco tiempo) o <b>descanso total</b> (p. ej. un cumpleaños) si sabes que no podrás. La semana se amolda.`;
+  $('semana-lista').innerHTML=focos.map((foco,i)=>{
+    const fi=FOCO_INFO[foco]||['•',foco], hoy=i===hoyIdx, cc=col[foco]||'var(--af-line)', fecha=fechaDeDia(i), ov=S.planSemana&&S.planSemana[fecha];
+    const clase=c&&c.horario&&c.horario[i]&&['fuerza','cardio','mixto'].includes(foco)?`<div style="color:var(--af-dorado);font-size:11.5px;margin-top:2px">🏋️ ${c.nombre}: ${c.horario[i]}</div>`:'';
+    return `<div onclick="planDia('${fecha}')" style="cursor:pointer;display:flex;align-items:center;gap:12px;background:${hoy?'rgba(46,204,143,.12)':'var(--af-panel)'};border:1px solid ${hoy?'var(--af-primario)':'var(--af-line)'};border-left:4px solid ${cc};border-radius:var(--af-radio-m);padding:12px 14px;margin-bottom:8px">
       <div style="font-size:26px;width:34px;text-align:center">${fi[0]}</div>
       <div style="flex:1"><div style="font-weight:700;font-size:14.5px">${dias[i]}${hoy?' <span style="color:var(--af-primario);font-size:11px">· HOY</span>':''}</div>
-        <div style="font-size:13px;color:${cc};font-weight:600">${fi[1]}</div>${clase}</div></div>`;
+        <div style="font-size:13px;color:${cc};font-weight:600">${fi[1]}${ov?' <span style="opacity:.7;font-weight:400">· lo marcaste tú</span>':''}</div>${clase}</div>
+      <span style="color:var(--af-texto-suave);font-size:13px">✎</span></div>`;
   }).join('');
   ir('semana');
 }
