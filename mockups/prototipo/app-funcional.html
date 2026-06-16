@@ -1003,6 +1003,21 @@ const EJ=[
  {id:'sprint',nom:'Series cortas / sprints',det:'según esquema',zona:'general',nivel:4,patron:'cardio',como:'Tras calentar, corre a máxima intensidad 20-30s y camina 60s para recuperar. Repite.',cuida:'Calienta bien antes. Para si notas tirones.'},
  {id:'wall_ball',nom:'Wall ball',det:'según esquema',zona:'general',nivel:4,patron:'cardio',como:'Sentadilla con balón al pecho; al subir, lánzalo a un punto alto de la pared y recógelo.',cuida:'Encadena sentadilla y lanzamiento; abdomen firme.'},
  {id:'pistol_squat',nom:'Sentadilla pistol',det:'según esquema',zona:'general',nivel:5,patron:'fuerza',como:'Sentadilla a una pierna con la otra extendida al frente. Baja controlado y sube.',cuida:'Asiste con apoyo al principio; rodilla alineada.'},
+ // ══ FUNCIONAL / ORIGINAL (movimientos de la vida real, más allá de la tabla de gimnasio) ══
+ {id:'farmer_carry',nom:'Paseo del granjero',det:'4 × 30 m con peso',zona:'general',nivel:3,patron:'fuerza',casa:true,como:'Agarra un peso en cada mano (mancuernas, garrafas de agua, bolsas) y camina erguido a paso firme.',cuida:'Hombros atrás, tronco firme, no te inclines. Pasos cortos.'},
+ {id:'bear_crawl',nom:'Marcha del oso',det:'4 × 10 m',zona:'general',nivel:3,patron:'estabilidad',casa:true,como:'A cuatro apoyos con las rodillas a un palmo del suelo, avanza moviendo mano y pie contrarios.',cuida:'Cadera baja y estable, sin balanceo lateral.'},
+ {id:'turkish_getup',nom:'Turkish get-up',det:'3 por lado',zona:'general',nivel:4,patron:'estabilidad',como:'Tumbado con un peso en la mano estirada hacia el techo, levántate hasta ponerte de pie sin bajar el brazo, y vuelve.',cuida:'Muy despacio y controlado; mira el peso todo el rato.'},
+ {id:'battle_ropes',nom:'Cuerdas de batalla',det:'8 × 20s fuerte / 40s suave',zona:'general',nivel:4,patron:'cardio',como:'Una cuerda en cada mano: haz ondas rápidas y continuas con las rodillas algo flexionadas.',cuida:'Mueve todo el cuerpo, abdomen firme. Respira.'},
+ {id:'trx_remo',nom:'Remo en anillas / TRX',det:'según esquema',zona:'general',nivel:2,patron:'fuerza',como:'Sujeto a las cintas, cuerpo recto e inclinado atrás: tira del pecho hacia las manos juntando escápulas.',cuida:'Cuerpo en tabla; cuanto más horizontal, más difícil.'},
+ {id:'step_up_carga',nom:'Subida al cajón con peso',det:'según esquema',zona:'general',nivel:3,patron:'fuerza',casa:true,como:'Sube a un escalón o cajón con peso en las manos, empujando con la pierna de arriba. Baja con control.',cuida:'Apoya todo el pie arriba; rodilla alineada con el pie.'},
+ {id:'med_ball_slam',nom:'Lanzamiento de balón medicinal',det:'4 × 12',zona:'general',nivel:3,patron:'cardio',como:'Levanta el balón sobre la cabeza y lánzalo con fuerza al suelo; recógelo y repite.',cuida:'Acompaña con el abdomen, no solo con los brazos.'},
+ // ══ VIDA ACTIVA (para quien no puede / no quiere hacer deporte: la vida diaria ES movimiento) ══
+ {id:'baile',nom:'Bailar',det:'15-20 min',zona:'general',nivel:0,patron:'cardio',casa:true,como:'Pon tu música y muévete a tu aire 15-20 min. No hay pasos correctos: el objetivo es moverte y disfrutar.',cuida:'Hidrátate y para si te mareas. Cuenta como cardio.'},
+ {id:'paseo_recados',nom:'Pasear (recados / perro)',det:'20-30 min',zona:'general',nivel:0,patron:'cardio',casa:true,como:'Ve andando a hacer un recado o saca al perro a buen paso. Aprovecha la vida diaria para moverte.',cuida:'Calzado cómodo, postura erguida. Si te falta el aire, baja el ritmo.'},
+ {id:'tareas_hogar',nom:'Tareas de casa activas',det:'20-30 min',zona:'general',nivel:0,patron:'cardio',casa:true,como:'Fregar el suelo, aspirar o limpiar cristales a buen ritmo cuenta como movimiento. Hazlo enérgico.',cuida:'Cambia de lado para no cargar siempre el mismo brazo. Dobla rodillas al agacharte.'},
+ {id:'jardineria',nom:'Jardinería / huerto',det:'20-30 min',zona:'general',nivel:0,patron:'fuerza',casa:true,como:'Cavar, plantar o mover macetas y tierra mueve todo el cuerpo. Agáchate con las piernas, no con la espalda.',cuida:'Alterna posturas; dobla las rodillas al levantar peso.'},
+ {id:'levantarse_silla',nom:'Levantarse de la silla',det:'3 series × 8',zona:'general',nivel:0,patron:'fuerza',casa:true,como:'Desde sentado, levántate sin usar las manos y siéntate despacio. Es la sentadilla de la vida real.',cuida:'Si te cuesta, ayúdate con las manos al principio. Controla la bajada.'},
+ {id:'silla_movilidad',nom:'Movilidad en silla',det:'8-10 min',zona:'general',nivel:0,patron:'movilidad',casa:true,como:'Sentado: círculos de hombros, giros de tronco, estira cuello, abre el pecho y sube/baja talones.',cuida:'Movimientos lentos y sin dolor. Ideal si te cuesta estar de pie.'},
 ];
 
 // ── DIALES DEL MOTOR (ajusta sin tocar la lógica) ──────────────────────────
@@ -1027,11 +1042,13 @@ const MOTOR={
   },
 };
 
+// El cliente "enseña" sus gustos: si cambia (🔄) un ejercicio 3+ veces, dejamos de proponérselo.
+function evitado(id){return ((S.gustos&&S.gustos[id])||0)>=3;}
 // ── COMPOSITOR: elige los ejercicios ideales para hoy ──────────────────────
 function componerRutina(zona, nivel, nEj, soloPatrones, receta, estricto){
   // estricto = solo ejercicios de la zona dolorida (terapéutico), sin generales
   const enZona=e=> estricto&&zona!=='general' ? e.zona===zona : (e.zona===zona||e.zona==='general');
-  let pool=EJ.filter(e=>e.nivel<=nivel && enZona(e));
+  let pool=EJ.filter(e=>e.nivel<=nivel && enZona(e) && !evitado(e.id));
   if(soloPatrones) pool=pool.filter(e=>soloPatrones.includes(e.patron));
   // Fallbacks: respetan nivel Y zona (nunca colar ejercicios de otra zona en una rutina)
   if(!pool.length) pool=EJ.filter(e=>e.nivel<=nivel && enZona(e));
@@ -1165,8 +1182,8 @@ function componerSesion(zona, nivel, minutos, receta, focoDia){
     const tope=b.tope!=null?Math.min(nivel,b.tope):nivel;   // calentamiento/vuelta no meten alta intensidad
     const ok=e=> (e.zona===zona||e.zona==='general') && !(e.riesgo&&zona!=='general'&&e.riesgo.includes(zona));
     // primero los ejercicios EXIGENTES para su nivel (rango [tope-2, tope]) y se rota entre ellos
-    let pool=EJ.filter(e=>e.nivel<=tope && e.nivel>=Math.max(0,tope-2) && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id));
-    if(pool.length<b.n) pool=pool.concat(EJ.filter(e=>e.nivel<=tope && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id) && !pool.includes(e)));
+    let pool=EJ.filter(e=>e.nivel<=tope && e.nivel>=Math.max(0,tope-2) && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id) && !evitado(e.id));
+    if(pool.length<b.n) pool=pool.concat(EJ.filter(e=>e.nivel<=tope && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id) && !evitado(e.id) && !pool.includes(e)));
     if(!pool.length) continue;
     const ejs=rota(pool).slice(0,b.n); ejs.forEach(e=>usados.add(e.id));
     bls.push({titulo:b.t, esquema:b.esquema, ejercicios:ejs});
@@ -1401,7 +1418,7 @@ function pintarListaRutina(){
     return cab+`<div class="ej" style="flex-direction:column;align-items:stretch" onclick="this.classList.toggle('ok');revisarRutina()">
        <div style="display:flex;align-items:center;gap:12px"><div class="chk">✓</div><div style="flex:1">
          <div class="t1">${e.nombre}</div><div class="t2">${e.detalle}</div></div>
-         ${e.id?`<span onclick="event.stopPropagation();cambiarEjercicio(${i})" title="No puedo con este — cámbiamelo" style="cursor:pointer;font-size:15px;padding:0 6px">🔄</span>`:''}
+         ${e.id?`<span onclick="event.stopPropagation();cambiarEjercicio(${i})" title="No puedo o no me gusta — cámbiamelo (si lo cambias mucho, dejo de proponértelo)" style="cursor:pointer;font-size:15px;padding:0 6px">🔄</span>`:''}
          ${e.video?`<a href="${e.video}" target="_blank" onclick="event.stopPropagation()" style="font-size:12px;font-weight:700;color:var(--af-agua);text-decoration:none">▶ Ver</a>`:''}</div>
        ${e.como?`<div class="t2" style="margin-top:8px;padding-left:38px;line-height:1.5">📋 ${e.como}${e.cuida?`<br><span style="color:var(--af-ambar)">⚠ ${e.cuida}</span>`:''}</div>`:''}
      </div>`;}).join('');
@@ -1410,8 +1427,9 @@ function pintarListaRutina(){
 function cambiarEjercicio(i){
   const pack=window._packHoy||[], cur=pack[i]; if(!cur||!cur.id)return;
   const ejCur=EJ.find(e=>e.id===cur.id); if(!ejCur)return;
+  S.gustos=S.gustos||{}; S.gustos[cur.id]=(S.gustos[cur.id]||0)+1; save();   // aprende lo que NO te gusta
   const zona=zonaPaciente();
-  const ok=e=> (e.zona===zona||e.zona==='general') && !(e.riesgo&&zona!=='general'&&e.riesgo.includes(zona));
+  const ok=e=> (e.zona===zona||e.zona==='general') && !(e.riesgo&&zona!=='general'&&e.riesgo.includes(zona)) && !evitado(e.id);
   const usados=new Set(pack.map(e=>e.id));
   let alts=EJ.filter(e=>e.patron===ejCur.patron && e.nivel<=ejCur.nivel && ok(e) && !usados.has(e.id));
   if(!alts.length) alts=EJ.filter(e=>e.patron===ejCur.patron && ok(e) && !usados.has(e.id));
