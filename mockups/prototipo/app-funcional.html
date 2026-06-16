@@ -1141,8 +1141,15 @@ const FOCO_INFO={fuerza:['🏋️','Fuerza'],cardio:['🏃','Cardio'],mixto:['�
   activo:['🚶','Descanso activo'],movilidad:['🧘','Movilidad'],descanso:['😴','Descanso']};
 function fechaDeDia(i){const b=new Date(hoyISO()); b.setDate(b.getDate()-((b.getDay()+6)%7)+i); return b.toISOString().slice(0,10);}
 // El foco del día respeta lo que el cliente haya marcado en su semana (descanso total / activo)
+// La LÍNEA modula la semana del elemento: Mística más suave · Guerrera equilibrada · Heroica más exigente
+function splitDe(){
+  const base=(SPLIT[S.elemento||'hierba']||SPLIT.hierba).slice(), linea=lineaKey(S.aud);
+  if(linea==='mistica') return base.map(f=>f==='mixto'?'cardio':f==='cardio'?'activo':f);    // más movimiento ligero, menos intensidad
+  if(linea==='heroica') return base.map(f=>f==='activo'?'mixto':f==='movilidad'?'fuerza':f); // más reto, menos descanso pasivo
+  return base;
+}
 function focoDelDia(fechaISO){const ov=S.planSemana&&S.planSemana[fechaISO]; if(ov==='descanso'||ov==='activo')return ov;
-  const ds=(new Date(fechaISO).getDay()+6)%7; return (SPLIT[S.elemento||'hierba']||SPLIT.hierba)[ds];}
+  const ds=(new Date(fechaISO).getDay()+6)%7; return splitDe()[ds];}
 // El cliente marca un día de su semana: entreno → descanso activo → descanso total → entreno
 function planDia(fecha){S.planSemana=S.planSemana||{};const cur=S.planSemana[fecha];
   const next=cur==='activo'?'descanso':cur==='descanso'?null:'activo';
@@ -2137,7 +2144,8 @@ function verSemana(){
   const entreno=focos.filter(f=>['fuerza','cardio','mixto'].includes(f)).length;
   const activo=focos.filter(f=>['activo','movilidad'].includes(f)).length;
   const desc=focos.filter(f=>f==='descanso').length;
-  $('semana-sub').innerHTML=`<b style="color:var(--af-texto)">${entreno} entreno · ${activo} descanso activo · ${desc} descanso.</b><br>👆 Toca un día para marcar <b>descanso activo</b> (poco tiempo) o <b>descanso total</b> (p. ej. un cumpleaños) si sabes que no podrás. La semana se amolda.`;
+  const pf=perfilDe(S.elemento,S.aud);
+  $('semana-sub').innerHTML=`<div style="color:var(--af-dorado);font-size:12.5px;margin-bottom:4px">Tu línea <b>${pf.linea}</b> — ${pf.entrena}</div><b style="color:var(--af-texto)">${entreno} entreno · ${activo} descanso activo · ${desc} descanso.</b><br>👆 Toca un día para marcar <b>descanso activo</b> (poco tiempo) o <b>descanso total</b> (p. ej. un cumpleaños) si sabes que no podrás. La semana se amolda.`;
   $('semana-lista').innerHTML=focos.map((foco,i)=>{
     const fi=FOCO_INFO[foco]||['•',foco], hoy=i===hoyIdx, cc=col[foco]||'var(--af-line)', fecha=fechaDeDia(i), ov=S.planSemana&&S.planSemana[fecha];
     const clase=c&&c.horario&&c.horario[i]&&['fuerza','cardio','mixto'].includes(foco)?`<div style="color:var(--af-dorado);font-size:11.5px;margin-top:2px">🏋️ ${c.nombre}: ${c.horario[i]}</div>`:'';
