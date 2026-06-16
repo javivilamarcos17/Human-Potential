@@ -1847,34 +1847,66 @@ const NUTRI={
   // BASE DE ALIMENTOS (editable). kcal por 100g (o por unidad si u='ud'). racion = porción
   // orientativa típica. cat: carbo|prot|verd|grasa|extra · color para la guía de calidad.
   alimentos:[
-    {n:'Arroz (en seco)',     cat:'carbo', kcal:350, u:'g', racion:70,  color:'ambar'},
-    {n:'Pasta (en seco)',     cat:'carbo', kcal:360, u:'g', racion:80,  color:'ambar'},
-    {n:'Pan / tostadas',      cat:'carbo', kcal:265, u:'g', racion:60,  color:'ambar'},
-    {n:'Patata',              cat:'carbo', kcal:80,  u:'g', racion:200, color:'ambar'},
-    {n:'Avena',               cat:'carbo', kcal:380, u:'g', racion:50,  color:'verde'},
-    {n:'Pollo / pavo',        cat:'prot',  kcal:165, u:'g', racion:150, color:'verde'},
-    {n:'Pescado',             cat:'prot',  kcal:120, u:'g', racion:150, color:'verde'},
-    {n:'Huevo',               cat:'prot',  kcal:78,  u:'ud',racion:2,   color:'verde'},
-    {n:'Carne roja',          cat:'prot',  kcal:250, u:'g', racion:120, color:'ambar', alt:'Alterna con pollo o pescado: igual de proteicos, menos grasa.'},
-    {n:'Bacon',               cat:'grasa', kcal:540, u:'g', racion:30,  color:'rojo',  alt:'Cambialo por pavo o jamon cocido: mucha menos grasa para el mismo sabor.'},
-    {n:'Pavo / jamon cocido', cat:'prot',  kcal:110, u:'g', racion:60,  color:'verde'},
-    {n:'Legumbres (cocidas)', cat:'prot',  kcal:120, u:'g', racion:180, color:'verde'},
-    {n:'Yogur / lácteo',      cat:'prot',  kcal:60,  u:'g', racion:200, color:'verde'},
-    {n:'Verdura / ensalada',  cat:'verd',  kcal:30,  u:'g', racion:200, color:'verde'},
-    {n:'Fruta',               cat:'verd',  kcal:60,  u:'g', racion:150, color:'verde'},
-    {n:'Aguacate',            cat:'grasa', kcal:160, u:'g', racion:75,  color:'verde'},
-    {n:'Aceite de oliva',     cat:'grasa', kcal:900, u:'g', racion:10,  color:'verde'},
-    {n:'Frutos secos',        cat:'grasa', kcal:600, u:'g', racion:30,  color:'verde'},
-    {n:'Queso',               cat:'grasa', kcal:350, u:'g', racion:40,  color:'ambar', alt:'El queso es grasa: usalo de toque, no de base. Mejor poca cantidad.'},
-    {n:'Bolleria / dulce',    cat:'extra', kcal:450, u:'g', racion:50,  color:'rojo',  alt:'Cambiala por fruta, avena o yogur natural con miel.'},
-    {n:'Frito / rebozado',    cat:'extra', kcal:300, u:'g', racion:120, color:'rojo',  alt:'Mejor a la plancha, horno o air-fryer: mismo plato, mitad de calorias.'},
-    {n:'Pizza',               cat:'extra', kcal:270, u:'g', racion:200, color:'rojo',  alt:'Casera, base fina y cargada de verduras y proteina.'},
-    {n:'Patatas chips',       cat:'extra', kcal:540, u:'g', racion:50,  color:'rojo',  alt:'Para picar, mejor frutos secos o fruta.'},
-    {n:'Refresco azucarado',  cat:'extra', kcal:42,  u:'ml',racion:330, color:'rojo',  alt:'Son calorias vacias: mejor agua o su version zero.'},
-    {n:'Cerveza / alcohol',   cat:'extra', kcal:45,  u:'ml',racion:330, color:'rojo'},
-    {n:'Zumo',                cat:'extra', kcal:45,  u:'ml',racion:200, color:'ambar'},
+    // — Comida / cena —
+    {n:'Arroz',               cat:'carbo', kcal:350, u:'g', racion:70,  color:'ambar', m:['comida','cena']},
+    {n:'Pasta',               cat:'carbo', kcal:360, u:'g', racion:80,  color:'ambar', m:['comida','cena']},
+    {n:'Pasta integral',      cat:'carbo', kcal:350, u:'g', racion:80,  color:'verde', m:['comida','cena']},
+    {n:'Patata',              cat:'carbo', kcal:80,  u:'g', racion:200, color:'ambar', m:['comida','cena']},
+    {n:'Quinoa',              cat:'carbo', kcal:350, u:'g', racion:70,  color:'verde', m:['comida','cena']},
+    {n:'Pollo / pavo',        cat:'prot',  kcal:165, u:'g', racion:150, color:'verde', m:['comida','cena']},
+    {n:'Pescado',             cat:'prot',  kcal:120, u:'g', racion:150, color:'verde', m:['comida','cena']},
+    {n:'Huevo',               cat:'prot',  kcal:78,  u:'ud',racion:2,   color:'verde', m:['desayuno','comida','cena','snack']},
+    {n:'Carne roja',          cat:'prot',  kcal:250, u:'g', racion:120, color:'ambar', m:['comida','cena'], alt:'Alterna con pollo o pescado: igual de proteicos, menos grasa.'},
+    {n:'Legumbres',           cat:'prot',  kcal:120, u:'g', racion:180, color:'verde', m:['comida','cena']},
+    {n:'Tofu',                cat:'prot',  kcal:120, u:'g', racion:150, color:'verde', m:['comida','cena']},
+    {n:'Verdura / ensalada',  cat:'verd',  kcal:30,  u:'g', racion:200, color:'verde', m:['comida','cena']},
+    // — Pan (base) y sus acompañamientos (toppings) —
+    {n:'Pan / tostada',       cat:'carbo', kcal:265, u:'g', racion:60,  color:'ambar', m:['desayuno','snack','comida'], base:true},
+    {n:'Tostada integral',    cat:'carbo', kcal:250, u:'g', racion:60,  color:'verde', m:['desayuno','snack'], base:true},
+    {n:'Aceite de oliva',     cat:'grasa', kcal:900, u:'g', racion:10,  color:'verde', m:['desayuno','comida','cena'], top:true},
+    {n:'Tomate',              cat:'verd',  kcal:20,  u:'g', racion:80,  color:'verde', m:['desayuno','comida','cena'], top:true},
+    {n:'Jamón serrano',       cat:'prot',  kcal:240, u:'g', racion:40,  color:'ambar', m:['desayuno','snack'], top:true},
+    {n:'Pavo / jamón cocido', cat:'prot',  kcal:110, u:'g', racion:50,  color:'verde', m:['desayuno','snack'], top:true},
+    {n:'Aguacate',            cat:'grasa', kcal:160, u:'g', racion:75,  color:'verde', m:['desayuno','comida','cena'], top:true},
+    {n:'Queso',               cat:'grasa', kcal:350, u:'g', racion:40,  color:'ambar', m:['desayuno','comida','cena','snack'], top:true, alt:'El queso es grasa: úsalo de toque, no de base.'},
+    {n:'Mantequilla',         cat:'grasa', kcal:740, u:'g', racion:15,  color:'ambar', m:['desayuno'], top:true},
+    {n:'Mermelada',           cat:'extra', kcal:260, u:'g', racion:20,  color:'ambar', m:['desayuno'], top:true},
+    {n:'Miel',                cat:'extra', kcal:300, u:'g', racion:15,  color:'ambar', m:['desayuno'], top:true},
+    // — Desayuno —
+    {n:'Avena',               cat:'carbo', kcal:380, u:'g', racion:50,  color:'verde', m:['desayuno','snack']},
+    {n:'Cereales',            cat:'carbo', kcal:380, u:'g', racion:40,  color:'ambar', m:['desayuno']},
+    {n:'Yogur',               cat:'prot',  kcal:60,  u:'g', racion:125, color:'verde', m:['desayuno','snack']},
+    {n:'Fruta',               cat:'verd',  kcal:60,  u:'g', racion:150, color:'verde', m:['desayuno','comida','cena','snack']},
+    {n:'Plátano',             cat:'verd',  kcal:90,  u:'ud',racion:1,   color:'verde', m:['desayuno','snack']},
+    // — Snack —
+    {n:'Frutos secos',        cat:'grasa', kcal:600, u:'g', racion:30,  color:'verde', m:['snack','desayuno']},
+    {n:'Chocolate negro',     cat:'extra', kcal:550, u:'g', racion:20,  color:'ambar', m:['snack']},
+    {n:'Barrita / dulce',     cat:'extra', kcal:450, u:'g', racion:40,  color:'rojo',  m:['snack','desayuno'], alt:'Cámbiala por fruta, avena o yogur con miel.'},
+    {n:'Patatas chips',       cat:'extra', kcal:540, u:'g', racion:40,  color:'rojo',  m:['snack'], alt:'Para picar, mejor frutos secos o fruta.'},
+    // — Bebidas —
+    {n:'Agua',                cat:'bebida',kcal:0,   u:'ml',racion:250, color:'verde', m:['bebida','desayuno','comida','cena','snack']},
+    {n:'Café solo',           cat:'bebida',kcal:2,   u:'ud',racion:1,   color:'verde', m:['bebida','desayuno','snack']},
+    {n:'Café con leche',      cat:'bebida',kcal:60,  u:'ud',racion:1,   color:'verde', m:['bebida','desayuno','snack']},
+    {n:'Té / infusión',       cat:'bebida',kcal:2,   u:'ud',racion:1,   color:'verde', m:['bebida','desayuno','snack']},
+    {n:'Leche',               cat:'prot',  kcal:65,  u:'ml',racion:200, color:'verde', m:['bebida','desayuno']},
+    {n:'Zumo natural',        cat:'verd',  kcal:45,  u:'ml',racion:200, color:'ambar', m:['bebida','desayuno']},
+    {n:'Refresco zero',       cat:'bebida',kcal:1,   u:'ml',racion:330, color:'verde', m:['bebida','comida','cena','snack']},
+    {n:'Refresco azucarado',  cat:'extra', kcal:42,  u:'ml',racion:330, color:'rojo',  m:['bebida','comida','snack'], alt:'Calorías vacías: mejor agua o versión zero.'},
+    {n:'Cerveza / alcohol',   cat:'extra', kcal:45,  u:'ml',racion:330, color:'rojo',  m:['bebida','comida','cena']},
+    {n:'Batido de proteína',  cat:'prot',  kcal:55,  u:'ml',racion:300, color:'verde', m:['bebida','snack','desayuno']},
+    // — Otros platos —
+    {n:'Pizza',               cat:'extra', kcal:270, u:'g', racion:200, color:'rojo',  m:['comida','cena'], alt:'Casera, base fina y cargada de verduras y proteína.'},
+    {n:'Frito / rebozado',    cat:'extra', kcal:300, u:'g', racion:120, color:'rojo',  m:['comida','cena'], alt:'Mejor plancha, horno o air-fryer: mitad de calorías.'},
+    {n:'Bollería',            cat:'extra', kcal:450, u:'g', racion:50,  color:'rojo',  m:['desayuno','snack'], alt:'Cámbiala por fruta, avena o yogur con miel.'},
   ],
-  catNom:{carbo:'Carbohidrato',prot:'Proteína',verd:'Verdura/fruta',grasa:'Grasa',extra:'Extra/capricho'},
+  // Chips rápidos por comida (lo más común). Editable a mano.
+  sugerencias:{
+    desayuno:['Café con leche','Tostada integral','Avena','Huevo','Fruta','Yogur','Plátano','Zumo natural','Pan / tostada'],
+    comida:['Pollo / pavo','Arroz','Verdura / ensalada','Pasta','Legumbres','Pescado','Patata','Aceite de oliva'],
+    cena:['Pescado','Verdura / ensalada','Huevo','Pollo / pavo','Aguacate','Tomate','Yogur','Queso'],
+    snack:['Fruta','Yogur','Frutos secos','Plátano','Chocolate negro','Café solo','Barrita / dulce'],
+  },
+  catNom:{carbo:'Carbohidrato',prot:'Proteína',verd:'Verdura/fruta',grasa:'Grasa',extra:'Extra/capricho',bebida:'Bebida'},
   repartoComida:{desayuno:.25, comida:.35, cena:.25, snack:.15},   // % del objetivo por comida
   // factor de cantidad por objetivo (elemento) y categoría: ajusta la ración recomendada
   factorObjetivo:{
@@ -1910,6 +1942,14 @@ function recomendar(aliIdx){const al=NUTRI.alimentos[aliIdx];
   const paso=al.u==='ud'?1:5; return Math.max(paso, Math.round(al.racion*f/paso)*paso);
 }
 function addAlim(k,idx){if(idx==='')return;const d=nutriHoy();d[k].push({a:+idx,c:recomendar(+idx)});save();pintarNutricion();}
+function nombreIdx(n){return NUTRI.alimentos.findIndex(a=>a.n===n);}
+function alimentosPara(k){return NUTRI.alimentos.map((a,i)=>(a.m&&a.m.includes(k))?i:-1).filter(i=>i>=0);}
+function addCustom(k){
+  const n=(prompt('¿Qué has comido? (nombre)')||'').trim(); if(!n)return;
+  const kc=Math.max(0,Math.round(+(prompt('¿Cuántas kcal, más o menos? (aprox.)','150'))||150));
+  NUTRI.alimentos.push({n:n.slice(0,28),cat:'extra',kcal:kc,u:'ud',racion:1,color:'ambar',m:['desayuno','comida','cena','snack'],custom:true});
+  const d=nutriHoy(); d[k].push({a:NUTRI.alimentos.length-1,c:1}); save(); pintarNutricion();
+}
 function setCant(k,i,v){const d=nutriHoy();if(d[k][i])d[k][i].c=Math.max(0,+v||0);save();pintarNutricion();}
 function delAlim(k,i){const d=nutriHoy();d[k].splice(i,1);save();pintarNutricion();}
 function pintarNutricion(){
@@ -1925,11 +1965,20 @@ function pintarNutricion(){
         <span class="sub" style="width:50px;text-align:right">${kcalItem(it)}</span>
         <span onclick="delAlim('${k}',${i})" style="cursor:pointer;color:var(--af-texto-suave);padding:0 4px">&#10005;</span></div>
         ${al.alt?`<div class="sub" style="font-size:11px;margin:2px 0 0 4px;line-height:1.4">&#128161; ${al.alt}</div>`:(exceso?`<div class="sub" style="font-size:11px;margin-left:4px;color:var(--af-ambar)">&#8593; Para tu objetivo, ~${rec}${al.u} seria suficiente.</div>`:'')}`;}).join('');
-    const opts='<option value="">+ anadir alimento...</option>'+NUTRI.alimentos.map((a,i)=>`<option value="${i}">${a.n}</option>`).join('');
+    const sug=(NUTRI.sugerencias[k]||[]).map(nombreIdx).filter(i=>i>=0);
+    const chip=(i,amber)=>`<span onclick="addAlim('${k}',${i})" style="display:inline-block;font-size:12.5px;background:${amber?'rgba(255,167,38,.12)':'rgba(46,204,143,.10)'};border:1px solid var(--af-line);border-radius:16px;padding:5px 11px;margin:5px 5px 0 0;cursor:pointer">+ ${NUTRI.alimentos[i].n}</span>`;
+    const hayBase=items.some(it=>NUTRI.alimentos[it.a]&&NUTRI.alimentos[it.a].base);
+    const tops=hayBase?NUTRI.alimentos.map((a,i)=>a.top?i:-1).filter(i=>i>=0).map(i=>chip(i,true)).join(''):'';
+    const masOpts='<option value="">⋯ más alimentos…</option>'+NUTRI.alimentos.map((a,i)=>`<option value="${i}">${a.n}</option>`).join('');
     return `<div style="margin-bottom:14px;border-bottom:1px solid var(--af-line);padding-bottom:12px">
       <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:14px">${lbl}</b>${items.length?`<span class="sub">${sub} kcal</span>`:''}</div>
       ${filas}
-      <select onchange="addAlim('${k}',this.value);this.value=''" style="width:100%;margin-top:8px;padding:9px;border-radius:10px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:13px">${opts}</select>
+      ${hayBase?`<div class="sub" style="font-size:11.5px;margin-top:8px;color:var(--af-ambar)">🍞 ¿Con qué lo tomas?</div><div>${tops}</div>`:''}
+      <div style="margin-top:6px">${sug.map(i=>chip(i,false)).join('')}</div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <select onchange="addAlim('${k}',this.value);this.value=''" style="flex:1;padding:9px;border-radius:10px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:13px">${masOpts}</select>
+        <span onclick="addCustom('${k}')" style="display:inline-flex;align-items:center;font-size:12.5px;font-weight:600;border:1px solid var(--af-line);border-radius:10px;padding:0 12px;cursor:pointer;color:var(--af-texto)">✏️ Otro</span>
+      </div>
     </div>`;}).join('');
   const per=S.nutriPerfil, kcal=kcalDia(d), reg=NUTRI.momentos.some(([k])=>(d[k]||[]).length);
   if(per){const pct=Math.min(100,Math.round(kcal/per.kcal*100)), col=kcal>per.kcal*1.1?'var(--af-ambar)':'var(--af-primario)';
