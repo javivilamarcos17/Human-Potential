@@ -405,7 +405,7 @@
         <a id="wa-alerta" href="#" target="_blank" style="display:none;margin-top:10px;text-align:center;font-weight:700;color:#062018;background:var(--af-primario);border-radius:10px;padding:10px;text-decoration:none">📲 Avisar ahora a mi fisio por WhatsApp</a>
       </div>
       <div class="panel" id="banderas" style="display:none;border-color:rgba(229,57,53,.4)">
-        <div class="sub" style="color:var(--af-texto)">Tu dolor es muy alto. Por tu seguridad, ¿notas alguno de estos hoy?</div>
+        <div class="sub" style="color:var(--af-texto)">Por tu seguridad, ¿notas alguno de estos hoy? (si marcas alguno, te derivamos a tu profesional)</div>
         <label style="display:flex;gap:10px;align-items:center;margin-top:10px;font-size:13px;cursor:pointer"><input type="checkbox" class="bandera" value="Hormigueo / pérdida de fuerza" style="width:20px;height:20px;accent-color:var(--af-rojo)"> Hormigueo, entumecimiento o pérdida de fuerza en brazo/pierna</label>
         <label style="display:flex;gap:10px;align-items:center;margin-top:8px;font-size:13px;cursor:pointer"><input type="checkbox" class="bandera" value="Dolor tras golpe fuerte" style="width:20px;height:20px;accent-color:var(--af-rojo)"> Dolor tras un golpe o caída fuerte</label>
         <label style="display:flex;gap:10px;align-items:center;margin-top:8px;font-size:13px;cursor:pointer"><input type="checkbox" class="bandera" value="Dolor nocturno que no cede" style="width:20px;height:20px;accent-color:var(--af-rojo)"> Dolor intenso que no me deja dormir</label>
@@ -933,7 +933,7 @@ function gymSugerencia(dec){
 }
 function toggleCentroClases(){const t=$('centro-todas'),f=$('centro-flecha');if(!t)return;const op=t.style.display==='none';t.style.display=op?'block':'none';if(f)f.textContent=op?'▴':'▾';}
 function waDestino(){const c=miCentro();return (c&&c.whatsapp)||CONFIG.whatsappFisio;}
-function dolor(v){const e=$('v-dolor');e.textContent=v;e.style.color=v>=8?'var(--af-rojo)':v>=5?'var(--af-ambar)':'var(--af-primario)';$('alerta').style.display=v>=8?'block':'none';$('banderas').style.display=v>=9?'block':'none';S.dolorHoy=+v;
+function dolor(v){const e=$('v-dolor');e.textContent=v;e.style.color=v>=8?'var(--af-rojo)':v>=5?'var(--af-ambar)':'var(--af-primario)';$('alerta').style.display=v>=8?'block':'none';$('banderas').style.display=v>=6?'block':'none';S.dolorHoy=+v;
   const wa=$('wa-alerta');
   if(v>=8 && waDestino()){wa.style.display='block';
     wa.href="https://wa.me/"+waDestino()+'?text='+encodeURIComponent(`⚠ Anti Frágil — ${CONFIG.paciente}: dolor ${v}/10 en ${CONFIG.zona} hoy (${hoyISO()}). Rutina adaptada a suave.`);}
@@ -1488,7 +1488,7 @@ function cerrarTriaje(){
   registrarSeguimiento();   // tras un aviso de dolor, la app sigue esa molestia día a día
   // SEGURIDAD: banderas rojas → la app para el juego y deriva a un profesional
   const bs=[...document.querySelectorAll('.bandera:checked')];
-  if(S.dolorHoy>=9 && bs.length){
+  if(bs.length){   // CUALQUIER bandera roja marcada escala al profesional, sea cual sea el nivel de dolor
     const urgente=bs.some(b=>b.dataset.urgente), lista=bs.map(b=>b.value).join('; ');
     sync('bandera_roja',{dolor:S.dolorHoy,sintomas:lista,urgente:!!urgente});
     $('seg-texto').innerHTML=urgente
