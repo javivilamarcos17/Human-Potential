@@ -1457,12 +1457,25 @@ function registrarSeguimiento(){
   if(segSel.cuando)A.cuando=segSel.cuando;
   A.dias=A.dias||[];A.dias.push({f:hoyISO(),dolor:v,vs:segSel.vs||null,cuando:segSel.cuando||null,zonas:(A.zonas||[]).slice()});
   if(A.dias.length>40)A.dias.shift();
+  const imp=importanciaDolor(A); A.importancia=imp.nivel;   // criba por importancia para la base de datos
   const ult=A.dias.slice(-3);
   if(ult.length>=3&&ult.every(d=>d.dolor<=2)){
     S.dolorLog=S.dolorLog||[];S.dolorLog.push({zonas:A.zonas,desde:A.desde,hasta:hoyISO(),dias:A.dias.length});
     S.dolorActivo=null; sync('dolor_resuelto',{zonas:A.zonas,dias:A.dias.length});
-  } else sync('dolor_seguimiento',{zonas:A.zonas,tipo:A.tipo,dolor:v,vs:segSel.vs,dia:A.dias.length});
+  } else sync('dolor_seguimiento',{zonas:A.zonas,tipo:A.tipo,cuando:A.cuando,dolor:v,vs:segSel.vs,dia:A.dias.length,importancia:imp.nivel,motivo:imp.motivo});
   segSel={zonas:[],tipo:'',cuando:'',vs:''}; save();
+}
+// CRIBA por importancia: clasifica cada molestia para la base de datos y el profesional (editable)
+function importanciaDolor(A){
+  if(!A) return {nivel:'baja',motivo:''};
+  const ult=(A.dias||[]).slice(-1)[0]||{}, dias=(A.dias||[]).length, t=A.tipo||'', cu=A.cuando||'', dol=ult.dolor||0;
+  if(t==='Hormigueo') return {nivel:'alta',motivo:'posible afectación nerviosa (hormigueo)'};
+  if(cu==='Por la noche'&&dias>=2) return {nivel:'alta',motivo:'dolor nocturno persistente'};
+  if(dol>=7) return {nivel:'alta',motivo:'dolor intenso'};
+  if(dias>=7) return {nivel:'media',motivo:'lleva '+dias+' días sin resolver'};
+  if(ult.vs&&ult.vs.indexOf('Peor')>=0) return {nivel:'media',motivo:'va a peor'};
+  if(dol>=4) return {nivel:'media',motivo:'dolor moderado'};
+  return {nivel:'baja',motivo:'molestia leve o en mejora'};
 }
 // Mensaje clínico a medida según el tipo y el cuándo del dolor (editable)
 function mensajeDolor(A){
@@ -1480,8 +1493,9 @@ function pintarDolorCard(){const c=$('dolor-card'); if(!c)return; const A=dolorA
   c.innerHTML=`<div style="font-weight:700;color:var(--af-ambar);font-size:13.5px">🩹 Seguimiento: ${(A.zonas||[]).join(', ')||'tu molestia'}${A.tipo?` · ${A.tipo.toLowerCase()}`:''}</div>
     <div class="sub" style="font-size:12px;margin-top:2px;line-height:1.45">Día ${dias} siguiéndola${ult.vs?` · va ${ult.vs}`:''}. ${mensajeDolor(A)}</div>
     ${esc?`<div class="sub" style="font-size:12px;margin-top:5px;color:var(--af-rojo)">⚠ Llevas ${dias} días con esta molestia. Pide una <b>valoración con tu profesional</b>.</div>`:''}`;}
-function textoSeguimiento(){const A=dolorActivo(); if(!A)return ''; const ult=(A.dias||[]).slice(-1)[0]||{};
-  return `\n— Molestia ACTIVA en seguimiento: ${(A.zonas||[]).join(', ')||'sin zona'}${A.tipo?' ('+A.tipo+')':''} · ${(A.dias||[]).length} días · hoy ${ult.dolor||'-'}/10${ult.vs?' · '+ult.vs:''}`;}
+function textoSeguimiento(){const A=dolorActivo(); if(!A)return ''; const ult=(A.dias||[]).slice(-1)[0]||{}, imp=importanciaDolor(A);
+  const ic={alta:'🔴 PRIORIDAD ALTA',media:'🟡 prioridad media',baja:'🟢 prioridad baja'}[imp.nivel];
+  return `\n— ${ic} · Molestia: ${(A.zonas||[]).join(', ')||'sin zona'}${A.tipo?' ('+A.tipo+')':''}${A.cuando?', '+A.cuando.toLowerCase():''} · ${(A.dias||[]).length} días · hoy ${ult.dolor||'-'}/10${ult.vs?' · '+ult.vs:''}${imp.motivo?' — '+imp.motivo:''}`;}
 function cerrarTriaje(){
   // Leer SIEMPRE el valor visible del slider (no el estado, que podría ser de ayer)
   S.dolorHoy=(hasMolestiaHoy()||dolorActivo())?(+$('v-dolor').textContent||2):2;   // si no hay molestia, sin dolor que puntuar
