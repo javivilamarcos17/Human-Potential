@@ -514,6 +514,14 @@
       <button class="sec" onclick="$('simlab').style.display='none';pintar()">Cerrar y volver a mi Guardián</button>
     </div>
   </div>
+  <!-- MINI-RETO de evolución: pequeño reto para "sellar" el paso de fase -->
+  <div id="minireto" style="display:none;position:absolute;inset:0;z-index:13;background:linear-gradient(160deg,#0A1626,#1a1230);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 34px">
+    <div style="font-size:52px;animation:resp 2.5s ease-in-out infinite">⚡</div>
+    <div class="h1" style="margin-top:10px">¡A punto de evolucionar!</div>
+    <div class="sub" style="margin-top:8px;line-height:1.5">Tu Guardián quiere subir de fase. Demuéstrale que te lo has ganado:</div>
+    <div id="mr-texto" style="font-family:var(--af-font-display);font-weight:800;font-size:19px;color:var(--af-dorado);margin-top:14px"></div>
+    <button class="cta" style="max-width:280px;margin-top:22px" onclick="completarMiniReto()">¡Hecho! Sellar la evolución</button>
+  </div>
   <div id="celebra" onclick="this.style.display='none'" style="display:none;position:absolute;inset:0;z-index:9;background:radial-gradient(circle at 50% 42%,rgba(244,196,48,.30),rgba(6,13,24,.96) 65%);backdrop-filter:blur(6px);text-align:center;cursor:pointer">
     <div style="margin-top:120px;animation:resp 3s ease-in-out infinite" id="celebra-ava"></div>
     <div style="font-family:var(--af-font-display);font-weight:900;font-size:30px;color:#F4C430;margin-top:14px">¡EVOLUCIÓN!</div>
@@ -1618,13 +1626,24 @@ function terminarJornada(){
       S.pc.push({fase:faseAhora,etapa:etapaDe(faseAhora),elemento:S.elemento,aud:S.aud,fecha:hoyISO(),season:S.season||0});
       save();
     }
-    $('celebra').style.display='block';}
+    mostrarMiniReto();}
   else evo.style.display='none';
   document.querySelectorAll('.ej').forEach(e=>e.classList.remove('ok'));$('btn-rutina').disabled=true;$('molestia').checked=false;
   ir('premio');
 }
 function prevISO(iso){const d=new Date(iso);d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
 function diaSiguiente(){try{const d=new Date(hoyISO());d.setDate(d.getDate()+1);S.fechaSim=d.toISOString().slice(0,10);S.hechoHoy=false;save();pintar();}catch(err){alert('Error: '+err.message+'. Pulsa Reiniciar.');}}
+// Mini-reto de evolución (editable): se gana al llenar la barra y subir de fase
+const RETOS_EVO=['Haz 5 sentadillas ahora mismo','Mantén una plancha 20 segundos','10 respiraciones profundas y lentas','Estírate 30 segundos','Bebe un vaso de agua de un trago','Haz 10 saltos de tijera'];
+function mostrarMiniReto(){
+  const r=RETOS_EVO[Math.floor(Math.random()*RETOS_EVO.length)];
+  if($('mr-texto'))$('mr-texto').textContent=r;
+  if($('minireto'))$('minireto').style.display='flex';
+}
+function completarMiniReto(){
+  if($('minireto'))$('minireto').style.display='none';
+  if($('celebra'))$('celebra').style.display='block';
+}
 function reset(){localStorage.removeItem(K);location.reload();}
 
 /* ════ DESCANSO ACTIVO — moverse suave cuenta para la racha (recuperación = parte del plan) ════ */
@@ -2044,7 +2063,8 @@ function pintarScore(v){
      <div style="font-size:46px">${v.emoji}</div>
      <div style="font-size:60px;font-weight:900;color:${v.color};line-height:1.05">${v.score}<span style="font-size:22px;color:var(--af-texto-suave)">/100</span></div>
      <div style="font-size:19px;font-weight:700;margin-top:2px">${v.titulo}</div>
-     <div class="sub" style="margin:8px auto 0;max-width:300px;line-height:1.5">${v.msg}</div></div>
+     <div class="sub" style="margin:8px auto 0;max-width:300px;line-height:1.5">${v.msg}</div>
+     <div class="sub" style="margin-top:8px;color:var(--af-primario)">🛡️ Cuidarte por dentro también alimenta a tu Guardián (+XP)</div></div>
    <div class="panel">${v.det.map(([l,ok])=>`<div style="display:flex;gap:8px;padding:5px 0;font-size:13.5px"><span>${ok?'✅':'▫️'}</span><span style="color:${ok?'var(--af-texto)':'var(--af-texto-suave)'}">${l}</span></div>`).join('')}</div>`;
 }
 function guardarNutri(){const d=nutriHoy();
