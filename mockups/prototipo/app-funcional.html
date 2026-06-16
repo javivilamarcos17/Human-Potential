@@ -274,6 +274,7 @@
         <div class="tool" onclick="verRetos()">🏆 Logros</div>
         <div class="tool" onclick="verPC()">🗃 PC</div>
         <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
+        <div class="tool" onclick="verFichaPerfil()">📋 Mi ficha de perfil</div>
         <div class="tool" onclick="verProfesional()">💬 Mi profesional</div>
         <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
       </div>
@@ -287,6 +288,14 @@
       <div id="prof-nota" style="margin-top:10px"></div>
       <a class="cta" id="prof-wa" target="_blank" style="background:linear-gradient(135deg,var(--af-primario),var(--af-primario-osc));color:#062018">💬 Consultar a mi profesional</a>
       <button class="sec" onclick="ir('mas')">Volver</button>
+    </div>
+
+    <!-- FICHA DE PERFIL (resultados de la valoración) -->
+    <div class="scr" id="ficha">
+      <div class="h1">Tu ficha de perfil</div>
+      <div class="sub">Tu valoración y por qué te hemos asignado este perfil. Transparente.</div>
+      <div id="ficha-card" style="margin-top:10px"></div>
+      <button class="cta" onclick="ir('mas')">Volver</button>
     </div>
 
     <!-- NUTRICIÓN (acompañamiento profesional, sin agobio) -->
@@ -2184,6 +2193,28 @@ function verSemana(){
       <span style="color:var(--af-texto-suave);font-size:13px">✎</span></div>`;
   }).join('');
   ir('semana');
+}
+function verFichaPerfil(){
+  if(!S.perfil){alert('Primero crea tu Guardián.');return;}
+  const b=S.bloques||{}, pf=perfilDe(S.elemento,S.aud), pr=S.pruebasHechas||[];
+  $('ficha-card').innerHTML=`
+   <div class="panel" style="text-align:center">
+     <div style="font-size:54px;font-weight:900;color:var(--af-primario);line-height:1">${S.aud}<span style="font-size:20px;color:var(--af-texto-suave)">/100</span></div>
+     <div class="sub">Tu Vitalidad${pr.length>=CONFIG.pruebas.length?' — medida con tus pruebas reales ✅':' (provisional: se afina con las pruebas de tu primera semana)'}</div>
+   </div>
+   <div class="panel">
+     <div class="fila"><span>💪 Fuerza</span><b>${b.f!=null?b.f:'-'} / 30</b></div>
+     <div class="fila"><span>🏃 Aeróbico</span><b>${b.a!=null?b.a:'-'} / 30</b></div>
+     <div class="fila"><span>🧘 Movilidad</span><b>${b.m!=null?b.m:'-'} / 20</b></div>
+     <div class="fila"><span>🔥 Constancia</span><b>${b.c!=null?b.c:'-'} / 20</b></div>
+   </div>
+   <div class="panel" style="border-color:rgba(244,196,48,.4)">
+     <div class="sub" style="color:var(--af-dorado);font-weight:700">${pf.emoji} ${(S.elemento||'').toUpperCase()} · ${pf.linea}</div>
+     <div class="sub" style="margin-top:6px;line-height:1.55">🎯 <b>Objetivo:</b> ${pf.objetivo}<br>🏋️ <b>Entrena:</b> ${pf.entrena}<br>🗣️ <b>Tono:</b> ${pf.tono}</div>
+     <div class="sub" style="margin-top:6px;font-size:11.5px;opacity:.8">El ELEMENTO sale de tu objetivo y capacidades; la LÍNEA, de tu nivel de salud de partida.</div>
+   </div>
+   ${(S.mejora||0)>0?`<div class="panel" style="border-color:rgba(46,204,143,.4)"><div class="sub" style="color:var(--af-primario)">📈 Has mejorado <b>+${S.mejora}</b> puntos de Vitalidad desde que empezaste.</div></div>`:''}`;
+  ir('ficha');
 }
 function verProfesional(){
   $('prof-quien').textContent=`${CONFIG.fisio}${CONFIG.clinica?' · '+CONFIG.clinica:''}`;
