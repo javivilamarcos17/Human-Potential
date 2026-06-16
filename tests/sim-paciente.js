@@ -32,6 +32,7 @@ function set(id,v){A.S?void 0:0;els[id]=els[id]||fakeEl();els[id].textContent=St
 function jornada(dolor=2,energia=7,rpe=5){
   set('v-dolor',dolor);set('v-energia',energia);set('v-rpe',rpe);
   els['molestia']=els['molestia']||fakeEl();els['molestia'].checked=false;
+  A.S.molestiaHoy = dolor>2 ? A.hoyISO() : 'no:'+A.hoyISO();   // nuevo flujo: responder "¿molestia?" antes de la escala 1-10
   A.cerrarTriaje();
   global.window._t0=Date.now()-10*60000; // simula 10 min de rutina
   A.terminarJornada();

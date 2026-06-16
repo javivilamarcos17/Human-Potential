@@ -345,23 +345,23 @@
       <div class="h1">Triaje de hoy</div>
       <div class="sub">30 segundos. Tu fisio lo ve en tiempo real.</div>
       <div class="panel">
-        <div class="sub">Nivel de dolor — <span class="cfg-zona">zona lumbar</span></div>
+        <div class="sub">¿Tienes alguna molestia o dolor hoy?</div>
+        <div class="toolbar" style="margin-top:8px">
+          <div class="tool t-mol" data-mol="0" onclick="molHoy(0,this)">✅ No, todo bien</div>
+          <div class="tool t-mol" data-mol="1" onclick="molHoy(1,this)">⚠️ Sí, algo me molesta</div>
+        </div>
+      </div>
+      <div class="panel" id="dolor-panel" style="display:none">
+        <div class="sub">¿Cuánto te duele? — <span class="cfg-zona">zona lumbar</span></div>
         <div class="t-num" id="v-dolor" style="color:var(--af-primario)">3</div>
         <input type="range" min="1" max="10" value="3" oninput="dolor(this.value)">
-        <div class="scale"><span>Sin dolor</span><span>Insoportable</span></div>
+        <div class="scale"><span>Leve</span><span>Insoportable</span></div>
       </div>
       <div class="panel">
         <div class="sub">Energía</div>
         <div class="t-num" id="v-energia" style="color:var(--af-agua)">7</div>
         <input type="range" min="1" max="10" value="7" oninput="energia(this.value)">
         <div class="scale"><span>Agotado</span><span>A tope</span></div>
-      </div>
-      <div class="panel">
-        <div class="sub">¿Alguna molestia o algo que cuidar hoy?</div>
-        <div class="toolbar" style="margin-top:8px">
-          <div class="tool t-mol" data-mol="0" onclick="molHoy(0,this)">✅ No, todo bien</div>
-          <div class="tool t-mol" data-mol="1" onclick="molHoy(1,this)">⚠️ Sí, una molestia</div>
-        </div>
       </div>
       <div class="panel" id="dolor-seg" style="display:none;border-color:rgba(255,167,38,.35)">
         <div class="sub" id="seg-titulo" style="color:var(--af-texto)"></div>
@@ -1378,8 +1378,12 @@ function hasMolestiaHoy(){return S.molestiaHoy===hoyISO();}
 function molHoy(v,el){S.molestiaHoy = v ? hoyISO() : 'no:'+hoyISO(); save();
   document.querySelectorAll('.t-mol').forEach(t=>{t.style.borderColor='';t.style.color='';});
   if(el){el.style.borderColor=v?'var(--af-ambar)':'var(--af-primario)';el.style.color='var(--af-texto)';}
+  const dp=$('dolor-panel'), vd=$('v-dolor');
+  if(dp) dp.style.display=(v||dolorActivo())?'block':'none';
+  if(vd && !v && !dolorActivo()) vd.textContent='1';
   pintarSeguimientoDolor();}
-function pintarMol(){document.querySelectorAll('.t-mol').forEach(t=>{const yes=t.dataset.mol==='1',on=(yes&&S.molestiaHoy===hoyISO())||(!yes&&S.molestiaHoy==='no:'+hoyISO());t.style.borderColor=on?(yes?'var(--af-ambar)':'var(--af-primario)'):'';t.style.color=on?'var(--af-texto)':'';});}
+function pintarMol(){document.querySelectorAll('.t-mol').forEach(t=>{const yes=t.dataset.mol==='1',on=(yes&&S.molestiaHoy===hoyISO())||(!yes&&S.molestiaHoy==='no:'+hoyISO());t.style.borderColor=on?(yes?'var(--af-ambar)':'var(--af-primario)'):'';t.style.color=on?'var(--af-texto)':'';});
+  const dp=$('dolor-panel'); if(dp) dp.style.display=(S.molestiaHoy===hoyISO()||dolorActivo())?'block':'none';}
 // Devuelve el ARTE REAL (PNG) de una fase si existe, con respaldo al SVG (para el simulador y vistas)
 function avatarArte(f){
   const et={'Huevo':'huevo','Cría':'cria','Juvenil':'juvenil','Desarrollo':'desarrollo','Adulto':'adulto','Apex':'apex'}[etapaDe(f)];
@@ -1455,7 +1459,7 @@ function textoSeguimiento(){const A=dolorActivo(); if(!A)return ''; const ult=(A
   return `\n— Molestia ACTIVA en seguimiento: ${(A.zonas||[]).join(', ')||'sin zona'}${A.tipo?' ('+A.tipo+')':''} · ${(A.dias||[]).length} días · hoy ${ult.dolor||'-'}/10${ult.vs?' · '+ult.vs:''}`;}
 function cerrarTriaje(){
   // Leer SIEMPRE el valor visible del slider (no el estado, que podría ser de ayer)
-  S.dolorHoy=+$('v-dolor').textContent;
+  S.dolorHoy=(hasMolestiaHoy()||dolorActivo())?(+$('v-dolor').textContent||2):2;   // si no hay molestia, sin dolor que puntuar
   registrarSeguimiento();   // tras un aviso de dolor, la app sigue esa molestia día a día
   // SEGURIDAD: banderas rojas → la app para el juego y deriva a un profesional
   const bs=[...document.querySelectorAll('.bandera:checked')];
