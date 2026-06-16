@@ -2040,9 +2040,10 @@ function pintarNutricion(){
         <span onclick="addCustom('${k}')" style="display:inline-flex;align-items:center;font-size:12.5px;font-weight:600;border:1px solid var(--af-line);border-radius:10px;padding:0 12px;cursor:pointer;color:var(--af-texto)">✏️ Otro</span>
       </div>
     </div>`;}).join('');
-  const per=S.nutriPerfil, kcal=kcalDia(d), reg=NUTRI.momentos.some(([k])=>(d[k]||[]).length);
-  if(per){const pct=Math.min(100,Math.round(kcal/per.kcal*100)), col=kcal>per.kcal*1.1?'var(--af-ambar)':'var(--af-primario)';
-    $('nutri-objetivo').innerHTML=`<div class="xprow"><span>Tu objetivo (${(S.elemento||'').toUpperCase()}, ${per.peso}kg)</span><b>~${per.kcal} kcal</b></div>
+  const per=S.nutriPerfil, kcal=kcalDia(d), reg=NUTRI.momentos.some(([k])=>(d[k]||[]).length), objHoy=objetivoHoy()||0;
+  if(per){const pct=Math.min(100,Math.round(kcal/objHoy*100)), col=kcal>objHoy*1.1?'var(--af-ambar)':'var(--af-primario)';
+    $('nutri-objetivo').innerHTML=`<div class="xprow"><span>Tu objetivo de HOY (${(S.elemento||'').toUpperCase()})</span><b>~${objHoy} kcal</b></div>
+      <div class="sub" style="margin-top:4px;font-size:11.5px">${notaEntrenoHoy()}</div>
       ${reg?`<div class="xprow" style="margin-top:8px"><span>Hoy llevas</span><b>${kcal} kcal</b></div><div class="track"><div class="fill" style="width:${pct}%;background:${col}"></div></div>`:''}
       <div class="sub" style="margin-top:6px">${objetivoTexto()}</div>
       <button class="tool" style="margin-top:8px" onclick="S.nutriPerfil=null;save();$('nutri-perfil').style.display='block';pintarNutricion()">&#8635; Recalcular objetivo</button>`;
@@ -2066,10 +2067,22 @@ function consejosNutri(d){
   if(S.elemento==='roca'&&(cats.prot||0)<3)c.push('Para tu <b>fuerza</b>, asegura proteina en cada comida.');
   if(S.elemento==='fuego'&&(cats.grasa||0)>=2)c.push('Para tu <b>deficit</b>, modera las grasas hoy.');
   alts.slice(0,2).forEach(a=>c.push('&#128161; '+a));
+  const entrenoHoy=S.hechoHoy&&S.ultDia===hoyISO(), fHoy=focoDelDia(hoyISO());
+  if(entrenoHoy&&(cats.prot||0)<2)c.unshift('💪 Acabas de entrenar: asegura <b>proteína</b> en tu próxima comida para recuperar.');
+  else if((fHoy==='fuerza'||fHoy==='mixto')&&(cats.carbo||0)<1)c.unshift('🔋 Día exigente: suma <b>carbohidrato</b> (arroz, pasta, avena) para rendir.');
   if(!c.length)c.push('Plato equilibrado. Vas muy bien.');
   return c.slice(0,3);
 }
 function objetivoTexto(){const o={fuego:'Meta de transformacion: ligero deficit, mucha proteina y verdura.',roca:'Ganar fuerza: algo de superavit y proteina suficiente.',rayo:'Resistencia: prioriza buenos carbohidratos para tener energia.',agua:'Recuperacion: alimentacion equilibrada que ayude a reparar.',hierba:'Construir el habito: come variado y sostenible, sin extremos.'};return o[S.elemento||'agua']||o.agua;}
+// ── NUTRICIÓN ↔ ENTRENAMIENTO: el objetivo del día se adapta a lo que toca entrenar ──
+function factorEntrenoHoy(){const f=focoDelDia(hoyISO());
+  return f==='descanso'?0.90 : (f==='activo'||f==='movilidad')?1.0 : f==='cardio'?1.08 : 1.12;}
+function objetivoHoy(){const per=S.nutriPerfil; return per?Math.round(per.kcal*factorEntrenoHoy()/10)*10:null;}
+function notaEntrenoHoy(){const f=focoDelDia(hoyISO()), fa=factorEntrenoHoy();
+  const lbl={fuerza:'fuerza',cardio:'cardio',mixto:'HIIT / metcon',activo:'descanso activo',movilidad:'movilidad',descanso:'descanso'}[f]||'tu sesión';
+  if(fa>1.05) return `🏋️ Hoy toca <b>${lbl}</b> → +${Math.round((fa-1)*100)}% de objetivo: más combustible para rendir y recuperar.`;
+  if(fa<1) return `😴 Hoy <b>${lbl}</b> → -${Math.round((1-fa)*100)}%: hoy no necesitas tanta energía.`;
+  return `🚶 Hoy <b>${lbl}</b>: objetivo de mantenimiento.`;}
 function semanaNutri(){const dias=Object.keys(S.nutri||{}).sort().slice(-7);let buenos=0;
   dias.forEach(f=>{const dd=S.nutri[f];const cats={};let ex=0;NUTRI.momentos.forEach(([k])=>(dd[k]||[]).forEach(it=>{const al=NUTRI.alimentos[it.a];if(al){cats[al.cat]=1;if(al.cat==='extra')ex++;}}));
     if(cats.prot&&cats.verd&&ex<2)buenos++;});
@@ -2087,7 +2100,7 @@ function valorarDia(d){
   s+= extras===0?25:extras===1?16:extras===2?8:0;
   det.push([extras===0?'Sin caprichos hoy':extras+' capricho(s) — sin culpa',extras<=1]);
   const per=S.nutriPerfil;
-  if(per){const dif=Math.abs(kcalDia(d)-per.kcal)/per.kcal; s+= dif<=.15?15:dif<=.3?8:3;
+  if(per){const obj=objetivoHoy()||per.kcal, dif=Math.abs(kcalDia(d)-obj)/obj; s+= dif<=.15?15:dif<=.3?8:3;
     det.push([dif<=.15?'Calorías en tu objetivo':dif<=.3?'Calorías casi en objetivo':'Calorías lejos del objetivo',dif<=.3]);
   } else s+=10;
   s+=Math.min(10,Math.round((d.agua||0)/NUTRI.metaAgua*10));
