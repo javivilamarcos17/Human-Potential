@@ -1835,9 +1835,15 @@ function simSemana(){
 }
 /* ════ ONBOARDING PROFESIONAL — anamnesis + seguridad + elemento + gustos + meta (editable) ════ */
 const ONB=[
- {t:'Empecemos 👋',s:'Vamos a conocerte para hacerte un plan a tu medida. 2 minutos.',campos:[
-   {t:'txt',k:'nombre',q:'¿Cómo te llamas?',ph:'Tu nombre'},
-   {t:'num',k:'edad',q:'¿Qué edad tienes?',ph:'años'},
+ {t:'Crea tu cuenta 📇',s:'Tus datos para tu seguimiento y tu centro. Lo básico — sin DNI ni documentos.',campos:[
+   {t:'txt',k:'nombre',q:'Nombre',ph:'Tu nombre'},
+   {t:'txt',k:'apellidos',q:'Apellidos',ph:'Tus apellidos'},
+   {t:'txt',k:'email',q:'Email',ph:'tucorreo@email.com',it:'email'},
+   {t:'txt',k:'telefono',q:'Teléfono',ph:'600 000 000',it:'tel'},
+   {t:'num',k:'nacimiento',q:'Año de nacimiento',ph:'Ej.: 1990'},
+   {t:'txt',k:'domicilio',q:'Domicilio (ciudad y dirección)',ph:'Ciudad, calle…'},
+ ]},
+ {t:'Tu cuerpo 💪',s:'Para calcular tu energía y tu punto de partida.',campos:[
    {t:'one',k:'sexo',q:'Sexo',ops:[{l:'Hombre',v:'h'},{l:'Mujer',v:'m'},{l:'Otro / prefiero no decir',v:'x'}]},
    {t:'num',k:'peso',q:'Peso (kg) — opcional',ph:'kg'},
    {t:'num',k:'altura',q:'Altura (cm) — opcional',ph:'cm'},
@@ -1881,7 +1887,7 @@ const ONB=[
  ]},
 ];
 function campoHTML(c){const v=S.onb[c.k], inp='width:100%;padding:11px;border-radius:10px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px';
-  if(c.t==='txt')return `<input value="${v==null?'':String(v).replace(/"/g,'&quot;')}" placeholder="${c.ph||''}" oninput="S.onb['${c.k}']=this.value" style="${inp}">`;
+  if(c.t==='txt')return `<input type="${c.it||'text'}" value="${v==null?'':String(v).replace(/"/g,'&quot;')}" placeholder="${c.ph||''}" oninput="S.onb['${c.k}']=this.value" style="${inp}">`;
   if(c.t==='num')return `<input type="number" value="${v==null?'':v}" placeholder="${c.ph||''}" oninput="S.onb['${c.k}']=this.value" style="${inp}">`;
   if(c.t==='slider')return `<div class="t-num" id="onb-${c.k}-v" style="font-size:28px;color:var(--af-primario)">${v==null?c.min:v}</div><input type="range" min="${c.min}" max="${c.max}" value="${v==null?c.min:v}" oninput="S.onb['${c.k}']=+this.value;document.getElementById('onb-${c.k}-v').textContent=this.value" style="width:100%">`;
   if(c.t==='one')return `<div class="toolbar" style="flex-direction:column;gap:6px">${c.ops.map((o,i)=>`<div class="tool" onclick="onbOne('${c.k}',${i})" style="text-align:left;${S.onb[c.k]===i?'border-color:var(--af-primario);color:var(--af-texto)':''}">${o.l}</div>`).join('')}</div>`;
@@ -1901,7 +1907,10 @@ function onbMulti(k,v){S.onb[k]=S.onb[k]||[];const a=S.onb[k],j=a.indexOf(v);if(
 function onbOpt(k){for(const s of ONB)for(const c of s.campos)if(c.k===k&&c.t==='one')return (c.ops[S.onb[k]]||{});return {};}
 function onbBack(){if(S.onbPaso>0){S.onbPaso--;pintarOnb();}}
 function onbNext(){
-  if(S.onbPaso===0 && !(S.onb.nombre&&String(S.onb.nombre).trim())){alert('Dinos tu nombre 🙂');return;}
+  if(S.onbPaso===0){
+    if(!(S.onb.nombre&&String(S.onb.nombre).trim())){alert('Dinos tu nombre 🙂');return;}
+    if(!(S.onb.email&&String(S.onb.email).indexOf('@')>0)){alert('Necesitamos un email válido para tu cuenta.');return;}
+  }
   if(S.onbPaso<ONB.length-1){S.onbPaso++;pintarOnb();return;}
   finishOnb();
 }
@@ -1913,6 +1922,9 @@ function finishOnb(){
   const o=S.onb||{};
   if(!o.consent){alert('Necesitamos tu consentimiento para cuidarte. Marca la casilla 🙂');return;}
   if(!(o.nombre&&String(o.nombre).trim())){alert('Nos falta tu nombre.');S.onbPaso=0;pintarOnb();return;}
+  // CUENTA (datos de registro para la base de datos — sin DNI)
+  const edad = o.nacimiento ? (new Date().getFullYear()-(+o.nacimiento)) : (+o.edad||0);
+  S.cuenta={nombre:String(o.nombre||'').trim(),apellidos:String(o.apellidos||'').trim(),email:String(o.email||'').trim(),telefono:String(o.telefono||'').trim(),nacimiento:o.nacimiento?+o.nacimiento:null,domicilio:String(o.domicilio||'').trim()};
   // ELEMENTO por puntuación (objetivo×3, éxito×2, frena×2, sensación×1)
   const score={}; [['objetivo',3],['exito',2],['frena',2],['sensacion',1]].forEach(([k,w])=>{const el=onbOpt(k).el; if(el)score[el]=(score[el]||0)+w;});
   let el=onbOpt('objetivo').el||'hierba', mx=-1;
@@ -1925,17 +1937,17 @@ function finishOnb(){
   const zona=zonas.length?(zonaMap[zonas[0]]||zonas[0]):'bienestar general';
   const cod=String(o.centro||'').trim().toUpperCase();
   S.perfil={nombre:String(o.nombre).trim(),zona,centro:CONFIG.centros[cod]?cod:null};
-  S.historia={experiencia:o.experiencia,queHacia:o.queHacia,cuantoTiempo:o.cuantoTiempo,desde:o.desde,diasActual:o.diasActual,lesiones:zonas,dolorActual:o.dolorActual,trabajo:o.trabajo,sueno:o.sueno,estres:o.estres,porque:o.porque,meta:o.meta,edad:o.edad,sexo:o.sexo,peso:o.peso,altura:o.altura,actividad:o.actividad};
+  S.historia={experiencia:o.experiencia,queHacia:o.queHacia,cuantoTiempo:o.cuantoTiempo,desde:o.desde,diasActual:o.diasActual,lesiones:zonas,dolorActual:o.dolorActual,trabajo:o.trabajo,sueno:o.sueno,estres:o.estres,porque:o.porque,meta:o.meta,edad:edad,sexo:o.sexo,peso:o.peso,altura:o.altura,actividad:o.actividad};
   S.lesionesHist=zonas; S.meta=o.meta||''; S.modalidades=o.modalidades||[]; S.intensidadPref=o.intensidad||'media';
   S.parq=(o.parq||[]).filter(x=>x&&x!=='nada'); S.parqRojo=S.parq.length>0;
   if(['casa','gym','aire'].includes(o.lugar))S.contextoHoy=(o.lugar==='gym'?'gym':'casa');
   if(o.tiempo)S.tiempoHoy=+o.tiempo;
   S.gustos=S.gustos||{}; (o.odio||[]).forEach(id=>{if(id)S.gustos[id]=3;});
-  if(o.peso&&o.altura&&o.edad){const basal=10*(+o.peso)+6.25*(+o.altura)-5*(+o.edad)+((o.sexo==='m')?-161:5);
-    S.nutriPerfil={peso:+o.peso,altura:+o.altura,edad:+o.edad,sexo:o.sexo==='m'?'m':'h',act:+o.actividad||1.375,kcal:Math.round(basal*(+o.actividad||1.375)*(NUTRI.ajusteObjetivo[el]||1)/10)*10};}
+  if(o.peso&&o.altura&&edad){const basal=10*(+o.peso)+6.25*(+o.altura)-5*edad+((o.sexo==='m')?-161:5);
+    S.nutriPerfil={peso:+o.peso,altura:+o.altura,edad:edad,sexo:o.sexo==='m'?'m':'h',act:+o.actividad||1.375,kcal:Math.round(basal*(+o.actividad||1.375)*(NUTRI.ajusteObjetivo[el]||1)/10)*10};}
   S.retos=0;S.reaud=0;S.retosLog=[];S.mejora=0;
   CONFIG.paciente=S.perfil.nombre; CONFIG.zona=S.perfil.zona; save();
-  sync('alta',{elemento:el,vitalidad_provisional:S.aud,parq:S.parq,centro:cod||null,meta:S.meta});
+  sync('alta',{elemento:el,vitalidad_provisional:S.aud,parq:S.parq,centro:cod||null,meta:S.meta,cuenta:S.cuenta});
   pintar(); ir('home');
   if(S.parqRojo) alert('Gracias por tu sinceridad 💚 Por lo que marcaste en seguridad, empezamos SUAVE y te recomendamos una valoración con tu profesional antes de pruebas exigentes. Tu salud primero.');
   if(!S.tutorialVisto) mostrarBienvenida();

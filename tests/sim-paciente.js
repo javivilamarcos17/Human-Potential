@@ -47,7 +47,7 @@ let fallos=0;
 const check=(cond,msg)=>{if(!cond){fallos++;console.log('❌ FALLO:',msg);}else console.log('✅',msg);};
 
 // Día 0: alta
-A.S.onb={nombre:'TestMaria',edad:30,sexo:'h',peso:70,altura:170,actividad:1.55,
+A.S.onb={nombre:'TestMaria',apellidos:'García',email:'test@mail.com',telefono:'600111222',nacimiento:1994,domicilio:'Torremolinos',sexo:'h',peso:70,altura:170,actividad:1.55,
   experiencia:'pasado',queHacia:['cardio'],cuantoTiempo:2,desde:1,diasActual:4,
   parq:['nada'],lesiones:['cervical'],dolorActual:'no',trabajo:'sentado',sueno:'bien',estres:'bajo',
   porque:'harto',objetivo:0,exito:0,frena:0,sensacion:0,
