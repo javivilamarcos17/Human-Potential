@@ -369,6 +369,8 @@
         <div class="toolbar" id="seg-zonas" style="margin-top:6px"></div>
         <div class="sub" style="margin-top:10px">¿Qué notas?</div>
         <div class="toolbar" id="seg-tipos" style="margin-top:6px"></div>
+        <div class="sub" style="margin-top:10px">¿Cuándo te molesta más?</div>
+        <div class="toolbar" id="seg-cuando" style="margin-top:6px"></div>
         <div id="seg-vs-wrap" style="display:none">
           <div class="sub" style="margin-top:10px">¿Cómo va respecto a los días anteriores?</div>
           <div class="toolbar" id="seg-vs" style="margin-top:6px"></div>
@@ -1392,7 +1394,8 @@ const DOLOR_UMBRAL=4;
 const SEG_ZONAS=['Lumbar','Cervical','Hombro','Rodilla','Cadera','Espalda alta','Mano/muñeca','Tobillo/pie','Otra'];
 const SEG_TIPOS=['Rigidez','Pinchazo','Dolor sordo','Tirón','Hormigueo'];
 const SEG_VS=['🙂 Mejor','😐 Igual','🙁 Peor'];
-let segSel={zonas:[],tipo:'',vs:''};
+const SEG_CUANDO=['Al moverme','En reposo','Al levantarme','Por la noche'];
+let segSel={zonas:[],tipo:'',cuando:'',vs:''};
 function dolorActivo(){return (S.dolorActivo&&S.dolorActivo.activa)?S.dolorActivo:null;}
 function pintarSeguimientoDolor(){
   const ve=$('v-dolor'); const v=ve?(+ve.textContent||0):(S.dolorHoy||0);
@@ -1406,35 +1409,48 @@ function pintarSeguimientoDolor(){
   const tit=$('seg-titulo'); if(tit)tit.innerHTML=act?`<b>Seguimiento de tu molestia</b> · día ${(act.dias||[]).length+1}. Nos centramos en esto hasta que mejore.`:`<b>Has avisado de dolor.</b> Cuéntanos para centrarnos en ello (y avisar a tu profesional si hace falta).`;
   const zc=$('seg-zonas'); if(zc)zc.innerHTML=SEG_ZONAS.map(z=>`<div class="tool" onclick="segZona('${z}')" style="${segSel.zonas.includes(z)?'border-color:var(--af-primario);color:var(--af-texto)':''}">${z}</div>`).join('');
   const tc=$('seg-tipos'); if(tc)tc.innerHTML=SEG_TIPOS.map(t=>`<div class="tool" onclick="segTipo('${t}')" style="${segSel.tipo===t?'border-color:var(--af-primario);color:var(--af-texto)':''}">${t}</div>`).join('');
+  const cc=$('seg-cuando'); if(cc)cc.innerHTML=SEG_CUANDO.map(t=>`<div class="tool" onclick="segCuando('${t}')" style="${segSel.cuando===t?'border-color:var(--af-primario);color:var(--af-texto)':''}">${t}</div>`).join('');
   const hayHist=act&&(act.dias||[]).length>0, vsw=$('seg-vs-wrap');
   if(vsw)vsw.style.display=hayHist?'block':'none';
   if(hayHist){const vc=$('seg-vs'); if(vc)vc.innerHTML=SEG_VS.map(o=>`<div class="tool" onclick="segVs('${o}')" style="${segSel.vs===o?'border-color:var(--af-primario);color:var(--af-texto)':''}">${o}</div>`).join('');}
 }
 function segZona(z){const i=segSel.zonas.indexOf(z);if(i>=0)segSel.zonas.splice(i,1);else segSel.zonas.push(z);pintarSeguimientoDolor();}
 function segTipo(t){segSel.tipo=segSel.tipo===t?'':t;pintarSeguimientoDolor();}
+function segCuando(c){segSel.cuando=segSel.cuando===c?'':c;pintarSeguimientoDolor();}
 function segVs(v){segSel.vs=v;pintarSeguimientoDolor();}
 function registrarSeguimiento(){
   const v=S.dolorHoy||0, act=dolorActivo();
-  if(v<DOLOR_UMBRAL&&!act){segSel={zonas:[],tipo:'',vs:''};return;}
+  if(v<DOLOR_UMBRAL&&!act){segSel={zonas:[],tipo:'',cuando:'',vs:''};return;}
   if(!act)S.dolorActivo={activa:true,desde:hoyISO(),zonas:segSel.zonas.slice(),tipo:segSel.tipo,dias:[]};
   const A=S.dolorActivo;
   if(segSel.zonas.length)A.zonas=segSel.zonas.slice();
   if(segSel.tipo)A.tipo=segSel.tipo;
-  A.dias=A.dias||[];A.dias.push({f:hoyISO(),dolor:v,vs:segSel.vs||null,zonas:(A.zonas||[]).slice()});
+  if(segSel.cuando)A.cuando=segSel.cuando;
+  A.dias=A.dias||[];A.dias.push({f:hoyISO(),dolor:v,vs:segSel.vs||null,cuando:segSel.cuando||null,zonas:(A.zonas||[]).slice()});
   if(A.dias.length>40)A.dias.shift();
   const ult=A.dias.slice(-3);
   if(ult.length>=3&&ult.every(d=>d.dolor<=2)){
     S.dolorLog=S.dolorLog||[];S.dolorLog.push({zonas:A.zonas,desde:A.desde,hasta:hoyISO(),dias:A.dias.length});
     S.dolorActivo=null; sync('dolor_resuelto',{zonas:A.zonas,dias:A.dias.length});
   } else sync('dolor_seguimiento',{zonas:A.zonas,tipo:A.tipo,dolor:v,vs:segSel.vs,dia:A.dias.length});
-  segSel={zonas:[],tipo:'',vs:''}; save();
+  segSel={zonas:[],tipo:'',cuando:'',vs:''}; save();
+}
+// Mensaje clínico a medida según el tipo y el cuándo del dolor (editable)
+function mensajeDolor(A){
+  const t=A.tipo||'', cu=A.cuando||'';
+  if(t==='Hormigueo') return 'El hormigueo conviene que lo valore tu profesional.';
+  if(cu==='Por la noche') return 'El dolor nocturno que no te deja descansar conviene comentarlo con tu profesional.';
+  if(cu==='Al levantarme'||t==='Rigidez') return 'Rigidez al empezar el día: el movimiento suave la va soltando.';
+  if(t==='Pinchazo') return 'Si el pinchazo es agudo y va a más, no fuerces y avísanos.';
+  return 'El movimiento correcto es parte de la solución — vamos sin forzar.';
 }
 function pintarDolorCard(){const c=$('dolor-card'); if(!c)return; const A=dolorActivo();
   if(!A){c.style.display='none';return;}
-  const ult=(A.dias||[]).slice(-1)[0]||{};
+  const ult=(A.dias||[]).slice(-1)[0]||{}, dias=(A.dias||[]).length, esc=dias>=7;
   c.style.display='block';
-  c.innerHTML=`<div style="font-weight:700;color:var(--af-ambar);font-size:13.5px">🩹 Seguimiento: ${(A.zonas||[]).join(', ')||'tu molestia'}</div>
-    <div class="sub" style="font-size:12px;margin-top:2px;line-height:1.45">Día ${(A.dias||[]).length} siguiéndola${ult.vs?` · va ${ult.vs}`:''}. La app se centra en esto hasta que mejore.</div>`;}
+  c.innerHTML=`<div style="font-weight:700;color:var(--af-ambar);font-size:13.5px">🩹 Seguimiento: ${(A.zonas||[]).join(', ')||'tu molestia'}${A.tipo?` · ${A.tipo.toLowerCase()}`:''}</div>
+    <div class="sub" style="font-size:12px;margin-top:2px;line-height:1.45">Día ${dias} siguiéndola${ult.vs?` · va ${ult.vs}`:''}. ${mensajeDolor(A)}</div>
+    ${esc?`<div class="sub" style="font-size:12px;margin-top:5px;color:var(--af-rojo)">⚠ Llevas ${dias} días con esta molestia. Pide una <b>valoración con tu profesional</b>.</div>`:''}`;}
 function textoSeguimiento(){const A=dolorActivo(); if(!A)return ''; const ult=(A.dias||[]).slice(-1)[0]||{};
   return `\n— Molestia ACTIVA en seguimiento: ${(A.zonas||[]).join(', ')||'sin zona'}${A.tipo?' ('+A.tipo+')':''} · ${(A.dias||[]).length} días · hoy ${ult.dolor||'-'}/10${ult.vs?' · '+ult.vs:''}`;}
 function cerrarTriaje(){
