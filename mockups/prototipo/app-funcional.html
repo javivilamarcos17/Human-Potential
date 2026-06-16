@@ -370,6 +370,14 @@
         </div>
         <div class="sub" style="margin-top:8px;font-size:11px">Sin culpa: 5 minutos bien hechos también suman racha y XP. La rutina se amolda a ti.</div>
       </div>
+      <div class="panel">
+        <div class="sub">¿Dónde entrenas hoy?</div>
+        <div class="toolbar" style="margin-top:8px">
+          <div class="tool t-ctx" data-ctx="casa" onclick="ctx(this)">🏠 Casa / sin material</div>
+          <div class="tool t-ctx" data-ctx="gym" onclick="ctx(this)">🏋️ Gimnasio / con material</div>
+        </div>
+        <div class="sub" style="margin-top:6px;font-size:11px">Si entrenas sin material o de viaje, te quito los ejercicios de gimnasio.</div>
+      </div>
       <div class="alerta-roja" id="alerta">
         <b>⚠ Aviso enviado a <span class="cfg-fisio">tu fisio</span> (<span class="cfg-clinica">tu clínica</span>).</b><br>
         Dolor alto registrado. Tu rutina de hoy se adapta a versión suave — sin culpa,
@@ -846,7 +854,7 @@ function pintar(){
   $('hecho-hoy').style.display=hecho?'block':'none';
   $('btn-empezar').style.display=hecho?'none':'block';
   {var _ba=$('btn-activo');if(_ba)_ba.style.display=hecho?'none':'block';}
-  pintarPreguntaDia(); pintarSeguimientoDolor(); pintarDolorCard();
+  pintarPreguntaDia(); pintarSeguimientoDolor(); pintarDolorCard(); pintarContexto();
   if(gap<2||hecho) $('saludo').innerHTML=hecho?`Hasta mañana, ${CONFIG.paciente}.`
     :(S.racha>0?`<b style="color:var(--af-ambar)">🔥 Tu racha de ${S.racha} días se apaga a medianoche.</b><br>5 minutos bastan para mantenerla viva, ${CONFIG.paciente}.`
     :`Tu Guardián te espera, ${CONFIG.paciente}.`);
@@ -1042,13 +1050,16 @@ const MOTOR={
   },
 };
 
+// CONTEXTO del día: en "casa / sin material" se excluyen los ejercicios que necesitan gimnasio (editable).
+const EJ_GYM=['sentadilla_barra','press_banca','peso_muerto','press_militar','hip_thrust','sentadilla_frontal','buenos_dias','peso_muerto_rumano','dominadas','prensa','remo_ergo','bici','box_jump','wall_ball','battle_ropes','trx_remo','fondos','kb_swing','med_ball_slam'];
+function materialOK(e){return S.contextoHoy!=='casa' || !EJ_GYM.includes(e.id);}
 // El cliente "enseña" sus gustos: si cambia (🔄) un ejercicio 3+ veces, dejamos de proponérselo.
 function evitado(id){return ((S.gustos&&S.gustos[id])||0)>=3;}
 // ── COMPOSITOR: elige los ejercicios ideales para hoy ──────────────────────
 function componerRutina(zona, nivel, nEj, soloPatrones, receta, estricto){
   // estricto = solo ejercicios de la zona dolorida (terapéutico), sin generales
   const enZona=e=> estricto&&zona!=='general' ? e.zona===zona : (e.zona===zona||e.zona==='general');
-  let pool=EJ.filter(e=>e.nivel<=nivel && enZona(e) && !evitado(e.id));
+  let pool=EJ.filter(e=>e.nivel<=nivel && enZona(e) && !evitado(e.id) && materialOK(e));
   if(soloPatrones) pool=pool.filter(e=>soloPatrones.includes(e.patron));
   // Fallbacks: respetan nivel Y zona (nunca colar ejercicios de otra zona en una rutina)
   if(!pool.length) pool=EJ.filter(e=>e.nivel<=nivel && enZona(e));
@@ -1180,7 +1191,7 @@ function componerSesion(zona, nivel, minutos, receta, focoDia){
   const usados=new Set(), bls=[];
   for(const b of bloques){
     const tope=b.tope!=null?Math.min(nivel,b.tope):nivel;   // calentamiento/vuelta no meten alta intensidad
-    const ok=e=> (e.zona===zona||e.zona==='general') && !(e.riesgo&&zona!=='general'&&e.riesgo.includes(zona));
+    const ok=e=> (e.zona===zona||e.zona==='general') && !(e.riesgo&&zona!=='general'&&e.riesgo.includes(zona)) && materialOK(e);
     // primero los ejercicios EXIGENTES para su nivel (rango [tope-2, tope]) y se rota entre ellos
     let pool=EJ.filter(e=>e.nivel<=tope && e.nivel>=Math.max(0,tope-2) && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id) && !evitado(e.id));
     if(pool.length<b.n) pool=pool.concat(EJ.filter(e=>e.nivel<=tope && ok(e) && b.pat.includes(e.patron) && !usados.has(e.id) && !evitado(e.id) && !pool.includes(e)));
@@ -1319,6 +1330,8 @@ function respDia(id,val,el){
 function tiempo(el){S.tiempoHoy=+el.dataset.min;
   document.querySelectorAll('.t-tiempo').forEach(t=>{t.style.borderColor='';t.style.color='';});
   el.style.borderColor='var(--af-primario)';el.style.color='var(--af-texto)';}
+function ctx(el){S.contextoHoy=el.dataset.ctx;save();pintarContexto();}
+function pintarContexto(){document.querySelectorAll('.t-ctx').forEach(t=>{const on=t.dataset.ctx===S.contextoHoy;t.style.borderColor=on?'var(--af-primario)':'';t.style.color=on?'var(--af-texto)':'';});}
 
 /* ════ SEGUIMIENTO DE PATOLOGÍA — tras el primer aviso de dolor, la app se centra en ESA molestia ════ */
 const DOLOR_UMBRAL=4;
