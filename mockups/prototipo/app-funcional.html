@@ -179,17 +179,12 @@
         <div class="xprow" style="margin-top:14px"><span id="centro-titulo" style="font-weight:700;color:var(--af-dorado)"></span></div>
         <div id="centro-lista"></div>
       </div>
-      <button class="cta" id="btn-empezar" onclick="ir('triaje')">Empezar mi jornada</button>
-      <button class="sec" id="btn-activo" onclick="verActivo()" style="margin-top:-4px">🚶 Hoy me muevo suave — descanso activo (cuenta para la racha)</button>
+      <button class="cta" id="btn-empezar" onclick="ir('triaje')">🏋️ Entrenar hoy</button>
+      <button class="sec" id="btn-activo" onclick="verActivo()" style="margin-top:-4px">🚶 O muévete suave — descanso activo</button>
+      <button class="cta" onclick="verNutricion()" style="background:linear-gradient(135deg,#3A9BD5,#2E86C1);color:#062018">🥗 Mi nutrición de hoy</button>
       <div class="toolbar">
         <div class="tool" onclick="verSemana()">📅 Mi semana</div>
-        <div class="tool" onclick="verNutricion()">🥗 Nutrición</div>
-        <div class="tool" onclick="verRetos()">🏆 Logros</div>
-        <div class="tool" onclick="verPC()">🗃 PC</div>
-        <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
-        <div class="tool" onclick="verProgreso()">📈 Mi progreso</div>
-        <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
-        <div class="tool" onclick="verValoracionSemana()">🏁 Cierre de semana</div>
+        <div class="tool" onclick="ir('mas')">⋯ Más</div>
         <div class="tool" id="dbg-dia" style="display:none" onclick="diaSiguiente()">⏭ Simular día</div>
         <div class="tool" id="dbg-perfil" style="display:none" onclick="simPerfil()">🎛 Simular perfil</div>
         <div class="tool" id="dbg-reset" style="display:none" onclick="reset()">↺ Reiniciar</div>
@@ -266,6 +261,22 @@
       </div>
       <button class="cta" onclick="registrarActivo()">Registrar mi movimiento · mantener racha</button>
       <button class="sec" onclick="ir('home')">Volver</button>
+    </div>
+
+    <!-- MÁS (todo lo que no es el día a día: semana, logros, progreso, compartir…) -->
+    <div class="scr" id="mas">
+      <div class="h1">Más</div>
+      <div class="sub">Tu semana, tus logros y tu progreso — sin recargar el inicio.</div>
+      <div class="toolbar" style="margin-top:16px">
+        <div class="tool" onclick="verSemana()">📅 Mi semana</div>
+        <div class="tool" onclick="verValoracionSemana()">🏁 Cierre de semana</div>
+        <div class="tool" onclick="verProgreso()">📈 Mi progreso</div>
+        <div class="tool" onclick="verRetos()">🏆 Logros</div>
+        <div class="tool" onclick="verPC()">🗃 PC</div>
+        <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
+        <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
+      </div>
+      <button class="cta" onclick="ir('home')">Volver con mi Guardián</button>
     </div>
 
     <!-- NUTRICIÓN (acompañamiento profesional, sin agobio) -->
@@ -558,12 +569,21 @@ const CONFIG = {
       nombre: 'Lidomare',
       whatsapp: '',                       // los resúmenes y alertas del cliente van aquí
       // clases programadas del centro por día (0=Lun..6=Dom) — se ven en la vista semanal
-      horario: {0:'Sala de fuerza 19:00', 1:'Spinning 18:30', 2:'CrossFit (WOD) 19:00', 3:'Pilates 18:00', 4:'CrossFit (WOD) 19:00', 5:'Funcional 11:00'},
+      // Horario real (representativo) por día (0=Lun..5=Sáb). Reservas vía resasports.
+      horario: {0:'Bodypump 17:30 · Spinning 18:30', 1:'Functional 08:30 · Crosstraining 19:30', 2:'Bodypump 09:30 · GAP 19:30', 3:'Spinning 17:30 · Upperbody 18:30', 4:'Cardio Dance 10:30 · HYTraining 20:30', 5:'Spinning 09:00 · HYTraining 10:00'},
+      // Actividades REALES de Lidomare. 'foco' empareja la clase con la rutina del día (fuerza/cardio/mixto/movilidad). Editable a mano.
       actividades: [
-        {nombre:'CrossFit (WOD)',        detalle:'La sesión cañera · ¿no puedes ir? hazla en casa con tu Metcon', cta:'Me interesa', nivel:4, equivalenteCasa:'packMetcon'},
-        {nombre:'Sala de fuerza guiada', detalle:'Tu pack de progresión, con supervisión · lun-vie',  cta:'Me interesa', nivel:3, equivalenteCasa:'packAvanzado'},
-        {nombre:'Pilates máquina',    detalle:'Control y core para tu espalda · mar/jue 19:00', cta:'Me interesa', nivel:2, equivalenteCasa:'pack'},
-        {nombre:'Fisioterapia',       detalle:'Si el dolor no cede con el movimiento, valoración presencial', cta:'Me interesa', nivel:0, equivalenteCasa:null},
+        {nombre:'Crosstraining (WOD)',  detalle:'La sesión cañera estilo CrossFit · si no puedes ir, tu Metcon en casa equivale', foco:'mixto',     cta:'Me interesa', nivel:4, equivalenteCasa:'packMetcon'},
+        {nombre:'HYTraining',           detalle:'Hipertrofia + HIIT: intensidad y resultados',                                    foco:'mixto',     cta:'Me interesa', nivel:4, equivalenteCasa:'packMetcon'},
+        {nombre:'Bodypump',             detalle:'Fuerza con barra al ritmo de la música (LesMills) · también Bodypump Heavy',     foco:'fuerza',    cta:'Me interesa', nivel:3, equivalenteCasa:'packAvanzado'},
+        {nombre:'Upperbody',            detalle:'Tren superior: brazos, pecho y espalda',                                         foco:'fuerza',    cta:'Me interesa', nivel:3, equivalenteCasa:'packAvanzado'},
+        {nombre:'GAP',                  detalle:'Glúteo, abdomen y pierna: tono y fuerza localizada',                             foco:'fuerza',    cta:'Me interesa', nivel:2, equivalenteCasa:'pack'},
+        {nombre:'Spinning',             detalle:'Ciclo indoor: cardio potente sin impacto',                                       foco:'cardio',    cta:'Me interesa', nivel:3, equivalenteCasa:'pack'},
+        {nombre:'Cardio Dance',         detalle:'Quema bailando, sin darte cuenta',                                               foco:'cardio',    cta:'Me interesa', nivel:2, equivalenteCasa:'pack'},
+        {nombre:'Fightraining',         detalle:'Boxeo y artes marciales fitness: desfógate y suda',                              foco:'cardio',    cta:'Me interesa', nivel:3, equivalenteCasa:'pack'},
+        {nombre:'Functional Training',  detalle:'Movimiento funcional para tu día a día',                                         foco:'mixto',     cta:'Me interesa', nivel:3, equivalenteCasa:'pack'},
+        {nombre:'Burn Abs',             detalle:'Core y abdominales a fuego',                                                      foco:'movilidad', cta:'Me interesa', nivel:2, equivalenteCasa:'pack'},
+        {nombre:'Fisioterapia',         detalle:'Si el dolor no cede con el movimiento, valoración presencial',                   foco:'movilidad', cta:'Me interesa', nivel:0, equivalenteCasa:null},
       ]
     }
   },
@@ -875,23 +895,26 @@ function pintar(){
     $('ec-sub').textContent='Prueba '+(S.pruebasHechas.length+1)+'/'+CONFIG.pruebas.length+' · '+prx.titulo+' · +15 XP — toca para hacerla';}
   else if(S.pruebasHechas&&S.pruebasHechas.length>=CONFIG.pruebas.length){ec.style.display='none';}
   else ec.style.display='none';
-  // Bloque del centro (B2B2C): sus actividades dentro de la app del cliente
-  const c=miCentro(), bl=$('centro-bloque');
-  if(c){bl.style.display='block';
-    $('centro-titulo').textContent=`${c.nombre} te propone`;
-    $('centro-lista').innerHTML=c.actividades.map(a=>
-      `<div class="ej" style="cursor:default"><div style="flex:1">
-         <div class="t1">${a.nombre}</div><div class="t2">${a.detalle}</div></div>
-         ${c.whatsapp?`<a href="https://wa.me/${c.whatsapp}?text=${encodeURIComponent('Hola, soy '+CONFIG.paciente+' (Anti Frágil). Me interesa: '+a.nombre)}" target="_blank" style="font-size:12px;font-weight:700;color:var(--af-dorado);text-decoration:none">${a.cta} →</a>`
-                     :`<span style="font-size:12px;font-weight:700;color:var(--af-dorado)">${a.cta} →</span>`}
-       </div>`).join('')
-      +`<div class="ej" style="border-style:dashed" onclick="ir('triaje')"><div style="flex:1">
-          <div class="t1">🏠 Hoy no puedo ir al centro</div>
-          <div class="t2">Sin problema: tu rutina en casa de hoy equivale a tu sesión — el vínculo no se rompe.</div>
-        </div></div>`;
-  } else bl.style.display='none';
+  // El INICIO se mantiene SIMPLE: las clases de Lidomare van en la rutina diaria (al elegir gimnasio), no aquí.
+  {const bl=$('centro-bloque'); if(bl) bl.style.display='none';}
 }
 function miCentro(){return S.perfil&&S.perfil.centro?CONFIG.centros[S.perfil.centro]:null;}
+// Clase del centro que encaja con el foco de hoy (fuerza/cardio/mixto/movilidad)
+function claseLidomare(foco){
+  const c=miCentro(); if(!c||!c.actividades) return null;
+  const m=c.actividades.find(a=>a.foco===foco)||c.actividades.find(a=>a.foco==='mixto')||c.actividades[0];
+  const ds=(new Date(hoyISO()).getDay()+6)%7;
+  return {clase:m.nombre, horario:(c.horario&&c.horario[ds])||'', centro:c.nombre};
+}
+// Si el cliente entrena en el GIMNASIO, le proponemos la clase del centro que toca hoy
+function gymSugerencia(dec){
+  if(S.contextoHoy!=='gym') return '';
+  const c=miCentro(); if(!c) return '';
+  const foco=(dec&&dec.foco)||focoDelDia(hoyISO()), cl=claseLidomare(foco); if(!cl) return '';
+  const wa=c.whatsapp?`<a href="https://wa.me/${c.whatsapp}?text=${encodeURIComponent('Hola, soy '+CONFIG.paciente+' (Anti Frágil). Quiero ir hoy a '+cl.clase)}" target="_blank" style="color:#062018;background:var(--af-dorado);border-radius:8px;padding:1px 8px;font-weight:700;text-decoration:none">Reservar →</a>`:'';
+  return `<br><span style="color:var(--af-dorado)">🏋️ Hoy en <b>${cl.centro}</b>: ve a <b>${cl.clase}</b>${cl.horario?` (${cl.horario.split(' · ')[0]})`:''} — tu sesión de ${foco}. ${wa}</span>`;
+}
+function toggleCentroClases(){const t=$('centro-todas'),f=$('centro-flecha');if(!t)return;const op=t.style.display==='none';t.style.display=op?'block':'none';if(f)f.textContent=op?'▴':'▾';}
 function waDestino(){const c=miCentro();return (c&&c.whatsapp)||CONFIG.whatsappFisio;}
 function dolor(v){const e=$('v-dolor');e.textContent=v;e.style.color=v>=8?'var(--af-rojo)':v>=5?'var(--af-ambar)':'var(--af-primario)';$('alerta').style.display=v>=8?'block':'none';$('banderas').style.display=v>=9?'block':'none';S.dolorHoy=+v;
   const wa=$('wa-alerta');
@@ -1435,7 +1458,7 @@ function cerrarTriaje(){
   $('rut-titulo').textContent=dec.titulo;
   $('rut-sub').innerHTML=(dec.motivo?`<span style="color:var(--af-agua)">🤖 ${dec.motivo}</span><br>`:'')
     +`${pack.nombre} · plan digital Anti Frágil`
-    +(pack.lidomare?`<br><span style="color:var(--af-dorado)">🏋️ Equivale a: <b>${pack.lidomare}</b> en ${pack.centro}</span>`:'')
+    +gymSugerencia(dec)
     +(dec.vender?`<br><a href="upselling.html" style="color:var(--af-dorado);font-weight:700;text-decoration:none">💆 O resuélvelo antes: sesión presencial con ${CONFIG.fisio} →</a>`:'');
   window._packHoy=pack.ejercicios;
   pintarListaRutina();
