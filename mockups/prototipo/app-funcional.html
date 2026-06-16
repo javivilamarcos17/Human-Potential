@@ -274,9 +274,19 @@
         <div class="tool" onclick="verRetos()">🏆 Logros</div>
         <div class="tool" onclick="verPC()">🗃 PC</div>
         <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
+        <div class="tool" onclick="verProfesional()">💬 Mi profesional</div>
         <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
       </div>
       <button class="cta" onclick="ir('home')">Volver con mi Guardián</button>
+    </div>
+
+    <!-- TU PROFESIONAL (bucle de ida y vuelta) -->
+    <div class="scr" id="profesional">
+      <div class="h1">Tu profesional</div>
+      <div class="sub" id="prof-quien"></div>
+      <div id="prof-nota" style="margin-top:10px"></div>
+      <a class="cta" id="prof-wa" target="_blank" style="background:linear-gradient(135deg,var(--af-primario),var(--af-primario-osc));color:#062018">💬 Consultar a mi profesional</a>
+      <button class="sec" onclick="ir('mas')">Volver</button>
     </div>
 
     <!-- NUTRICIÓN (acompañamiento profesional, sin agobio) -->
@@ -541,6 +551,8 @@
 const CONFIG = {
   paciente: 'Javi',
   fisio:    'Dra. Elena Ruiz',
+  // Nota que tu profesional te deja (la edita el centro). Bucle de ida y vuelta: él te escribe, tú le consultas.
+  mensajeProfesional: 'He visto tu seguimiento, Javi. Vas bien. Si la molestia lumbar no baja esta semana, baja la intensidad y prioriza la movilidad — y reserva una valoración. Cualquier duda, escríbeme.',
   clinica:  'MovePlus',
   zona:     'zona lumbar',
   whatsappFisio: '',   // ej. '34600111222' — activa el envío real de alertas y resúmenes
@@ -2170,6 +2182,19 @@ function verSemana(){
       <span style="color:var(--af-texto-suave);font-size:13px">✎</span></div>`;
   }).join('');
   ir('semana');
+}
+function verProfesional(){
+  $('prof-quien').textContent=`${CONFIG.fisio}${CONFIG.clinica?' · '+CONFIG.clinica:''}`;
+  const A=dolorActivo(); let html='';
+  if(CONFIG.mensajeProfesional) html+=`<div class="panel" style="border-color:rgba(46,204,143,.4)"><div class="sub" style="color:var(--af-texto);font-weight:700">💬 Nota de ${CONFIG.fisio}</div><div class="sub" style="margin-top:4px;line-height:1.5">${CONFIG.mensajeProfesional}</div></div>`;
+  if(A){const imp=importanciaDolor(A), ic={alta:'🔴 alta',media:'🟡 media',baja:'🟢 baja'}[imp.nivel];
+    html+=`<div class="panel"><div class="sub" style="color:var(--af-texto)">Tu profesional ve tu seguimiento en tiempo real:</div><div class="sub" style="margin-top:4px">Molestia en <b>${(A.zonas||[]).join(', ')||'-'}</b> · ${(A.dias||[]).length} días · prioridad ${ic}.</div></div>`;
+  } else html+=`<div class="panel"><div class="sub">Tu profesional recibe tus datos (dolor, sesiones, alertas) en tiempo real. Aquí puedes escribirle cuando quieras.</div></div>`;
+  $('prof-nota').innerHTML=html;
+  const dest=waDestino(), wa=$('prof-wa');
+  if(dest){wa.href='https://wa.me/'+dest+'?text='+encodeURIComponent('Hola '+CONFIG.fisio+', soy '+CONFIG.paciente+' (Anti Frágil). Quería consultarte: ');wa.onclick=null;}
+  else{wa.href='#';wa.onclick=function(e){e.preventDefault();alert('Configura el WhatsApp de tu fisio/centro en CONFIG para activar la consulta directa.');};}
+  ir('profesional');
 }
 function verRetos(){
   S.retosLog=S.retosLog||[];
