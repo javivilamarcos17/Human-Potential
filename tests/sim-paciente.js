@@ -24,7 +24,7 @@ const LOG=[];
 
 // ── cargar la app ───────────────────────────────────────────────────
 const ctx={};
-new Function(js+'\n;Object.assign(this,{S,save,altaSubmit,cerrarTriaje,terminarJornada,diaSiguiente,faseDesde,etapaDe,nivelDesdeXp,registrarPrueba,pruebaPendiente,abrirPrueba,CONFIG,hoyISO,verPC,cerrarSeason,verRetos,verProgreso,mostrarBienvenida,abrirPlayer,plSiguiente,enviarResumen,verNutricion,verSemana,verValoracionSemana,semanaEntreno,simPerfil,simPreviewFase,simEscenario,simSemana,verActivo,activoPick,registrarActivo,decidirRutina,pintarListaRutina,cambiarEjercicio});').call(ctx);
+new Function(js+'\n;Object.assign(this,{S,save,finishOnb,onbOne,onbMulti,cerrarTriaje,terminarJornada,diaSiguiente,faseDesde,etapaDe,nivelDesdeXp,registrarPrueba,pruebaPendiente,abrirPrueba,CONFIG,hoyISO,verPC,cerrarSeason,verRetos,verProgreso,mostrarBienvenida,abrirPlayer,plSiguiente,enviarResumen,verNutricion,verSemana,verValoracionSemana,semanaEntreno,simPerfil,simPreviewFase,simEscenario,simSemana,verActivo,activoPick,registrarActivo,decidirRutina,pintarListaRutina,cambiarEjercicio});').call(ctx);
 const A=ctx;
 
 // ── helpers de interacción ──────────────────────────────────────────
@@ -47,10 +47,13 @@ let fallos=0;
 const check=(cond,msg)=>{if(!cond){fallos++;console.log('❌ FALLO:',msg);}else console.log('✅',msg);};
 
 // Día 0: alta
-set('a-nombre','TestMaria');set('a-zona','cervicales');set('a-f',20);set('a-a',30);set('a-m','13');set('a-c',4);
-els['a-m'].value='13';els['a-centro']=fakeEl();els['a-centro'].value='LIDOMARE26';
-els['a-consent']=fakeEl();els['a-consent'].checked=true;
-A.altaSubmit();
+A.S.onb={nombre:'TestMaria',edad:30,sexo:'h',peso:70,altura:170,actividad:1.55,
+  experiencia:'pasado',queHacia:['cardio'],cuantoTiempo:2,desde:1,diasActual:4,
+  parq:['nada'],lesiones:['cervical'],dolorActual:'no',trabajo:'sentado',sueno:'bien',estres:'bajo',
+  porque:'harto',objetivo:0,exito:0,frena:0,sensacion:0,
+  modalidades:['fuerza'],lugar:'casa',tiempo:30,intensidad:'media',odio:[],
+  meta:'tocarme los pies',centro:'LIDOMARE26',consent:true};
+A.finishOnb();
 check(A.S.perfil&&A.S.perfil.nombre==='TestMaria','alta crea perfil');
 check(A.S.perfil.centro==='LIDOMARE26','vinculación al centro');
 check(A.S.aud>0&&A.S.aud<=100,'vitalidad provisional en rango: '+A.S.aud);

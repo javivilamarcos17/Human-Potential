@@ -99,53 +99,12 @@
 
     <!-- ALTA EXPRÉS (solo primera vez) -->
     <div class="scr" id="alta">
-      <div class="h1">Empecemos, de verdad</div>
-      <div class="sub">60 segundos. De aquí nace tu Guardián.</div>
-      <div class="panel">
-        <div class="sub">¿Cómo te llamas?</div>
-        <input id="a-nombre" placeholder="Tu nombre" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px">
-        <div class="sub" style="margin-top:12px">¿Qué buscas sobre todo?</div>
-        <select id="a-objetivo" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px">
-          <option value="agua">Recuperarme de un dolor o lesión</option>
-          <option value="fuego">Transformar mi cuerpo</option>
-          <option value="rayo">Resistencia y velocidad (correr, cardio)</option>
-          <option value="hierba">Crear el hábito y soltar estrés</option>
-          <option value="roca">Ganar fuerza</option>
-        </select>
-        <div class="sub" style="margin-top:12px">¿Hay alguna zona que quieras cuidar? <span style="opacity:.6">(opcional)</span></div>
-        <select id="a-zona" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px">
-          <option value="zona lumbar">Zona lumbar</option><option value="cervicales">Cervicales</option>
-          <option value="hombro">Hombro</option><option value="rodilla">Rodilla</option>
-          <option value="cadera">Cadera</option><option value="bienestar general">Ninguna — prevención</option>
-        </select>
-      </div>
-      <div class="panel">
-        <div class="sub">Mini-Auditoría de Vitalidad</div>
-        <div class="sub" style="margin-top:10px;color:var(--af-texto)">¿Cuántas sentadillas seguidas harías sin parar?</div>
-        <div class="t-num" id="a-f" style="color:var(--af-tierra);font-size:30px">10</div>
-        <input type="range" min="0" max="30" value="10" oninput="$('a-f').textContent=this.value">
-        <div class="sub" style="margin-top:8px;color:var(--af-texto)">¿Minutos andando rápido sin agotarte?</div>
-        <div class="t-num" id="a-a" style="color:var(--af-viento);font-size:30px">20</div>
-        <input type="range" min="0" max="60" value="20" oninput="$('a-a').textContent=this.value">
-        <div class="sub" style="margin-top:8px;color:var(--af-texto)">¿Te tocas los pies sin doblar rodillas?</div>
-        <select id="a-m" style="width:100%;margin-top:6px;padding:10px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto)">
-          <option value="20">Sí, fácil</option><option value="13" selected>Casi — me quedo cerca</option>
-          <option value="7">Lejos</option><option value="3">Con dolor</option>
-        </select>
-        <div class="sub" style="margin-top:10px;color:var(--af-texto)">¿Cuántos días a la semana haces algo de ejercicio?</div>
-        <div class="t-num" id="a-c" style="color:var(--af-primario);font-size:30px">2</div>
-        <input type="range" min="0" max="7" value="2" oninput="$('a-c').textContent=this.value">
-      </div>
-      <div class="panel">
-        <div class="sub">¿Tienes un código de tu centro? <span style="opacity:.6">(opcional)</span></div>
-        <input id="a-centro" placeholder="Ej.: LIDOMARE26" style="width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px;text-transform:uppercase">
-        <div class="sub" style="margin-top:6px;font-size:11px">Con él, tu centro te acompaña: verá tu progreso y te propondrá sus actividades.</div>
-      </div>
-      <div class="panel" style="display:flex;gap:10px;align-items:flex-start">
-        <input type="checkbox" id="a-consent" style="width:22px;height:22px;accent-color:var(--af-primario);flex:0 0 22px;margin-top:2px">
-        <label for="a-consent" class="sub" style="cursor:pointer">Acepto que mis datos de salud (dolor, energía, ejercicio) se usen para mi seguimiento y, si uso código de centro, se compartan con mi centro. Puedo borrarlos cuando quiera escribiendo a mi centro o a privacidad@antifragil.es. <b>Borrador piloto — pendiente de validación legal.</b></label>
-      </div>
-      <button class="cta" onclick="altaSubmit()">Crear mi Guardián</button>
+      <div class="h1" id="onb-titulo">Empecemos</div>
+      <div class="sub" id="onb-sub"></div>
+      <div id="onb-dots" style="margin:10px 0 4px;color:var(--af-texto-suave);letter-spacing:3px;font-size:12px"></div>
+      <div id="onb-campos"></div>
+      <button class="cta" id="onb-next" onclick="onbNext()">Siguiente →</button>
+      <button class="sec" id="onb-back" onclick="onbBack()" style="display:none">Atrás</button>
     </div>
 
     <!-- HOME -->
@@ -1874,29 +1833,112 @@ function simSemana(){
   $('sim-fase').value=faseDesde({...S}); simPreviewFase($('sim-fase').value); pintar();
   alert('Simulada 1 semana entrenando bien.\nFase del Guardián ahora: '+faseDesde({...S})+'/30 ('+etapaDe(faseDesde({...S}))+').\nSigue simulando, mira el cierre de semana, o cierra para verlo en tu Guardián.');
 }
-function altaSubmit(){
-  const n=$('a-nombre').value.trim(); if(!n){alert('Dinos tu nombre 🙂');return;}
-  if(!$('a-consent').checked){alert('Necesitamos tu consentimiento para guardar tus datos de salud — sin él no podemos acompañarte.');return;}
-  // Score 0-100 con los pesos reales: fuerza 30 + aeróbico 30 + movilidad 20 + constancia 20
-  const f=Math.min(30,Math.round(+$('a-f').textContent)),          // 1 sentadilla ≈ 1 punto (tope 30)
-        a=Math.min(30,Math.round(+$('a-a').textContent/2)),        // 60 min → 30 puntos
-        m=+$('a-m').value,
-        c=Math.round(+$('a-c').textContent*20/7);                  // 7 días → 20 puntos
-  const cod=$('a-centro').value.trim().toUpperCase();
-  S.perfil={nombre:n,zona:$('a-zona').value,centro:CONFIG.centros[cod]?cod:null}; S.aud=f+a+m+c;
-  S.audInicial=S.aud;S.retos=0;S.reaud=0;S.retosLog=[];S.mejora=0;
-  // Sombrero Seleccionador digital: el elemento nace de tu cuerpo, no de un menú
-  S.bloques={f:f,a:a,m:m,c:c};
-  // El elemento nace de TU OBJETIVO de salud (brief de arte): es tu historia
-  const obj=$('a-objetivo')&&$('a-objetivo').value;
-  if(['agua','fuego','rayo','hierba','roca'].includes(obj)) S.elemento=obj;
-  else{const mx=Math.max(f/30,a/30,m/20,c/20);
-    S.elemento=(m/20>=mx)?'agua':(f/30>=mx)?'roca':(a/30>=mx)?'rayo':(c/20>=mx)?'hierba':'fuego';}
-  CONFIG.paciente=n; CONFIG.zona=S.perfil.zona; save();
-  if(cod&&!CONFIG.centros[cod]) alert('Código de centro no reconocido — entras en modo individual (puedes vincularte después).');
-  sync('alta',{zona:S.perfil.zona,vitalidad_provisional:S.aud,centro_intentado:cod||null});
-  alert(`Tu Vitalidad provisional: ${S.aud}/100\n(Fuerza ${f}/30 · Aeróbico ${a}/30 · Movilidad ${m}/20 · Constancia ${c}/20)\n\nTu huevo ya late. Las pruebas reales de tu primera semana afinarán este número — y de ahí nacerá tu Guardián.`);
+/* ════ ONBOARDING PROFESIONAL — anamnesis + seguridad + elemento + gustos + meta (editable) ════ */
+const ONB=[
+ {t:'Empecemos 👋',s:'Vamos a conocerte para hacerte un plan a tu medida. 2 minutos.',campos:[
+   {t:'txt',k:'nombre',q:'¿Cómo te llamas?',ph:'Tu nombre'},
+   {t:'num',k:'edad',q:'¿Qué edad tienes?',ph:'años'},
+   {t:'one',k:'sexo',q:'Sexo',ops:[{l:'Hombre',v:'h'},{l:'Mujer',v:'m'},{l:'Otro / prefiero no decir',v:'x'}]},
+   {t:'num',k:'peso',q:'Peso (kg) — opcional',ph:'kg'},
+   {t:'num',k:'altura',q:'Altura (cm) — opcional',ph:'cm'},
+   {t:'one',k:'actividad',q:'¿Cómo de activo eres ahora mismo?',ops:[{l:'Sedentario',v:1.2},{l:'Ligero (1-2 días/sem)',v:1.375},{l:'Activo (3-4 días)',v:1.55},{l:'Muy activo (5+ días)',v:1.725}]},
+ ]},
+ {t:'De dónde vienes 🕰️',s:'Tu historia entrenando importa más que tu forma de hoy.',campos:[
+   {t:'one',k:'experiencia',q:'¿Has entrenado de forma regular alguna vez?',ops:[{l:'Nunca',v:'novato'},{l:'Lo intenté pero no cuajó',v:'intento'},{l:'Sí, en el pasado',v:'pasado'},{l:'Sí, ahora mismo',v:'actual'}]},
+   {t:'multi',k:'queHacia',q:'¿Qué hacías o haces? (varias)',ops:[{l:'🏋️ Gym/pesas',v:'pesas'},{l:'🎵 Clases dirigidas',v:'clases'},{l:'🏃 Correr/bici/nadar',v:'cardio'},{l:'⚽ Deportes',v:'deportes'},{l:'🤸 Calistenia/casa',v:'calistenia'},{l:'🥊 Artes marciales',v:'marciales'},{l:'Nada',v:'nada'}]},
+   {t:'one',k:'cuantoTiempo',q:'¿Cuánto tiempo seguido llegaste a entrenar?',ops:[{l:'Nunca',v:0},{l:'Menos de 6 meses',v:1},{l:'6 meses – 2 años',v:2},{l:'Más de 2 años',v:3}]},
+   {t:'one',k:'desde',q:'¿Hace cuánto que no entrenas de forma regular?',ops:[{l:'Entreno ahora',v:0},{l:'Menos de 3 meses',v:1},{l:'3 – 12 meses',v:2},{l:'Más de 1 año',v:3},{l:'Nunca he entrenado',v:4}]},
+   {t:'slider',k:'diasActual',q:'Días/semana que te mueves AHORA',min:0,max:7},
+ ]},
+ {t:'Tu seguridad primero 🛡️',s:'Marca solo lo que sea SÍ. Es para cuidarte.',campos:[
+   {t:'multi',k:'parq',q:'¿Algo de esto va contigo?',ops:[{l:'Problema de corazón / tensión diagnosticado',v:'corazon'},{l:'Dolor en el pecho (reposo o esfuerzo)',v:'pecho'},{l:'Mareos con caída o desmayos (último año)',v:'sincope'},{l:'Otra enfermedad crónica (diabetes, asma…)',v:'cronica'},{l:'Tomo medicación para una enfermedad crónica',v:'medicacion'},{l:'Un médico me dijo: solo ejercicio supervisado',v:'supervision'},{l:'Nada de lo anterior',v:'nada'}]},
+ ]},
+ {t:'Lesiones y tu vida 🩹',s:'Aunque ya no duela, cuidaremos esas zonas siempre.',campos:[
+   {t:'multi',k:'lesiones',q:'¿Lesiones o cirugías importantes? (zonas)',ops:[{l:'Lumbar',v:'lumbar'},{l:'Cervical',v:'cervical'},{l:'Hombro',v:'hombro'},{l:'Rodilla',v:'rodilla'},{l:'Cadera',v:'cadera'},{l:'Tobillo',v:'tobillo'},{l:'Ninguna',v:'ninguna'}]},
+   {t:'one',k:'dolorActual',q:'¿Tienes dolor o molestia AHORA mismo?',ops:[{l:'No',v:'no'},{l:'A veces, leve',v:'leve'},{l:'Sí, me molesta',v:'si'}]},
+   {t:'one',k:'trabajo',q:'¿Cómo es tu día?',ops:[{l:'Sentado casi todo el día',v:'sentado'},{l:'Mixto',v:'mixto'},{l:'De pie / físico',v:'fisico'}]},
+   {t:'one',k:'sueno',q:'¿Qué tal duermes?',ops:[{l:'Bien',v:'bien'},{l:'Regular',v:'regular'},{l:'Mal',v:'mal'}]},
+   {t:'one',k:'estres',q:'¿Nivel de estrés habitual?',ops:[{l:'Bajo',v:'bajo'},{l:'Medio',v:'medio'},{l:'Alto',v:'alto'}]},
+ ]},
+ {t:'Qué buscas 🎯',s:'Esto define tu elemento — tu camino.',campos:[
+   {t:'one',k:'porque',q:'¿Por qué AHORA?',ops:[{l:'Un susto de salud',v:'salud'},{l:'No me gusté en una foto',v:'foto'},{l:'Me lo pidió el médico',v:'medico'},{l:'Una boda / un evento',v:'evento'},{l:'Harto de sentirme así',v:'harto'},{l:'Estar bien para los míos',v:'familia'}]},
+   {t:'one',k:'objetivo',q:'Tu objetivo PRINCIPAL',ops:[{l:'Quitarme un dolor / moverme sin molestias',el:'agua'},{l:'Cambiar mi cuerpo / perder grasa',el:'fuego'},{l:'Más energía y fondo / no cansarme',el:'rayo'},{l:'Crear el hábito / bajar el estrés',el:'hierba'},{l:'Ser más fuerte',el:'roca'}]},
+   {t:'one',k:'exito',q:'En 3 meses, ¿qué te haría sentir que valió la pena?',ops:[{l:'Hacer mi vida sin dolor',el:'agua'},{l:'Verme mejor en el espejo',el:'fuego'},{l:'Subir escaleras sin ahogarme',el:'rayo'},{l:'Que se me haya hecho rutina',el:'hierba'},{l:'Levantar más peso',el:'roca'}]},
+   {t:'one',k:'frena',q:'¿Qué es lo que MÁS te frena hoy?',ops:[{l:'El dolor o una lesión',el:'agua'},{l:'Mi peso / cómo me veo',el:'fuego'},{l:'Me canso enseguida',el:'rayo'},{l:'La constancia / el estrés',el:'hierba'},{l:'Me siento débil',el:'roca'}]},
+   {t:'one',k:'sensacion',q:'Si eliges UNA sensación al entrenar',ops:[{l:'Cuidarme, sin castigarme',el:'agua'},{l:'Sudar y quemar',el:'fuego'},{l:'Ágil y con energía',el:'rayo'},{l:'Calma y desconexión',el:'hierba'},{l:'Esfuerzo y potencia',el:'roca'}]},
+ ]},
+ {t:'Cómo te gusta moverte 🧬',s:'Esto es el ADN de tu rutina.',campos:[
+   {t:'multi',k:'modalidades',q:'¿Qué disfrutas? (varias)',ops:[{l:'🏋️ Pesas/fuerza',v:'fuerza'},{l:'🎵 Clases/HIIT',v:'mixto'},{l:'🏃 Correr/cardio',v:'cardio'},{l:'🤸 Peso corporal',v:'casa'},{l:'🧘 Yoga/movilidad',v:'movilidad'},{l:'⚽ Deportes/juego',v:'deportes'}]},
+   {t:'one',k:'lugar',q:'¿Dónde entrenas normalmente?',ops:[{l:'🏠 Casa',v:'casa'},{l:'🏋️ Gimnasio',v:'gym'},{l:'🌳 Aire libre',v:'aire'}]},
+   {t:'one',k:'tiempo',q:'¿Cuánto tiempo sueles tener?',ops:[{l:'15 min',v:15},{l:'30 min',v:30},{l:'45-60 min',v:60}]},
+   {t:'one',k:'intensidad',q:'¿Cómo te gustan las sesiones?',ops:[{l:'Cortas e intensas',v:'intensa'},{l:'Equilibradas',v:'media'},{l:'Más largas y tranquilas',v:'tranquila'}]},
+   {t:'multi',k:'odio',q:'¿Algo que ODIES o no puedas hacer?',ops:[{l:'Burpees',v:'burpees'},{l:'Correr',v:'carrera'},{l:'Plancha',v:'plancha_frontal'},{l:'Saltos',v:'sent_salto'},{l:'Flexiones',v:'flexiones'},{l:'Nada en concreto',v:''}]},
+ ]},
+ {t:'A dónde vas 🚀',s:'Tu meta. La celebraremos contigo.',campos:[
+   {t:'txt',k:'meta',q:'Una meta concreta que te haría ilusión',ph:'Ej.: tocarme los pies sin dolor'},
+   {t:'txt',k:'centro',q:'¿Código de tu centro? (opcional)',ph:'Ej.: LIDOMARE26'},
+   {t:'consent',k:'consent',q:'Acepto que mis datos de salud se usen para mi seguimiento (y, con código de centro, se compartan con mi centro).'},
+ ]},
+];
+function campoHTML(c){const v=S.onb[c.k], inp='width:100%;padding:11px;border-radius:10px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:15px';
+  if(c.t==='txt')return `<input value="${v==null?'':String(v).replace(/"/g,'&quot;')}" placeholder="${c.ph||''}" oninput="S.onb['${c.k}']=this.value" style="${inp}">`;
+  if(c.t==='num')return `<input type="number" value="${v==null?'':v}" placeholder="${c.ph||''}" oninput="S.onb['${c.k}']=this.value" style="${inp}">`;
+  if(c.t==='slider')return `<div class="t-num" id="onb-${c.k}-v" style="font-size:28px;color:var(--af-primario)">${v==null?c.min:v}</div><input type="range" min="${c.min}" max="${c.max}" value="${v==null?c.min:v}" oninput="S.onb['${c.k}']=+this.value;document.getElementById('onb-${c.k}-v').textContent=this.value" style="width:100%">`;
+  if(c.t==='one')return `<div class="toolbar" style="flex-direction:column;gap:6px">${c.ops.map((o,i)=>`<div class="tool" onclick="onbOne('${c.k}',${i})" style="text-align:left;${S.onb[c.k]===i?'border-color:var(--af-primario);color:var(--af-texto)':''}">${o.l}</div>`).join('')}</div>`;
+  if(c.t==='multi')return `<div class="toolbar">${c.ops.map(o=>`<div class="tool" onclick="onbMulti('${c.k}','${o.v}')" style="${(v||[]).includes(o.v)?'border-color:var(--af-primario);color:var(--af-texto)':''}">${o.l}</div>`).join('')}</div>`;
+  if(c.t==='consent')return `<label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer"><input type="checkbox" ${v?'checked':''} onchange="S.onb['${c.k}']=this.checked" style="width:22px;height:22px;accent-color:var(--af-primario);flex:0 0 22px;margin-top:2px"><span class="sub">${c.q} <b>Borrador piloto — pendiente de validación legal.</b></span></label>`;
+  return '';}
+function pintarCampos(){const step=ONB[S.onbPaso];
+  $('onb-campos').innerHTML=step.campos.map(c=>`<div class="panel"><div class="sub" style="color:var(--af-texto);font-weight:600">${c.q}</div><div style="margin-top:8px">${campoHTML(c)}</div></div>`).join('');}
+function pintarOnb(){const step=ONB[S.onbPaso]; if(!step)return;
+  $('onb-titulo').textContent=step.t; $('onb-sub').textContent=step.s||'';
+  $('onb-dots').textContent=ONB.map((_,i)=>i===S.onbPaso?'●':'○').join(' ')+`   ${S.onbPaso+1}/${ONB.length}`;
+  pintarCampos();
+  $('onb-back').style.display=S.onbPaso>0?'block':'none';
+  $('onb-next').textContent=S.onbPaso===ONB.length-1?'✨ Crear mi Guardián':'Siguiente →';}
+function onbOne(k,i){S.onb[k]=i;pintarCampos();}
+function onbMulti(k,v){S.onb[k]=S.onb[k]||[];const a=S.onb[k],j=a.indexOf(v);if(j>=0)a.splice(j,1);else a.push(v);pintarCampos();}
+function onbOpt(k){for(const s of ONB)for(const c of s.campos)if(c.k===k&&c.t==='one')return (c.ops[S.onb[k]]||{});return {};}
+function onbBack(){if(S.onbPaso>0){S.onbPaso--;pintarOnb();}}
+function onbNext(){
+  if(S.onbPaso===0 && !(S.onb.nombre&&String(S.onb.nombre).trim())){alert('Dinos tu nombre 🙂');return;}
+  if(S.onbPaso<ONB.length-1){S.onbPaso++;pintarOnb();return;}
+  finishOnb();
+}
+function audProvisional(){const o=S.onb||{};
+  const act={1.2:0,1.375:8,1.55:16,1.725:24}[o.actividad]||0, exp={novato:0,intento:3,pasado:8,actual:14}[o.experiencia]||0, dias=+o.diasActual||0;
+  let v=20+act+exp+Math.min(15,dias*2.2); if(o.dolorActual==='si')v-=8;
+  return Math.max(10,Math.min(85,Math.round(v)));}
+function finishOnb(){
+  const o=S.onb||{};
+  if(!o.consent){alert('Necesitamos tu consentimiento para cuidarte. Marca la casilla 🙂');return;}
+  if(!(o.nombre&&String(o.nombre).trim())){alert('Nos falta tu nombre.');S.onbPaso=0;pintarOnb();return;}
+  // ELEMENTO por puntuación (objetivo×3, éxito×2, frena×2, sensación×1)
+  const score={}; [['objetivo',3],['exito',2],['frena',2],['sensacion',1]].forEach(([k,w])=>{const el=onbOpt(k).el; if(el)score[el]=(score[el]||0)+w;});
+  let el=onbOpt('objetivo').el||'hierba', mx=-1;
+  ['agua','fuego','rayo','hierba','roca'].forEach(e=>{if((score[e]||0)>mx){mx=score[e]||0;el=e;}});
+  S.elemento=el; S.elementoScore=score;
+  S.aud=audProvisional(); S.audInicial=S.aud;
+  S.bloques={f:Math.round(S.aud*0.3),a:Math.round(S.aud*0.3),m:Math.round(S.aud*0.2),c:Math.round((+o.diasActual||0)*20/7)};
+  const zonas=(o.lesiones||[]).filter(z=>z&&z!=='ninguna');
+  const zonaMap={lumbar:'zona lumbar',cervical:'cervicales',hombro:'hombro',rodilla:'rodilla',cadera:'cadera',tobillo:'tobillo'};
+  const zona=zonas.length?(zonaMap[zonas[0]]||zonas[0]):'bienestar general';
+  const cod=String(o.centro||'').trim().toUpperCase();
+  S.perfil={nombre:String(o.nombre).trim(),zona,centro:CONFIG.centros[cod]?cod:null};
+  S.historia={experiencia:o.experiencia,queHacia:o.queHacia,cuantoTiempo:o.cuantoTiempo,desde:o.desde,diasActual:o.diasActual,lesiones:zonas,dolorActual:o.dolorActual,trabajo:o.trabajo,sueno:o.sueno,estres:o.estres,porque:o.porque,meta:o.meta,edad:o.edad,sexo:o.sexo,peso:o.peso,altura:o.altura,actividad:o.actividad};
+  S.lesionesHist=zonas; S.meta=o.meta||''; S.modalidades=o.modalidades||[]; S.intensidadPref=o.intensidad||'media';
+  S.parq=(o.parq||[]).filter(x=>x&&x!=='nada'); S.parqRojo=S.parq.length>0;
+  if(['casa','gym','aire'].includes(o.lugar))S.contextoHoy=(o.lugar==='gym'?'gym':'casa');
+  if(o.tiempo)S.tiempoHoy=+o.tiempo;
+  S.gustos=S.gustos||{}; (o.odio||[]).forEach(id=>{if(id)S.gustos[id]=3;});
+  if(o.peso&&o.altura&&o.edad){const basal=10*(+o.peso)+6.25*(+o.altura)-5*(+o.edad)+((o.sexo==='m')?-161:5);
+    S.nutriPerfil={peso:+o.peso,altura:+o.altura,edad:+o.edad,sexo:o.sexo==='m'?'m':'h',act:+o.actividad||1.375,kcal:Math.round(basal*(+o.actividad||1.375)*(NUTRI.ajusteObjetivo[el]||1)/10)*10};}
+  S.retos=0;S.reaud=0;S.retosLog=[];S.mejora=0;
+  CONFIG.paciente=S.perfil.nombre; CONFIG.zona=S.perfil.zona; save();
+  sync('alta',{elemento:el,vitalidad_provisional:S.aud,parq:S.parq,centro:cod||null,meta:S.meta});
   pintar(); ir('home');
+  if(S.parqRojo) alert('Gracias por tu sinceridad 💚 Por lo que marcaste en seguridad, empezamos SUAVE y te recomendamos una valoración con tu profesional antes de pruebas exigentes. Tu salud primero.');
+  if(!S.tutorialVisto) mostrarBienvenida();
 }
 const SEASONS=['Season 0 · El Despertar','Season 1 · La Forja','Season 2 · El Ascenso'];
 function cerrarSeason(){
@@ -2329,7 +2371,7 @@ function enviarResumen(){
 try{
   if(S.perfil){CONFIG.paciente=S.perfil.nombre;CONFIG.zona=S.perfil.zona;}
   pintar();
-  if(!S.perfil) ir('alta');
+  if(!S.perfil){S.onbPaso=S.onbPaso||0;S.onb=S.onb||{};ir('alta');pintarOnb();}
   if(S.perfil && !S.tutorialVisto) mostrarBienvenida();
   // Modo demo (?debug=1): muestra herramientas de simulación. Pacientes reales NO las ven.
   if(location.search.indexOf('debug=1')>=0){['dbg-dia','dbg-perfil','dbg-reset'].forEach(id=>{var e=$(id);if(e)e.style.display='block';});}
