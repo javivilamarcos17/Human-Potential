@@ -138,8 +138,10 @@
         <div class="xprow" style="margin-top:14px"><span id="centro-titulo" style="font-weight:700;color:var(--af-dorado)"></span></div>
         <div id="centro-lista"></div>
       </div>
+      <div id="home-semana" onclick="verSemana()" style="margin:14px 0 10px;cursor:pointer"></div>
       <button class="cta" id="btn-empezar" onclick="ir('triaje')">🏋️ Entrenar hoy</button>
       <button class="sec" id="btn-activo" onclick="verActivo()" style="margin-top:-4px">🚶 O muévete suave — descanso activo</button>
+      <div id="home-nutri" class="sub" onclick="verNutricion()" style="margin:8px 0 4px;line-height:1.4;cursor:pointer;color:var(--af-agua)"></div>
       <button class="cta" onclick="verNutricion()" style="background:linear-gradient(135deg,#3A9BD5,#2E86C1);color:#062018">🥗 Mi nutrición de hoy</button>
       <div class="toolbar">
         <div class="tool" onclick="verSemana()">📅 Mi semana</div>
@@ -902,10 +904,15 @@ function pintar(){
      else{be.textContent='🏋️ Entrenar hoy';be.onclick=function(){ir('triaje');};}
      be.style.display=hecho?'none':'block';
    }
-   if(ba) ba.style.display=(hecho||focoHoy==='activo'||focoHoy==='movilidad')?'none':'block';}
+   if(ba) ba.style.display=(hecho||focoHoy==='activo'||focoHoy==='movilidad')?'none':'block';
+   const bn=$('home-nutri');
+   if(bn){const obj=objetivoHoy(),prot=objetivoProteina(),ft={fuerza:'fuerza',cardio:'cardio',mixto:'HIIT',activo:'descanso activo',movilidad:'movilidad',descanso:'descanso'}[focoHoy]||'hoy';
+     bn.innerHTML=`🥗 Hoy <b>${ft}</b> → tu objetivo: ${obj?'~'+obj+' kcal · ':''}${prot} g de proteína`;}}
+  pintarHomeSemana();
   pintarPreguntaDia(); pintarSeguimientoDolor(); pintarDolorCard(); pintarContexto(); pintarMol();
-  if(gap<2||hecho) $('saludo').innerHTML=hecho?`Hasta mañana, ${CONFIG.paciente}.`
-    :(S.racha>0?`<b style="color:var(--af-ambar)">🔥 Tu racha de ${S.racha} días se apaga a medianoche.</b><br>5 minutos bastan para mantenerla viva, ${CONFIG.paciente}.`
+  if(hecho){const tm=new Date(hoyISO());tm.setDate(tm.getDate()+1);const mf=FOCO_INFO[focoDelDia(tm.toISOString().slice(0,10))]||['•','—'],pr=progresoSemana();
+    $('saludo').innerHTML=`✅ Día hecho, ${CONFIG.paciente}. Mañana toca ${mf[0]} <b>${mf[1]}</b> · llevas <b>${pr.hechos}/${pr.plan}</b> entrenos de tu semana.`;}
+  else if(gap<2) $('saludo').innerHTML=(S.racha>0?`<b style="color:var(--af-ambar)">🔥 Tu racha de ${S.racha} días se apaga a medianoche.</b><br>5 minutos bastan para mantenerla viva, ${CONFIG.paciente}.`
     :`Tu Guardián te espera, ${CONFIG.paciente}.`);
   document.querySelectorAll('.cfg-nombre').forEach(e=>e.textContent=CONFIG.paciente);
   document.querySelectorAll('.cfg-fisio').forEach(e=>e.textContent=CONFIG.fisio);
@@ -1161,6 +1168,36 @@ function planSet(fecha,estado){S.planSemana=S.planSemana||{};
   save();verSemana();}
 // Quita los cambios de ESTA semana y vuelve al plan recomendado por tu perfil
 function restaurarSemana(){S.planSemana=S.planSemana||{};for(let i=0;i<7;i++)delete S.planSemana[fechaDeDia(i)];save();verSemana();}
+
+/* ════ CONEXIÓN DIARIA ↔ SEMANAL — estado real de cada día y sesión concreta ════ */
+// Estado del día i de la semana actual: hecho / hoy / pendiente / saltado / descanso
+function estadoDiaSemana(i){const fecha=fechaDeDia(i),foco=focoDelDia(fecha),hoy=hoyISO();
+  if((S.hist||[]).some(x=>x.f===fecha))return 'hecho';
+  if(foco==='descanso')return 'descanso';
+  if(fecha===hoy)return 'hoy';
+  if(fecha<hoy)return 'saltado';
+  return 'pendiente';}
+const EST_BADGE={hecho:['✅','var(--af-primario)'],hoy:['●','var(--af-dorado)'],pendiente:['○','var(--af-texto-suave)'],saltado:['✗','var(--af-ambar)'],descanso:['–','var(--af-texto-suave)']};
+// Una línea con la sesión concreta de un día (reutiliza el motor del Explorador)
+function hintSesion(foco,i){
+  if(foco==='activo')   return 'Caminar 20-30 min o intervalos caminar-correr';
+  if(foco==='movilidad')return 'Movilidad de cadera, hombros y columna · 10-15 min';
+  if(foco==='descanso') return 'Recuperación · opcional movilidad muy suave';
+  const ejs=explSesion(S.elemento,S.aud,foco,i).ejercicios||[];
+  const main=ejs.filter(e=>!/Calentamiento|Vuelta|Activaci/i.test(e.bloque||''));
+  const noms=(main.length?main:ejs).map(e=>e.nombre);
+  return noms.slice(0,3).join(' · ')+(noms.length>3?` +${noms.length-3} más`:'');}
+// Entrenos de la semana hechos vs planificados (los descansos activos no cuentan como entreno)
+function progresoSemana(){let plan=0,hechos=0;for(let i=0;i<7;i++){const fecha=fechaDeDia(i),f=focoDelDia(fecha);
+  if(['fuerza','cardio','mixto'].includes(f)){plan++;if((S.hist||[]).some(x=>x.f===fecha&&!x.activo))hechos++;}}
+  return {plan,hechos};}
+// Mini-semana del inicio: 7 celdas con foco + estado; toca para abrir la semana
+function pintarHomeSemana(){const el=$('home-semana');if(!el)return;
+  const DI=['L','M','X','J','V','S','D'],hoyIdx=(new Date(hoyISO()).getDay()+6)%7,cels=[];
+  for(let i=0;i<7;i++){const foco=focoDelDia(fechaDeDia(i)),fi=FOCO_INFO[foco]||['•',foco],bd=EST_BADGE[estadoDiaSemana(i)]||EST_BADGE.pendiente,hoy=i===hoyIdx;
+    cels.push(`<span style="flex:1;text-align:center;border:1px solid ${hoy?'var(--af-primario)':'var(--af-line)'};border-radius:8px;padding:5px 1px;background:${hoy?'rgba(46,204,143,.10)':'transparent'}"><div style="font-size:9px;opacity:.55">${DI[i]}</div><div style="font-size:15px;line-height:1.25">${fi[0]}</div><div style="font-size:10px;color:${bd[1]};line-height:1">${bd[0]}</div></span>`);}
+  const pr=progresoSemana();
+  el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><span class="sub" style="font-size:11px">📅 Tu semana</span><span class="sub" style="font-size:11px">${pr.hechos}/${pr.plan} entrenos · ver ▸</span></div><div style="display:flex;gap:4px">${cels.join('')}</div>`;}
 
 /* ════ EXPLORADOR DE PERFILES (demo) — ver los 15 tipos y su sesión real por día ════ */
 const EXPL_EL=[['agua','💧 Agua'],['fuego','🔥 Fuego'],['hierba','🌿 Hierba'],['roca','🪨 Roca'],['rayo','⚡ Rayo']];
@@ -2536,8 +2573,10 @@ function verSemana(){
       <div style="font-weight:700;color:var(--af-ambar)">⚠️ Demasiado descanso esta semana</div>
       <div class="t2" style="margin-top:3px;line-height:1.5">Tu línea <b>${pf.linea}</b> rinde con unos <b>${recTrain} días de movimiento</b>; ahora llevas <b>${effTrain}</b>. Descansar de más frena tu progreso — y recuerda: incluso un paseo suave cuenta como descanso activo, no hace falta descanso total.</div>
       <button class="cta" style="margin-top:8px" onclick="restaurarSemana()">↩️ Volver a mi plan recomendado</button></div>`:'';
+  const prg=progresoSemana();
   $('semana-sub').innerHTML=`<div style="color:var(--af-dorado);font-size:12.5px;margin-bottom:4px">Tu línea <b>${pf.linea}</b> — ${pf.entrena}</div>
     <b style="color:var(--af-texto)">${effTrain} entreno · ${activo} descanso activo · ${descTot} descanso total.</b>
+    <span style="color:var(--af-primario)"> · ${prg.hechos}/${prg.plan} entrenos hechos ✅</span>
     <br>Lo que marques aquí es <b>justo lo que verás cada día en tu inicio</b>. Por defecto sigues tu plan recomendado; cámbialo solo en días puntuales (un cumpleaños, un día sin tiempo…).`;
   const chip=(on)=>`display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:16px;border:1px solid ${on?'var(--af-primario)':'var(--af-line)'};background:${on?'rgba(46,204,143,.18)':'rgba(0,0,0,.15)'}`;
   $('semana-lista').innerHTML=aviso+focos.map((foco,i)=>{
@@ -2545,11 +2584,15 @@ function verSemana(){
     const hoy=i===hoyIdx, cc=col[foco]||'var(--af-line)', fecha=fechaDeDia(i), ov=(S.planSemana&&S.planSemana[fecha])||null;
     const clase=c&&c.horario&&c.horario[i]&&esTrain(foco)?`<div style="color:var(--af-dorado);font-size:11px;margin-top:2px">🏋️ ${c.horario[i]}</div>`:'';
     const recNota=ov?`<div style="font-size:11px;color:var(--af-texto-suave);margin-top:1px">Tu plan recomienda: ${recFi[0]} ${recFi[1]}</div>`:'';
+    const est=estadoDiaSemana(i);
+    const badge=est==='hecho'?'<span style="color:var(--af-primario);font-size:11px"> · ✅ hecho</span>'
+      :est==='saltado'?'<span style="color:var(--af-ambar);font-size:11px"> · ✗ sin entrenar</span>':'';
+    const hint=`<div class="sub" style="font-size:11px;margin-top:2px;color:var(--af-texto)">▸ ${hintSesion(foco,i)}</div>`;
     return `<div style="background:${hoy?'rgba(46,204,143,.10)':'var(--af-panel)'};border:1px solid ${hoy?'var(--af-primario)':'var(--af-line)'};border-left:4px solid ${cc};border-radius:var(--af-radio-m);padding:10px 12px;margin-bottom:8px">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="font-size:22px;width:26px;text-align:center">${fi[0]}</div>
-        <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">${dias[i]}${hoy?' <span style="color:var(--af-primario);font-size:11px">· HOY</span>':''}</div>
-          <div style="font-size:12.5px;color:${cc};font-weight:600">${fi[1]}${ov?' · lo cambiaste tú':''}</div>${recNota}${clase}</div>
+        <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">${dias[i]}${hoy?' <span style="color:var(--af-primario);font-size:11px">· HOY</span>':''}${badge}</div>
+          <div style="font-size:12.5px;color:${cc};font-weight:600">${fi[1]}${ov?' · lo cambiaste tú':''}</div>${recNota}${hint}${clase}</div>
       </div>
       <div style="display:flex;gap:6px;margin-top:8px;justify-content:flex-end">
         <span onclick="planSet('${fecha}','normal')" title="Seguir mi plan recomendado" style="${chip(ov==null)}">✓</span>
