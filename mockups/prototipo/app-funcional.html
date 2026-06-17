@@ -917,6 +917,9 @@ function gymSugerencia(dec){
   const wa=c.whatsapp?`<a href="https://wa.me/${c.whatsapp}?text=${encodeURIComponent('Hola, soy '+CONFIG.paciente+' (Anti Frágil). Quiero ir hoy a '+cl.clase)}" target="_blank" style="color:#062018;background:var(--af-dorado);border-radius:8px;padding:1px 8px;font-weight:700;text-decoration:none">Reservar →</a>`:'';
   return `<br><span style="color:var(--af-dorado)">🏋️ Hoy en <b>${cl.centro}</b>: ve a <b>${cl.clase}</b>${cl.horario?` (${cl.horario.split(' · ')[0]})`:''} — tu sesión de ${foco}. ${wa}</span>`;
 }
+// Vincular el centro piloto (demo / o cuando el cliente pega su código de gimnasio asociado)
+function vincularCentroDemo(){S.perfil=S.perfil||{nombre:CONFIG.paciente||'Demo',zona:'bienestar general',centro:null};
+  S.perfil.centro='LIDOMARE26';save();pintarListaRutina();}
 function toggleCentroClases(){const t=$('centro-todas'),f=$('centro-flecha');if(!t)return;const op=t.style.display==='none';t.style.display=op?'block':'none';if(f)f.textContent=op?'▴':'▾';}
 function waDestino(){const c=miCentro();return (c&&c.whatsapp)||CONFIG.whatsappFisio;}
 function dolor(v){const e=$('v-dolor');e.textContent=v;e.style.color=v>=8?'var(--af-rojo)':v>=5?'var(--af-ambar)':'var(--af-primario)';$('alerta').style.display=v>=8?'block':'none';$('banderas').style.display=v>=6?'block':'none';S.dolorHoy=+v;
@@ -1523,7 +1526,8 @@ function pintarListaRutina(){
   let lastBloque=null;
   let claseCard='';
   if(S.contextoHoy==='gym'){const cl=claseLidomare(focoDelDia(hoyISO()));
-    if(cl)claseCard=`<div class="panel" style="border-color:rgba(244,196,48,.45);margin-bottom:10px"><div style="font-weight:700;color:var(--af-dorado);font-size:14px">🏋️ Hoy en ${cl.centro}: ${cl.clase}${cl.horario?' · '+cl.horario.split(' · ')[0]:''}</div><div class="t2" style="margin-top:2px">Esa es tu sesión de hoy. Si vas, no necesitas la rutina de casa.</div><button class="cta" style="margin-top:8px" onclick="irAClase()">✓ Voy a la clase</button><div class="sub" style="font-size:11px;margin-top:6px">¿No puedes ir? Abajo tienes la versión equivalente en casa.</div></div>`;}
+    if(cl)claseCard=`<div class="panel" style="border-color:rgba(244,196,48,.45);margin-bottom:10px"><div style="font-weight:700;color:var(--af-dorado);font-size:14px">🏋️ Hoy en ${cl.centro}: ${cl.clase}${cl.horario?' · '+cl.horario.split(' · ')[0]:''}</div><div class="t2" style="margin-top:2px">Esa es tu sesión de hoy. Si vas, no necesitas la rutina de casa.</div><button class="cta" style="margin-top:8px" onclick="irAClase()">✓ Voy a la clase</button><div class="sub" style="font-size:11px;margin-top:6px">¿No puedes ir? Abajo tienes la versión equivalente en casa.</div></div>`;
+    else claseCard=`<div class="panel" style="border-color:rgba(244,196,48,.35);margin-bottom:10px"><div style="font-weight:700;color:var(--af-dorado);font-size:14px">🏋️ ¿Tu gimnasio está asociado a Anti Frágil?</div><div class="t2" style="margin-top:2px">Si tu centro trabaja con nosotros, vincula su código y verás aquí tu <b>clase recomendada de hoy</b> (Bodypump, Spinning, Crosstraining…).</div><button class="cta" style="margin-top:8px" onclick="vincularCentroDemo()">🔗 Probar con Lidomare (demo)</button></div>`;}
   $('rut-lista').innerHTML=claseCard+ayudaCarga+ejs.map((e,i)=>{
     const cab=(e.bloque&&e.bloque!==lastBloque)?`<div class="sub" style="margin:14px 0 2px;color:var(--af-dorado);font-weight:700;letter-spacing:.5px">▸ ${e.bloque}</div>`:'';
     lastBloque=e.bloque;
