@@ -235,10 +235,28 @@
         <div class="tool" onclick="verPC()">🗃 PC</div>
         <div class="tool" onclick="tarjetaEpica()">🎴 Tarjeta Épica</div>
         <div class="tool" onclick="verFichaPerfil()">📋 Mi ficha de perfil</div>
+        <div class="tool" onclick="verExplorar()">🗺️ Explorar perfiles</div>
         <div class="tool" onclick="verProfesional()">💬 Mi profesional</div>
         <div class="tool" onclick="enviarResumen()">📲 Resumen a mi fisio</div>
       </div>
       <button class="cta" onclick="ir('home')">Volver con mi Guardián</button>
+    </div>
+
+    <!-- EXPLORADOR DE PERFILES (demo): ver los 15 tipos y sus sesiones reales por día -->
+    <div class="scr" id="explorar">
+      <div class="h1">🗺️ Explorar perfiles</div>
+      <div class="sub">Mira los <b>15 tipos de cliente</b> (5 elementos × 3 líneas) y la <b>sesión real</b> de cada día. Modo demo: no afecta a tu progreso.</div>
+      <div class="panel" style="margin-top:12px">
+        <div class="sub" style="color:var(--af-texto)">Elemento</div>
+        <div class="toolbar" id="expl-el" style="margin-top:6px"></div>
+        <div class="sub" style="color:var(--af-texto);margin-top:12px">Línea — nivel de salud (Heroica = la mejor forma)</div>
+        <div class="toolbar" id="expl-linea" style="margin-top:6px"></div>
+      </div>
+      <div class="panel" id="expl-card" style="margin-top:10px;text-align:left"></div>
+      <div class="sub" style="margin-top:12px;color:var(--af-dorado)">📅 Su semana — toca un día para ver la sesión que se le ofrece</div>
+      <div id="expl-semana" style="display:flex;gap:5px;margin-top:6px"></div>
+      <div id="expl-sesion" style="margin-top:12px"></div>
+      <button class="sec" style="margin-top:14px" onclick="ir('mas')">Volver</button>
     </div>
 
     <!-- TU PROFESIONAL (bucle de ida y vuelta) -->
@@ -1143,6 +1161,53 @@ function planSet(fecha,estado){S.planSemana=S.planSemana||{};
   save();verSemana();}
 // Quita los cambios de ESTA semana y vuelve al plan recomendado por tu perfil
 function restaurarSemana(){S.planSemana=S.planSemana||{};for(let i=0;i<7;i++)delete S.planSemana[fechaDeDia(i)];save();verSemana();}
+
+/* ════ EXPLORADOR DE PERFILES (demo) — ver los 15 tipos y su sesión real por día ════ */
+const EXPL_EL=[['agua','💧 Agua'],['fuego','🔥 Fuego'],['hierba','🌿 Hierba'],['roca','🪨 Roca'],['rayo','⚡ Rayo']];
+const EXPL_LIN=[['mistica','Mística',30],['guerrera','Guerrera',60],['heroica','Heroica',90]];
+const EXPL_DIAS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+let EXPL={el:'agua',aud:60,dia:0};
+// Ejecuta fn como si fueras ese perfil (elemento+vitalidad) y restaura tu estado real al salir.
+// dayIdx (opcional) cambia la rotación para ver la variedad día a día del mismo tipo de sesión.
+function conPerfil(el,aud,fn,dayIdx){const o={el:S.elemento,aud:S.aud,ctx:S.contextoHoy,fs:S.fechaSim};
+  S.elemento=el;S.aud=aud;S.contextoHoy=null;
+  if(dayIdx!=null){const d=new Date();d.setDate(1+dayIdx);S.fechaSim=d.toISOString().slice(0,10);}
+  try{return fn();}finally{S.elemento=o.el;S.aud=o.aud;S.contextoHoy=o.ctx;S.fechaSim=o.fs;}}
+// La sesión real que el motor compone para ese perfil en un día con ese foco
+function explSesion(el,aud,foco,dayIdx){return conPerfil(el,aud,()=>{
+  const zona='general', fase=12;
+  let techo=MOTOR.nivelBase(aud)+MOTOR.bonusFase(fase)+(MOTOR.ajusteObjetivo[el]||0); techo=Math.max(0,Math.min(5,techo));
+  const receta=MOTOR.receta[el], min=30, nEj=MOTOR.ejerciciosPorTiempo[30]||5;
+  if(foco==='descanso')  return componerRutina(zona,0,3,['movilidad']);
+  if(foco==='activo')    return componerRutina(zona,Math.min(1,techo),nEj,['movilidad','cardio']);
+  if(foco==='movilidad') return componerRutina(zona,Math.min(1,techo),nEj,['movilidad','estabilidad']);
+  return componerSesion(zona,techo,min,receta,foco);
+},dayIdx);}
+function verExplorar(){
+  $('expl-el').innerHTML=EXPL_EL.map(([k,l])=>`<div class="tool" data-k="${k}" onclick="explSetEl('${k}')">${l}</div>`).join('');
+  $('expl-linea').innerHTML=EXPL_LIN.map(([k,l,a])=>`<div class="tool" data-k="${k}" onclick="explSetLinea(${a})">${l}</div>`).join('');
+  EXPL.dia=0; pintarExplorar(); ir('explorar');
+}
+function explSetEl(k){EXPL.el=k;EXPL.dia=0;pintarExplorar();}
+function explSetLinea(a){EXPL.aud=a;EXPL.dia=0;pintarExplorar();}
+function explDia(i){EXPL.dia=i;pintarExplorar();}
+function pintarExplorar(){
+  const el=EXPL.el, aud=EXPL.aud, linK=aud<=40?'mistica':aud<=70?'guerrera':'heroica';
+  document.querySelectorAll('#expl-el .tool').forEach(e=>{const on=e.dataset.k===el;e.style.borderColor=on?'var(--af-primario)':'var(--af-line)';e.style.color=on?'var(--af-texto)':'';});
+  document.querySelectorAll('#expl-linea .tool').forEach(e=>{const on=e.dataset.k===linK;e.style.borderColor=on?'var(--af-primario)':'var(--af-line)';e.style.color=on?'var(--af-texto)':'';});
+  const pf=perfilDe(el,aud);
+  $('expl-card').innerHTML=`<div style="font-weight:700">${pf.emoji} ${el.toUpperCase()} · ${pf.linea} — ${pf.criatura}</div>
+    <div class="sub" style="margin-top:6px;line-height:1.55">🎯 <b>Objetivo:</b> ${pf.objetivo}<br>🙋 <b>Soy:</b> ${pf.persona}<br>🏋️ <b>Entrena:</b> ${pf.entrena}<br>🗣️ <b>Tono:</b> ${pf.tono}</div>`;
+  const week=conPerfil(el,aud,()=>splitDe()), DI=['L','M','X','J','V','S','D'];
+  $('expl-semana').innerHTML=week.map((fo,i)=>{const fi=FOCO_INFO[fo]||['•',fo], on=i===EXPL.dia;
+    return `<span onclick="explDia(${i})" style="flex:1;text-align:center;cursor:pointer;border:1px solid ${on?'var(--af-primario)':'var(--af-line)'};border-radius:9px;padding:6px 2px;background:${on?'rgba(46,204,143,.12)':'transparent'}"><div style="font-size:10px;opacity:.6">${DI[i]}</div><div style="font-size:17px">${fi[0]}</div></span>`;}).join('');
+  const foco=week[EXPL.dia], fi=FOCO_INFO[foco]||['•',foco], ses=explSesion(el,aud,foco,EXPL.dia);
+  const ejs=(ses.ejercicios||[]);
+  $('expl-sesion').innerHTML=`<div class="panel"><div style="font-weight:700;color:var(--af-primario)">${EXPL_DIAS[EXPL.dia]} · ${fi[0]} ${fi[1]}</div>
+    <div class="sub" style="margin-top:2px">${ses.nombre||''}</div>
+    ${ejs.length?ejs.map(e=>`<div style="margin-top:9px"><div style="font-weight:600;font-size:13.5px">${e.nombre}</div><div class="sub" style="font-size:12px">${e.detalle}</div></div>`).join(''):'<div class="sub" style="margin-top:8px">Día de descanso — movimiento opcional muy suave.</div>'}
+    <div class="sub" style="font-size:11px;margin-top:10px;opacity:.65">Esto es justo lo que esta persona vería ese día en su inicio.</div></div>`;
+}
 function diaDescanso(){alert('Hoy tu plan marca DESCANSO total. Recuperar también es progresar 💚\nSi te apetece moverte suave, abajo tienes el descanso activo.');}
 // "Voy a la clase de Lidomare": esa clase ES la sesión de hoy (no se hace rutina en casa)
 function irAClase(){window._t0=Date.now()-15*60000;const vr=$('v-rpe');if(vr)vr.textContent='6';const mo=$('molestia');if(mo)mo.checked=false;terminarJornada();}
