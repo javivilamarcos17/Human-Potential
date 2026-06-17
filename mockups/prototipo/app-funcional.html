@@ -2060,6 +2060,169 @@ const NUTRI={
     {n:'Frito / rebozado',    cat:'extra', kcal:300, u:'g', racion:120, color:'rojo',  m:['comida','cena'], alt:'Mejor plancha, horno o air-fryer: mitad de calorías.'},
     {n:'Bollería',            cat:'extra', kcal:450, u:'g', racion:50,  color:'rojo',  m:['desayuno','snack'], alt:'Cámbiala por fruta, avena o yogur con miel.'},
   ],
+  // ── PLATOS REALES por familia (lo que la gente come de verdad). Editable a mano.
+  // Cada opción: kcal y proteína (p, en gramos) por ración estándar de 1 plato. cat/color heredan de la familia salvo override.
+  familias:[
+    // — Desayuno —
+    {id:'tostada',nom:'Tostadas',emoji:'🍞',cat:'carbo',color:'ambar',m:['desayuno','snack'],op:[
+      {n:'Tostada con aceite y tomate',kcal:230,p:5,color:'verde'},
+      {n:'Tostada con aguacate',kcal:300,p:6,color:'verde'},
+      {n:'Tostada con pavo',kcal:240,p:14,color:'verde'},
+      {n:'Tostada con tomate y queso fresco',kcal:280,p:12,color:'verde'},
+      {n:'Tostada con jamón serrano',kcal:300,p:16,color:'ambar'},
+      {n:'Tostada con mantequilla y mermelada',kcal:330,p:5,color:'ambar'},
+      {n:'Tostada con crema de cacahuete',kcal:340,p:11,color:'ambar'},
+    ]},
+    {id:'avena',nom:'Avena / bol',emoji:'🥣',cat:'carbo',color:'verde',m:['desayuno','snack'],op:[
+      {n:'Avena con leche y fruta',kcal:350,p:14},
+      {n:'Avena con yogur y frutos secos',kcal:420,p:18},
+      {n:'Porridge con plátano y miel',kcal:400,p:12},
+      {n:'Tortitas de avena',kcal:380,p:16},
+    ]},
+    {id:'huevos',nom:'Huevos',emoji:'🍳',cat:'prot',color:'verde',m:['desayuno','comida','cena'],op:[
+      {n:'Huevos revueltos (2)',kcal:200,p:14},
+      {n:'Tortilla francesa',kcal:220,p:14},
+      {n:'2 huevos cocidos',kcal:160,p:13},
+      {n:'Tortilla de patatas (porción)',kcal:300,p:10,color:'ambar'},
+      {n:'Huevos fritos con patatas',kcal:520,p:16,color:'rojo',alt:'Al horno o air-fryer las patatas: mitad de calorías.'},
+    ]},
+    {id:'yogur',nom:'Yogur / lácteos',emoji:'🥛',cat:'prot',color:'verde',m:['desayuno','snack'],op:[
+      {n:'Yogur natural con fruta',kcal:160,p:10},
+      {n:'Yogur griego con miel',kcal:220,p:15},
+      {n:'Yogur con granola',kcal:280,p:12,color:'ambar'},
+      {n:'Requesón / queso fresco con fruta',kcal:200,p:18},
+    ]},
+    // — Principales (comida / cena) —
+    {id:'pasta',nom:'Pasta',emoji:'🍝',cat:'carbo',color:'ambar',m:['comida','cena'],op:[
+      {n:'Pasta con tomate',kcal:480,p:14,color:'verde'},
+      {n:'Pasta con verduras',kcal:430,p:13,color:'verde'},
+      {n:'Pasta con atún y tomate',kcal:520,p:28,color:'verde'},
+      {n:'Pasta integral con pollo y verdura',kcal:560,p:34,color:'verde'},
+      {n:'Pasta boloñesa',kcal:620,p:30},
+      {n:'Pasta al pesto',kcal:600,p:16},
+      {n:'Macarrones con queso',kcal:700,p:24},
+      {n:'Pasta carbonara',kcal:780,p:26,color:'rojo',alt:'La nata y el bacon disparan la grasa: con leche y pavo baja mucho.'},
+    ]},
+    {id:'arroz',nom:'Arroz',emoji:'🍚',cat:'carbo',color:'ambar',m:['comida','cena'],op:[
+      {n:'Arroz blanco',kcal:300,p:6},
+      {n:'Arroz con verduras',kcal:380,p:9,color:'verde'},
+      {n:'Arroz con pollo',kcal:550,p:32,color:'verde'},
+      {n:'Sushi (8-10 piezas)',kcal:450,p:18,color:'verde'},
+      {n:'Poke bowl',kcal:550,p:28,color:'verde'},
+      {n:'Arroz tres delicias',kcal:480,p:16},
+      {n:'Paella / arroz de marisco',kcal:600,p:26},
+      {n:'Arroz a la cubana',kcal:620,p:18},
+    ]},
+    {id:'pollo',nom:'Pollo / pavo',emoji:'🍗',cat:'prot',color:'verde',m:['comida','cena'],op:[
+      {n:'Pollo a la plancha con ensalada',kcal:380,p:42},
+      {n:'Pechuga con verduras al horno',kcal:360,p:40},
+      {n:'Fajitas / wrap de pollo',kcal:550,p:36,color:'ambar'},
+      {n:'Pollo al horno con patatas',kcal:600,p:42,color:'ambar'},
+      {n:'Muslos de pollo asados',kcal:520,p:38,color:'ambar'},
+      {n:'Pollo empanado / nuggets',kcal:650,p:34,color:'rojo',alt:'A la plancha o al horno tienes la mitad de grasa.'},
+    ]},
+    {id:'carne',nom:'Carne',emoji:'🥩',cat:'prot',color:'ambar',m:['comida','cena'],op:[
+      {n:'Filete de ternera con ensalada',kcal:420,p:40,color:'verde'},
+      {n:'Carne guisada con patata',kcal:600,p:36},
+      {n:'Albóndigas con tomate',kcal:550,p:32},
+      {n:'Hamburguesa casera',kcal:550,p:30},
+      {n:'Cerdo / costillas',kcal:650,p:34},
+      {n:'Hamburguesa con patatas (restaurante)',kcal:900,p:38,color:'rojo',alt:'Un capricho ocasional: que no sea la norma.'},
+    ]},
+    {id:'pescado',nom:'Pescado',emoji:'🐟',cat:'prot',color:'verde',m:['comida','cena'],op:[
+      {n:'Pescado blanco a la plancha con verdura',kcal:320,p:38},
+      {n:'Atún a la plancha con ensalada',kcal:350,p:40},
+      {n:'Marisco a la plancha',kcal:300,p:34},
+      {n:'Salmón al horno',kcal:450,p:36},
+      {n:'Merluza rebozada',kcal:480,p:30,color:'ambar'},
+      {n:'Pescaíto frito',kcal:520,p:28,color:'rojo',alt:'A la plancha o al horno baja mucho la grasa.'},
+    ]},
+    {id:'legumbre',nom:'Legumbres',emoji:'🫘',cat:'prot',color:'verde',m:['comida','cena'],op:[
+      {n:'Lentejas guisadas',kcal:450,p:24},
+      {n:'Garbanzos con verduras',kcal:420,p:22},
+      {n:'Ensalada de legumbres',kcal:400,p:20},
+      {n:'Hummus con crudités',kcal:350,p:14},
+      {n:'Cocido / potaje',kcal:700,p:34,color:'ambar'},
+    ]},
+    {id:'ensalada',nom:'Ensaladas / bowl',emoji:'🥗',cat:'verd',color:'verde',m:['comida','cena','snack'],op:[
+      {n:'Ensalada mixta',kcal:200,p:8},
+      {n:'Ensalada completa (atún/huevo/pollo)',kcal:420,p:30},
+      {n:'Bowl de quinoa y verduras',kcal:450,p:18},
+      {n:'Gazpacho / salmorejo',kcal:250,p:6},
+      {n:'Ensalada César con pollo',kcal:500,p:32,color:'ambar'},
+    ]},
+    {id:'verdura',nom:'Verduras',emoji:'🥦',cat:'verd',color:'verde',m:['comida','cena'],op:[
+      {n:'Verduras a la plancha',kcal:180,p:7},
+      {n:'Crema de verduras',kcal:220,p:8},
+      {n:'Verduras al horno',kcal:240,p:8},
+      {n:'Menestra / salteado',kcal:260,p:12},
+      {n:'Pisto con huevo',kcal:320,p:16},
+    ]},
+    {id:'patata',nom:'Patata',emoji:'🥔',cat:'carbo',color:'ambar',m:['comida','cena'],op:[
+      {n:'Patata cocida / al vapor',kcal:180,p:5,color:'verde'},
+      {n:'Patatas asadas',kcal:280,p:6},
+      {n:'Puré de patata',kcal:300,p:7},
+      {n:'Patatas fritas',kcal:420,p:6,color:'rojo',alt:'Al horno o air-fryer: mismo gusto, mitad de calorías.'},
+    ]},
+    {id:'bocadillo',nom:'Bocadillo / sándwich',emoji:'🥪',cat:'carbo',color:'ambar',m:['desayuno','comida','cena','snack'],op:[
+      {n:'Sándwich vegetal con pavo',kcal:350,p:22,color:'verde'},
+      {n:'Sándwich mixto',kcal:400,p:20},
+      {n:'Bocadillo de jamón / queso',kcal:450,p:22},
+      {n:'Bocadillo de tortilla',kcal:550,p:18},
+      {n:'Bocadillo de calamares / lomo',kcal:650,p:28,color:'rojo'},
+    ]},
+    {id:'sopa',nom:'Sopa / caldo',emoji:'🍲',cat:'verd',color:'verde',m:['comida','cena'],op:[
+      {n:'Caldo / consomé',kcal:80,p:6},
+      {n:'Sopa de fideos / arroz',kcal:220,p:8},
+      {n:'Sopa de pescado',kcal:280,p:18},
+    ]},
+    {id:'pizza',nom:'Pizza / fast food',emoji:'🍕',cat:'extra',color:'rojo',m:['comida','cena'],op:[
+      {n:'Pizza casera con verduras',kcal:550,p:26,color:'ambar'},
+      {n:'Pizza (2 porciones)',kcal:560,p:22,color:'ambar'},
+      {n:'Kebab / durum',kcal:750,p:35},
+      {n:'Perrito / bocadillo fast food',kcal:500,p:18},
+      {n:'Pizza entera',kcal:1100,p:44,alt:'Comparte o guarda la mitad: una pizza entera es casi un día.'},
+    ]},
+    // — Snack / picoteo —
+    {id:'fruta',nom:'Fruta',emoji:'🍎',cat:'verd',color:'verde',m:['desayuno','comida','cena','snack'],op:[
+      {n:'Pieza de fruta',kcal:80,p:1},
+      {n:'Plátano',kcal:90,p:1},
+      {n:'Bol de fruta variada',kcal:150,p:2},
+      {n:'Manzana con crema de cacahuete',kcal:230,p:7},
+    ]},
+    {id:'picoteo',nom:'Picoteo',emoji:'🥜',cat:'grasa',color:'verde',m:['snack'],op:[
+      {n:'Puñado de frutos secos',kcal:180,p:6},
+      {n:'Yogur con nueces',kcal:220,p:12},
+      {n:'Tortitas de arroz / maíz',kcal:120,p:3},
+      {n:'Hummus con zanahoria',kcal:200,p:8},
+      {n:'Aceitunas / encurtidos',kcal:150,p:2,color:'ambar'},
+      {n:'Patatas chips',kcal:280,p:3,color:'rojo',alt:'Para picar, mejor frutos secos o fruta.'},
+    ]},
+    {id:'batido',nom:'Batido / proteína',emoji:'🥤',cat:'prot',color:'verde',m:['desayuno','snack'],op:[
+      {n:'Batido de proteína (con agua)',kcal:130,p:26},
+      {n:'Batido de proteína con leche y plátano',kcal:300,p:32},
+      {n:'Smoothie de fruta',kcal:220,p:5,color:'ambar'},
+    ]},
+    {id:'dulce',nom:'Dulce / capricho',emoji:'🍫',cat:'extra',color:'ambar',m:['snack','desayuno'],op:[
+      {n:'Onzas de chocolate negro',kcal:120,p:2},
+      {n:'Barrita de cereales',kcal:200,p:5},
+      {n:'Galletas (3-4)',kcal:200,p:3},
+      {n:'Helado',kcal:250,p:4},
+      {n:'Bollería / croissant',kcal:350,p:6,color:'rojo',alt:'Mejor fruta, avena o yogur con miel.'},
+    ]},
+    // — Bebidas —
+    {id:'bebida',nom:'Bebidas',emoji:'🥤',cat:'bebida',color:'verde',m:['desayuno','comida','cena','snack'],op:[
+      {n:'Café solo',kcal:2,p:0},
+      {n:'Café con leche',kcal:60,p:4},
+      {n:'Té / infusión',kcal:2,p:0},
+      {n:'Refresco zero',kcal:1,p:0},
+      {n:'Zumo natural',kcal:110,p:2,color:'ambar'},
+      {n:'Cerveza (caña)',kcal:90,p:1,color:'ambar'},
+      {n:'Copa de vino',kcal:120,p:0,color:'ambar'},
+      {n:'Refresco azucarado',kcal:140,p:0,color:'rojo',alt:'Calorías vacías: mejor agua o versión zero.'},
+      {n:'Cubata / combinado',kcal:250,p:0,color:'rojo'},
+    ]},
+  ],
   // Chips rápidos por comida (lo más común). Editable a mano.
   sugerencias:{
     desayuno:['Café con leche','Tostada integral','Avena','Huevo','Fruta','Yogur','Plátano','Zumo natural','Pan / tostada'],
@@ -2094,7 +2257,25 @@ function calcularObjetivo(){
   S.nutriPerfil={peso:pp,altura:a,edad:e,sexo:sx,act,kcal};save();
   $('nutri-perfil').style.display='none';pintarNutricion();
 }
-function kcalItem(it){const al=NUTRI.alimentos[it.a];if(!al)return 0;return Math.round(al.u==='ud'?al.kcal*it.c:al.kcal*it.c/100);}
+let nutriAbrir=null;
+// Resuelve un item, sea PLATO (it.d) o INGREDIENTE suelto (it.a). Devuelve kcal y proteína ya calculadas.
+function itInfo(it){
+  if(it.d){return {n:it.n,cat:it.cat,color:it.color||'ambar',u:'plato',kcal:Math.round(it.kcal*it.c),p:Math.round((it.p||0)*it.c),alt:it.alt,plato:true};}
+  const al=NUTRI.alimentos[it.a]; if(!al)return {n:'?',cat:'extra',color:'ambar',u:'ud',kcal:0,p:0};
+  const ud=al.u==='ud';
+  return {n:al.n,cat:al.cat,color:al.color,u:al.u,kcal:Math.round(ud?al.kcal*it.c:al.kcal*it.c/100),p:Math.round((al.p||0)*(ud?it.c:it.c/100)),alt:al.alt,rec:recomendar(it.a)};
+}
+function kcalItem(it){return itInfo(it).kcal;}
+function protComida(arr){return (arr||[]).reduce((t,it)=>t+itInfo(it).p,0);}
+function protDia(d){return NUTRI.momentos.reduce((t,[k])=>t+protComida(d[k]),0);}
+function pesoUsuario(){return (S.nutriPerfil&&S.nutriPerfil.peso)||(S.onb&&S.onb.peso)||70;}
+function objetivoProteina(){const el=S.elemento||'hierba';
+  const base={roca:2.0,fuego:1.9,rayo:1.6,agua:1.6,hierba:1.5}[el]||1.6;
+  const f=focoDelDia(hoyISO()); return Math.round(pesoUsuario()*(base+((f==='fuerza'||f==='mixto')?0.2:0)));}
+function nutriFam(k,fid){const key=k+':'+fid;nutriAbrir=nutriAbrir===key?null:key;pintarNutricion();}
+function addPlato(k,fid,oi){const fam=NUTRI.familias.find(f=>f.id===fid); if(!fam)return; const o=fam.op[oi];
+  nutriHoy()[k].push({d:1,n:o.n,kcal:o.kcal,p:o.p||0,cat:o.cat||fam.cat,color:o.color||fam.color,alt:o.alt,c:1});
+  nutriAbrir=null;save();pintarNutricion();}
 function kcalComida(arr){return (arr||[]).reduce((t,it)=>t+kcalItem(it),0);}
 function kcalDia(d){return NUTRI.momentos.reduce((t,[k])=>t+kcalComida(d[k]),0);}
 function recomendar(aliIdx){const al=NUTRI.alimentos[aliIdx];
@@ -2117,25 +2298,35 @@ function pintarNutricion(){
   const d=nutriHoy();
   $('nutri-comidas').innerHTML=NUTRI.momentos.map(([k,lbl])=>{
     const items=d[k]||[], sub=kcalComida(items);
-    const filas=items.map((it,i)=>{const al=NUTRI.alimentos[it.a], rec=recomendar(it.a);
-      const exceso=al.u!=='ud'&&it.c>rec*1.5;
+    const filas=items.map((it,i)=>{const inf=itInfo(it), rec=inf.rec||0;
+      const exceso=!inf.plato&&inf.u!=='ud'&&rec&&it.c>rec*1.5;
+      const cant=inf.plato?`<span class="sub" style="width:74px;text-align:right">${it.c>1?it.c+' platos':'1 plato'}</span>`
+        :`<input type="number" value="${it.c}" onchange="setCant('${k}',${i},this.value)" style="width:54px;padding:6px;border-radius:8px;border:1px solid ${exceso?'var(--af-ambar)':'var(--af-line)'};background:rgba(0,0,0,.25);color:var(--af-texto);text-align:right"><span class="sub" style="width:20px">${inf.u}</span>`;
       return `<div style="display:flex;align-items:center;gap:6px;margin-top:6px">
-        <div style="flex:1;font-size:13.5px">${al.n}${al.alt?' <span style="color:var(--af-ambar)">&#9888;</span>':''}</div>
-        <input type="number" value="${it.c}" onchange="setCant('${k}',${i},this.value)" style="width:58px;padding:6px;border-radius:8px;border:1px solid ${exceso?'var(--af-ambar)':'var(--af-line)'};background:rgba(0,0,0,.25);color:var(--af-texto);text-align:right">
-        <span class="sub" style="width:22px">${al.u}</span>
-        <span class="sub" style="width:50px;text-align:right">${kcalItem(it)}</span>
+        <div style="flex:1;font-size:13.5px">${inf.n}${inf.alt?' <span style="color:var(--af-ambar)">&#9888;</span>':''}</div>
+        ${cant}
+        <span class="sub" style="width:50px;text-align:right">${inf.kcal}</span>
         <span onclick="delAlim('${k}',${i})" style="cursor:pointer;color:var(--af-texto-suave);padding:0 4px">&#10005;</span></div>
-        ${al.alt?`<div class="sub" style="font-size:11px;margin:2px 0 0 4px;line-height:1.4">&#128161; ${al.alt}</div>`:(exceso?`<div class="sub" style="font-size:11px;margin-left:4px;color:var(--af-ambar)">&#8593; Para tu objetivo, ~${rec}${al.u} seria suficiente.</div>`:'')}`;}).join('');
-    const sug=(NUTRI.sugerencias[k]||[]).map(nombreIdx).filter(i=>i>=0);
-    const chip=(i,amber)=>`<span onclick="addAlim('${k}',${i})" style="display:inline-block;font-size:12.5px;background:${amber?'rgba(255,167,38,.12)':'rgba(46,204,143,.10)'};border:1px solid var(--af-line);border-radius:16px;padding:5px 11px;margin:5px 5px 0 0;cursor:pointer">+ ${NUTRI.alimentos[i].n}</span>`;
-    const hayBase=items.some(it=>NUTRI.alimentos[it.a]&&NUTRI.alimentos[it.a].base);
-    const tops=hayBase?NUTRI.alimentos.map((a,i)=>a.top?i:-1).filter(i=>i>=0).map(i=>chip(i,true)).join(''):'';
-    const masOpts='<option value="">⋯ más alimentos…</option>'+NUTRI.alimentos.map((a,i)=>`<option value="${i}">${a.n}</option>`).join('');
+        ${inf.alt?`<div class="sub" style="font-size:11px;margin:2px 0 0 4px;line-height:1.4">&#128161; ${inf.alt}</div>`:(exceso?`<div class="sub" style="font-size:11px;margin-left:4px;color:var(--af-ambar)">&#8593; Para tu objetivo, ~${rec}${inf.u} seria suficiente.</div>`:'')}`;}).join('');
+    const COL={verde:'rgba(46,204,143,.12)',ambar:'rgba(255,167,38,.12)',rojo:'rgba(255,82,82,.12)'};
+    const fams=NUTRI.familias.filter(f=>f.m.includes(k));
+    const famChips=fams.map(f=>{const on=nutriAbrir===k+':'+f.id;
+      return `<span onclick="nutriFam('${k}','${f.id}')" style="display:inline-block;font-size:12.5px;background:${on?'var(--af-primario)':'rgba(255,255,255,.04)'};color:${on?'#06281c':'var(--af-texto)'};font-weight:${on?'700':'400'};border:1px solid var(--af-line);border-radius:16px;padding:5px 11px;margin:5px 5px 0 0;cursor:pointer">${f.emoji} ${f.nom}</span>`;}).join('');
+    let platos='';
+    if(nutriAbrir&&nutriAbrir.indexOf(k+':')===0){const fam=fams.find(f=>k+':'+f.id===nutriAbrir);
+      if(fam)platos=`<div style="margin-top:6px;padding:8px 10px;border:1px dashed var(--af-line);border-radius:12px">
+        <div class="sub" style="font-size:11px;margin-bottom:2px">${fam.emoji} ${fam.nom} — elige el plato (kcal aprox.):</div>
+        ${fam.op.map((o,oi)=>`<span onclick="addPlato('${k}','${fam.id}',${oi})" style="display:inline-block;font-size:12.5px;background:${COL[o.color||fam.color]||COL.ambar};border:1px solid var(--af-line);border-radius:14px;padding:5px 10px;margin:4px 5px 0 0;cursor:pointer">${o.n} <b style="opacity:.6">${o.kcal}</b></span>`).join('')}</div>`;}
+    const hayBase=items.some(it=>!it.d&&NUTRI.alimentos[it.a]&&NUTRI.alimentos[it.a].base);
+    const tchip=i=>`<span onclick="addAlim('${k}',${i})" style="display:inline-block;font-size:12.5px;background:rgba(255,167,38,.12);border:1px solid var(--af-line);border-radius:16px;padding:5px 11px;margin:5px 5px 0 0;cursor:pointer">+ ${NUTRI.alimentos[i].n}</span>`;
+    const tops=hayBase?NUTRI.alimentos.map((a,i)=>a.top?i:-1).filter(i=>i>=0).map(tchip).join(''):'';
+    const masOpts='<option value="">⋯ ingrediente suelto…</option>'+NUTRI.alimentos.map((a,i)=>`<option value="${i}">${a.n}</option>`).join('');
     return `<div style="margin-bottom:14px;border-bottom:1px solid var(--af-line);padding-bottom:12px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:14px">${lbl}</b>${items.length?`<span class="sub">${sub} kcal</span>`:''}</div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:14px">${lbl}</b>${items.length?`<span class="sub">${sub} kcal · ${protComida(items)}g prot</span>`:''}</div>
       ${filas}
       ${hayBase?`<div class="sub" style="font-size:11.5px;margin-top:8px;color:var(--af-ambar)">🍞 ¿Con qué lo tomas?</div><div>${tops}</div>`:''}
-      <div style="margin-top:6px">${sug.map(i=>chip(i,false)).join('')}</div>
+      <div style="margin-top:6px">${famChips}</div>
+      ${platos}
       <div style="display:flex;gap:6px;margin-top:8px">
         <select onchange="addAlim('${k}',this.value);this.value=''" style="flex:1;padding:9px;border-radius:10px;border:1px solid var(--af-line);background:rgba(0,0,0,.25);color:var(--af-texto);font-size:13px">${masOpts}</select>
         <span onclick="addCustom('${k}')" style="display:inline-flex;align-items:center;font-size:12.5px;font-weight:600;border:1px solid var(--af-line);border-radius:10px;padding:0 12px;cursor:pointer;color:var(--af-texto)">✏️ Otro</span>
@@ -2143,10 +2334,13 @@ function pintarNutricion(){
     </div>`;}).join('');
   const per=S.nutriPerfil, kcal=kcalDia(d), reg=NUTRI.momentos.some(([k])=>(d[k]||[]).length), objHoy=objetivoHoy()||0;
   if(per){const pct=Math.min(100,Math.round(kcal/objHoy*100)), col=kcal>objHoy*1.1?'var(--af-ambar)':'var(--af-primario)';
-    $('nutri-objetivo').innerHTML=`<div class="xprow"><span>Tu objetivo de HOY (${(S.elemento||'').toUpperCase()})</span><b>~${objHoy} kcal</b></div>
-      <div class="sub" style="margin-top:4px;font-size:11.5px">${notaEntrenoHoy()}</div>
-      ${reg?`<div class="xprow" style="margin-top:8px"><span>Hoy llevas</span><b>${kcal} kcal</b></div><div class="track"><div class="fill" style="width:${pct}%;background:${col}"></div></div>`:''}
-      <div class="sub" style="margin-top:6px">${objetivoTexto()}</div>
+    const protObj=objetivoProteina(), protHoy=protDia(d), ppct=Math.min(100,Math.round(protHoy/protObj*100));
+    $('nutri-objetivo').innerHTML=`<div class="sub" style="font-size:12px;color:var(--af-dorado);margin-bottom:7px;line-height:1.45">${notaEntrenoHoy()}</div>
+      <div class="xprow"><span>Calorías de HOY (${(S.elemento||'').toUpperCase()})</span><b>${reg?kcal+' / ':'~'}${objHoy} kcal</b></div>
+      ${reg?`<div class="track"><div class="fill" style="width:${pct}%;background:${col}"></div></div>`:''}
+      <div class="xprow" style="margin-top:9px"><span>Proteína de HOY 💪</span><b>${protHoy} / ${protObj} g</b></div>
+      <div class="track"><div class="fill" style="width:${ppct}%;background:${protHoy>=protObj*.8?'var(--af-primario)':'var(--af-agua)'}"></div></div>
+      <div class="sub" style="margin-top:7px">${objetivoTexto()}</div>
       <button class="tool" style="margin-top:8px" onclick="S.nutriPerfil=null;save();$('nutri-perfil').style.display='block';pintarNutricion()">&#8635; Recalcular objetivo</button>`;
   } else $('nutri-objetivo').innerHTML=`<div class="sub" style="color:var(--af-texto)">Para recomendarte cantidades necesito tus datos</div>
     <button class="cta" style="margin-top:10px" onclick="$('nutri-perfil').style.display='block'">Calcular mi objetivo</button>`;
@@ -2160,18 +2354,17 @@ function pintarNutricion(){
 }
 function consejosNutri(d){
   const cats={};let extras=0;const alts=[];
-  NUTRI.momentos.forEach(([k])=>(d[k]||[]).forEach(it=>{const al=NUTRI.alimentos[it.a];if(!al)return;cats[al.cat]=(cats[al.cat]||0)+1;if(al.cat==='extra')extras++;if(al.alt&&!alts.includes(al.alt))alts.push(al.alt);}));
-  const c=[];
-  if(!cats.prot)c.push('Te falta <b>proteina</b> hoy: pollo, huevo, pescado o legumbres.');
-  if(!cats.verd)c.push('Suma <b>verduras o fruta</b>: apunta a 2 raciones al dia.');
+  NUTRI.momentos.forEach(([k])=>(d[k]||[]).forEach(it=>{const inf=itInfo(it);cats[inf.cat]=(cats[inf.cat]||0)+1;if(inf.cat==='extra')extras++;if(inf.alt&&!alts.includes(inf.alt))alts.push(inf.alt);}));
+  const prot=protDia(d), protObj=objetivoProteina(), c=[];
+  if(prot<protObj*.5)c.push(`Te falta <b>proteína</b> hoy (${prot}/${protObj} g): pollo, huevo, pescado o legumbres.`);
+  if(!cats.verd)c.push('Suma <b>verduras o fruta</b>: apunta a 2 raciones al día.');
   if(extras>=2)c.push('Varios <b>caprichos</b> hoy. No pasa nada: tu entrenamiento ayuda a compensarlo.');
-  if(S.elemento==='roca'&&(cats.prot||0)<3)c.push('Para tu <b>fuerza</b>, asegura proteina en cada comida.');
-  if(S.elemento==='fuego'&&(cats.grasa||0)>=2)c.push('Para tu <b>deficit</b>, modera las grasas hoy.');
+  if(S.elemento==='fuego'&&(cats.grasa||0)>=2)c.push('Para tu <b>déficit</b>, modera las grasas hoy.');
   alts.slice(0,2).forEach(a=>c.push('&#128161; '+a));
   const entrenoHoy=S.hechoHoy&&S.ultDia===hoyISO(), fHoy=focoDelDia(hoyISO());
-  if(entrenoHoy&&(cats.prot||0)<2)c.unshift('💪 Acabas de entrenar: asegura <b>proteína</b> en tu próxima comida para recuperar.');
-  else if((fHoy==='fuerza'||fHoy==='mixto')&&(cats.carbo||0)<1)c.unshift('🔋 Día exigente: suma <b>carbohidrato</b> (arroz, pasta, avena) para rendir.');
-  if(!c.length)c.push('Plato equilibrado. Vas muy bien.');
+  if(entrenoHoy&&prot<protObj*.6)c.unshift('💪 Acabas de entrenar: te faltan ~'+Math.max(0,protObj-prot)+'g de <b>proteína</b> para recuperar bien.');
+  else if((fHoy==='fuerza'||fHoy==='mixto')&&!cats.carbo)c.unshift('🔋 Día exigente: suma <b>carbohidrato</b> (arroz, pasta, avena) para rendir.');
+  if(!c.length)c.push('Plato equilibrado y proteína cubierta. Vas muy bien.');
   return c.slice(0,3);
 }
 function objetivoTexto(){const o={fuego:'Meta de transformacion: ligero deficit, mucha proteina y verdura.',roca:'Ganar fuerza: algo de superavit y proteina suficiente.',rayo:'Resistencia: prioriza buenos carbohidratos para tener energia.',agua:'Recuperacion: alimentacion equilibrada que ayude a reparar.',hierba:'Construir el habito: come variado y sostenible, sin extremos.'};return o[S.elemento||'agua']||o.agua;}
@@ -2185,16 +2378,19 @@ function notaEntrenoHoy(){const f=focoDelDia(hoyISO()), fa=factorEntrenoHoy();
   if(fa<1) return `😴 Hoy <b>${lbl}</b> → -${Math.round((1-fa)*100)}%: hoy no necesitas tanta energía.`;
   return `🚶 Hoy <b>${lbl}</b>: objetivo de mantenimiento.`;}
 function semanaNutri(){const dias=Object.keys(S.nutri||{}).sort().slice(-7);let buenos=0;
-  dias.forEach(f=>{const dd=S.nutri[f];const cats={};let ex=0;NUTRI.momentos.forEach(([k])=>(dd[k]||[]).forEach(it=>{const al=NUTRI.alimentos[it.a];if(al){cats[al.cat]=1;if(al.cat==='extra')ex++;}}));
+  dias.forEach(f=>{const dd=S.nutri[f];const cats={};let ex=0;NUTRI.momentos.forEach(([k])=>(dd[k]||[]).forEach(it=>{const inf=itInfo(it);cats[inf.cat]=1;if(inf.cat==='extra')ex++;}));
     if(cats.prot&&cats.verd&&ex<2)buenos++;});
   return {dias:dias.length,buenos};}
 function agua(n){const d=nutriHoy();d.agua=Math.max(0,(d.agua||0)+n);save();pintarNutricion();}
 // VALORA el día: nota 0-100 según equilibrio, moderación, calorías e hidratación
 function valorarDia(d){
   const cats={};let extras=0,saludables=0;
-  NUTRI.momentos.forEach(([k])=>(d[k]||[]).forEach(it=>{const al=NUTRI.alimentos[it.a];if(!al)return;cats[al.cat]=(cats[al.cat]||0)+1;if(al.cat==='extra')extras++;if(al.color==='verde')saludables++;}));
+  NUTRI.momentos.forEach(([k])=>(d[k]||[]).forEach(it=>{const inf=itInfo(it);cats[inf.cat]=(cats[inf.cat]||0)+1;if(inf.cat==='extra')extras++;if(inf.color==='verde')saludables++;}));
   let s=0;const det=[];
-  if(cats.prot){s+=15;det.push(['Proteína en tu día',true]);}else det.push(['Te faltó proteína',false]);
+  const prot=protDia(d), protObj=objetivoProteina();
+  if(prot>=protObj*.8){s+=15;det.push(['Proteína suficiente ('+prot+'g)',true]);}
+  else if(prot>=protObj*.5){s+=8;det.push(['Algo de proteína ('+prot+'/'+protObj+'g)',true]);}
+  else det.push(['Poca proteína ('+prot+'/'+protObj+'g)',false]);
   if(cats.verd){s+=15;det.push(['Verduras o fruta',true]);}else det.push(['Faltaron verduras/fruta',false]);
   if(cats.carbo){s+=10;det.push(['Energía (carbohidratos)',true]);}else det.push(['Pocos carbohidratos',false]);
   if(cats.grasa||saludables>=3){s+=10;det.push(['Grasas / comida real',true]);}
@@ -2226,7 +2422,7 @@ function guardarNutri(){const d=nutriHoy();
   const v=valorarDia(d);
   if(!d._xp){d._xp=true;S.xp+=5+(v.score>=85?5:v.score>=70?3:0);}  // bonus por buen día
   d._score=v.score;save();
-  sync('nutricion',{score:v.score,kcal:kcalDia(d),agua:d.agua||0,comidas:NUTRI.momentos.map(([k])=>({m:k,items:(d[k]||[]).map(it=>({a:NUTRI.alimentos[it.a].n,c:it.c}))}))});
+  sync('nutricion',{score:v.score,prot:protDia(d),kcal:kcalDia(d),agua:d.agua||0,comidas:NUTRI.momentos.map(([k])=>({m:k,items:(d[k]||[]).map(it=>({a:itInfo(it).n,c:it.c}))}))});
   pintarScore(v);ir('nutri-score');
 }
 function verSemana(){
