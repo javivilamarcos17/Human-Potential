@@ -258,7 +258,9 @@
       <div class="sub" style="margin-top:12px;color:var(--af-dorado)">📅 Su semana — toca un día para ver la sesión que se le ofrece</div>
       <div id="expl-semana" style="display:flex;gap:5px;margin-top:6px"></div>
       <div id="expl-sesion" style="margin-top:12px"></div>
-      <button class="sec" style="margin-top:14px" onclick="ir('mas')">Volver</button>
+      <button class="cta" id="expl-usar" style="margin-top:14px" onclick="explUsarPerfil()">👤 Probar la app como este perfil</button>
+      <div class="sub" style="font-size:11px;margin-top:6px;text-align:center;opacity:.7">Cambia tu Guardián a este elemento/línea para vivir toda la app (inicio, semana, rutinas).</div>
+      <button class="sec" style="margin-top:10px" onclick="ir('mas')">Volver</button>
     </div>
 
     <!-- TU PROFESIONAL (bucle de ida y vuelta) -->
@@ -1227,6 +1229,10 @@ function verExplorar(){
 }
 function explSetEl(k){EXPL.el=k;EXPL.dia=0;pintarExplorar();}
 function explSetLinea(a){EXPL.aud=a;EXPL.dia=0;pintarExplorar();}
+// Cambia tu Guardián al perfil que estás explorando (para vivir toda la app como ese elemento/línea)
+function explUsarPerfil(){const pf=perfilDe(EXPL.el,EXPL.aud);
+  if(!confirm('¿Poner tu Guardián como '+EXPL.el.toUpperCase()+' · '+pf.linea+'? Cambiará tu elemento y línea para que pruebes toda la app con ese perfil.'))return;
+  S.elemento=EXPL.el; S.aud=EXPL.aud; S.audInicial=EXPL.aud; save(); pintar(); ir('home');}
 function explDia(i){EXPL.dia=i;pintarExplorar();}
 function pintarExplorar(){
   const el=EXPL.el, aud=EXPL.aud, linK=aud<=40?'mistica':aud<=70?'guerrera':'heroica';
