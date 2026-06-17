@@ -212,6 +212,7 @@
       <div class="panel">
         <div class="sub" style="color:var(--af-texto)">¿Qué has hecho (o vas a hacer) hoy?</div>
         <div class="toolbar" id="activo-ops" style="margin-top:8px"></div>
+        <div id="activo-guia" class="sub" style="margin-top:10px;line-height:1.5;color:var(--af-texto);background:rgba(46,204,143,.07);border:1px solid var(--af-line);border-radius:10px;padding:9px 11px"></div>
       </div>
       <div class="panel">
         <div class="sub">¿Cuántos minutos, más o menos?</div>
@@ -1129,7 +1130,8 @@ function fechaDeDia(i){const b=new Date(hoyISO()); b.setDate(b.getDate()-((b.get
 // La LÍNEA modula la semana del elemento: Mística más suave · Guerrera equilibrada · Heroica más exigente
 function splitDe(){
   const base=(SPLIT[S.elemento||'hierba']||SPLIT.hierba).slice(), linea=lineaKey(S.aud);
-  if(linea==='mistica') return base.map(f=>f==='mixto'?'cardio':f==='cardio'?'activo':f);    // más movimiento ligero, menos intensidad
+  // Mística (el perfil más suave): baja intensidad PERO se mueve casi cada día — su descanso total pasa a paseo suave (vida activa)
+  if(linea==='mistica') return base.map(f=>f==='mixto'?'cardio':f==='cardio'?'activo':f==='descanso'?'activo':f);
   if(linea==='heroica') return base.map(f=>f==='activo'?'mixto':f==='movilidad'?'fuerza':f); // más reto, menos descanso pasivo
   return base;
 }
@@ -1139,6 +1141,8 @@ function focoDelDia(fechaISO){const ov=S.planSemana&&S.planSemana[fechaISO]; if(
 function planSet(fecha,estado){S.planSemana=S.planSemana||{};
   if(estado==='normal'||!estado)delete S.planSemana[fecha];else S.planSemana[fecha]=estado;
   save();verSemana();}
+// Quita los cambios de ESTA semana y vuelve al plan recomendado por tu perfil
+function restaurarSemana(){S.planSemana=S.planSemana||{};for(let i=0;i<7;i++)delete S.planSemana[fechaDeDia(i)];save();verSemana();}
 function diaDescanso(){alert('Hoy tu plan marca DESCANSO total. Recuperar también es progresar 💚\nSi te apetece moverte suave, abajo tienes el descanso activo.');}
 // "Voy a la clase de Lidomare": esa clase ES la sesión de hoy (no se hace rutina en casa)
 function irAClase(){window._t0=Date.now()-15*60000;const vr=$('v-rpe');if(vr)vr.textContent='6';const mo=$('molestia');if(mo)mo.checked=false;terminarJornada();}
@@ -1696,12 +1700,23 @@ function completarMiniReto(){
 function reset(){localStorage.removeItem(K);location.reload();}
 
 /* ════ DESCANSO ACTIVO — moverse suave cuenta para la racha (recuperación = parte del plan) ════ */
-const ACTIVO_OPS=[['caminar','🚶 Caminar'],['trote','🏃 Trote muy suave'],['bici','🚴 Bici suave'],['nadar','🏊 Nadar suave'],['movilidad','🧘 Movilidad / estiramientos']];
+// Vida activa: moverse casi cada día. Cada opción lleva una pauta concreta (no solo "muévete"). Editable.
+const ACTIVO_OPS=[
+  ['caminar','🚶 Caminar a buen paso','20-30 min a ritmo vivo (puedes hablar, pero no cantar). Es el movimiento base de la vida activa: casi cualquier día vale.'],
+  ['intervalos','🏃 Intervalos caminar-correr','8-10 rondas de 1 min andando rápido + 1 min de trote suave. Si te cuesta, empieza 1 min trote / 2 min andar. Mejoras el fondo sin machacarte.'],
+  ['trote','🏃 Trote muy suave','15-20 min a ritmo cómodo, conversando. Si te falta el aire, alterna con caminar y vuelve al trote.'],
+  ['bici','🚴 Bici suave','25-35 min con las piernas sueltas, sin forcejear. Ideal si te molestan rodillas, cadera o pies.'],
+  ['nadar','🏊 Nadar suave','20-30 min a tu ritmo. Cero impacto: perfecto en días de molestias.'],
+  ['movilidad','🧘 Movilidad / estiramientos','10-15 min de movilidad de cadera, hombros y columna. Recuperas y previenes molestias.'],
+];
+const actGuia=k=>(ACTIVO_OPS.find(o=>o[0]===k)||[])[2]||'';
 let activoSel='caminar', activoMin=20;
 function verActivo(){activoSel='caminar';activoMin=20;
   $('activo-ops').innerHTML=ACTIVO_OPS.map(([k,l])=>`<div class="tool" data-k="${k}" onclick="activoPick('${k}')" style="${k===activoSel?'border-color:var(--af-primario);color:var(--af-texto)':''}">${l}</div>`).join('');
+  const g=$('activo-guia'); if(g)g.innerHTML='💡 '+actGuia(activoSel);
   ir('activo');}
-function activoPick(k){activoSel=k;document.querySelectorAll('#activo-ops .tool').forEach(e=>{const on=e.dataset.k===k;e.style.borderColor=on?'var(--af-primario)':'var(--af-line)';e.style.color=on?'var(--af-texto)':'';});}
+function activoPick(k){activoSel=k;document.querySelectorAll('#activo-ops .tool').forEach(e=>{const on=e.dataset.k===k;e.style.borderColor=on?'var(--af-primario)':'var(--af-line)';e.style.color=on?'var(--af-texto)':'';});
+  const g=$('activo-guia'); if(g)g.innerHTML='💡 '+actGuia(k);}
 function registrarActivo(){
   const hoy=hoyISO(), ayer=prevISO(S.fechaSim?S.fechaSim:new Date().toISOString().slice(0,10));
   const faseAntes=faseDesde({...S});
@@ -2443,27 +2458,38 @@ function verSemana(){
   const hoyIdx=(new Date(hoyISO()).getDay()+6)%7;
   const c=miCentro();
   const col={fuerza:'var(--af-primario)',cardio:'var(--af-agua)',mixto:'var(--af-dorado)',activo:'#FFA726',movilidad:'#B8C6F2',descanso:'var(--af-texto-suave)'};
-  const focos=dias.map((_,i)=>focoDelDia(fechaDeDia(i)));   // respeta lo que el cliente haya marcado
-  const entreno=focos.filter(f=>['fuerza','cardio','mixto'].includes(f)).length;
+  const rec=splitDe();                                       // plan RECOMENDADO por tu perfil (día i = rec[i])
+  const focos=dias.map((_,i)=>focoDelDia(fechaDeDia(i)));    // plan EFECTIVO (respeta lo que el cliente cambió)
+  const esTrain=f=>['fuerza','cardio','mixto'].includes(f);
+  const recTrain=rec.filter(esTrain).length, effTrain=focos.filter(esTrain).length;
   const activo=focos.filter(f=>['activo','movilidad'].includes(f)).length;
-  const desc=focos.filter(f=>f==='descanso').length;
+  const descTot=focos.filter(f=>f==='descanso').length;
+  const minTrain=Math.max(2,recTrain-1);
   const pf=perfilDe(S.elemento,S.aud);
-  $('semana-sub').innerHTML=`<div style="color:var(--af-dorado);font-size:12.5px;margin-bottom:4px">Tu línea <b>${pf.linea}</b> — ${pf.entrena}</div><b style="color:var(--af-texto)">${entreno} entreno · ${activo} descanso activo · ${desc} descanso.</b><br>Elige el tipo de cada día: 🏋️ entreno · 🚶 descanso activo (poco tiempo) · 😴 descanso total (p. ej. un cumpleaños).`;
+  // PUSHBACK: si te pasas de descanso, la app te avisa y te deja volver a tu plan
+  const aviso=(effTrain<minTrain||descTot>=4)?`<div class="panel" style="border-color:rgba(255,167,38,.5);background:rgba(255,167,38,.08);margin-bottom:10px">
+      <div style="font-weight:700;color:var(--af-ambar)">⚠️ Demasiado descanso esta semana</div>
+      <div class="t2" style="margin-top:3px;line-height:1.5">Tu línea <b>${pf.linea}</b> rinde con unos <b>${recTrain} días de movimiento</b>; ahora llevas <b>${effTrain}</b>. Descansar de más frena tu progreso — y recuerda: incluso un paseo suave cuenta como descanso activo, no hace falta descanso total.</div>
+      <button class="cta" style="margin-top:8px" onclick="restaurarSemana()">↩️ Volver a mi plan recomendado</button></div>`:'';
+  $('semana-sub').innerHTML=`<div style="color:var(--af-dorado);font-size:12.5px;margin-bottom:4px">Tu línea <b>${pf.linea}</b> — ${pf.entrena}</div>
+    <b style="color:var(--af-texto)">${effTrain} entreno · ${activo} descanso activo · ${descTot} descanso total.</b>
+    <br>Lo que marques aquí es <b>justo lo que verás cada día en tu inicio</b>. Por defecto sigues tu plan recomendado; cámbialo solo en días puntuales (un cumpleaños, un día sin tiempo…).`;
   const chip=(on)=>`display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:16px;border:1px solid ${on?'var(--af-primario)':'var(--af-line)'};background:${on?'rgba(46,204,143,.18)':'rgba(0,0,0,.15)'}`;
-  $('semana-lista').innerHTML=focos.map((foco,i)=>{
-    const fi=FOCO_INFO[foco]||['•',foco], hoy=i===hoyIdx, cc=col[foco]||'var(--af-line)', fecha=fechaDeDia(i), ov=(S.planSemana&&S.planSemana[fecha])||null;
-    const esEntreno=['fuerza','cardio','mixto'].includes(foco);
-    const clase=c&&c.horario&&c.horario[i]&&esEntreno?`<div style="color:var(--af-dorado);font-size:11px;margin-top:2px">🏋️ ${c.horario[i]}</div>`:'';
+  $('semana-lista').innerHTML=aviso+focos.map((foco,i)=>{
+    const fi=FOCO_INFO[foco]||['•',foco], recFi=FOCO_INFO[rec[i]]||['•',rec[i]];
+    const hoy=i===hoyIdx, cc=col[foco]||'var(--af-line)', fecha=fechaDeDia(i), ov=(S.planSemana&&S.planSemana[fecha])||null;
+    const clase=c&&c.horario&&c.horario[i]&&esTrain(foco)?`<div style="color:var(--af-dorado);font-size:11px;margin-top:2px">🏋️ ${c.horario[i]}</div>`:'';
+    const recNota=ov?`<div style="font-size:11px;color:var(--af-texto-suave);margin-top:1px">Tu plan recomienda: ${recFi[0]} ${recFi[1]}</div>`:'';
     return `<div style="background:${hoy?'rgba(46,204,143,.10)':'var(--af-panel)'};border:1px solid ${hoy?'var(--af-primario)':'var(--af-line)'};border-left:4px solid ${cc};border-radius:var(--af-radio-m);padding:10px 12px;margin-bottom:8px">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="font-size:22px;width:26px;text-align:center">${fi[0]}</div>
         <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">${dias[i]}${hoy?' <span style="color:var(--af-primario);font-size:11px">· HOY</span>':''}</div>
-          <div style="font-size:12.5px;color:${cc};font-weight:600">${fi[1]}${ov?' · lo marcaste tú':''}</div>${clase}</div>
+          <div style="font-size:12.5px;color:${cc};font-weight:600">${fi[1]}${ov?' · lo cambiaste tú':''}</div>${recNota}${clase}</div>
       </div>
       <div style="display:flex;gap:6px;margin-top:8px;justify-content:flex-end">
-        <span onclick="planSet('${fecha}','normal')" title="Entreno normal" style="${chip(ov==null)}">🏋️</span>
-        <span onclick="planSet('${fecha}','activo')" title="Descanso activo" style="${chip(ov==='activo')}">🚶</span>
-        <span onclick="planSet('${fecha}','descanso')" title="Descanso total" style="${chip(ov==='descanso')}">😴</span>
+        <span onclick="planSet('${fecha}','normal')" title="Seguir mi plan recomendado" style="${chip(ov==null)}">✓</span>
+        <span onclick="planSet('${fecha}','activo')" title="Cambiar a descanso activo (paseo / movilidad)" style="${chip(ov==='activo')}">🚶</span>
+        <span onclick="planSet('${fecha}','descanso')" title="Cambiar a descanso total" style="${chip(ov==='descanso')}">😴</span>
       </div>
     </div>`;
   }).join('');
