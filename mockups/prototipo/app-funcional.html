@@ -852,6 +852,11 @@ function diasSinVenir(){
   return Math.max(0,Math.round((new Date(hoyISO())-new Date(S.ultDia))/86400000)-1);
 }
 function pintar(){
+  // ── DÍA NUEVO: si la fecha de hoy ya no coincide con el último día entrenado,
+  // la jornada de hoy vuelve a estar PENDIENTE. La sesión (histórico) y la nutrición
+  // (guardada por fecha) de días anteriores quedan intactas — esto solo "abre" el día de hoy.
+  if(S.hechoHoy && S.ultDia!==hoyISO()){S.hechoHoy=false; save();}
+  S.diaVisto=hoyISO();
   const p={...S}, f=faseDesde(p), pr=progresoNivel(S.xp);
   const gap=diasSinVenir();
   // Re-enganche sin culpa: el Guardián se aletarga, nunca muere — y te recibe, no te riñe
@@ -1805,8 +1810,12 @@ function simPreviewFase(f){f=+f;$('sim-fnum').textContent=f;
   const nom=et==='Huevo'?'??? (huevo misterioso)':(CRIATURAS[S.elemento||'agua']||CRIATURAS.agua)[lineaKey(S.aud)][{'Cría':0,'Juvenil':1,'Desarrollo':2,'Adulto':3,'Apex':4}[et]||0];
   $('sim-chip').textContent=`${EMO[S.elemento||'agua']} ${(S.elemento||'agua').toUpperCase()} · ${lineaDe(S.aud)} · Fase ${f}/30 · ${et} · ${nom}`;
   const pf=perfilDe(S.elemento,S.aud), sp=$('sim-perfil');
+  const sem=['L','M','X','J','V','S','D'].map((dn,i)=>{const fo=focoDelDia(fechaDeDia(i)), fi=FOCO_INFO[fo]||['•',fo];
+    return `<span style="flex:1;text-align:center"><div style="font-size:10px;opacity:.55">${dn}</div><div style="font-size:18px">${fi[0]}</div><div style="font-size:8.5px;opacity:.7;line-height:1.1">${fi[1]}</div></span>`;}).join('');
   if(sp)sp.innerHTML=`<div class="sub" style="color:var(--af-texto)"><b>${pf.emoji} ${(S.elemento||'agua').toUpperCase()} · ${pf.linea}</b> — ${pf.criatura}${pf.vidaActiva?' · 🚶 vida activa':''}</div>
-    <div class="sub" style="margin-top:6px;line-height:1.55">🎯 <b>Objetivo:</b> ${pf.objetivo}<br>🙋 <b>Soy:</b> ${pf.persona}<br>🏋️ <b>Entrena:</b> ${pf.entrena}<br>🗣️ <b>Tono:</b> ${pf.tono}</div>`;
+    <div class="sub" style="margin-top:6px;line-height:1.55">🎯 <b>Objetivo:</b> ${pf.objetivo}<br>🙋 <b>Soy:</b> ${pf.persona}<br>🏋️ <b>Entrena:</b> ${pf.entrena}<br>🗣️ <b>Tono:</b> ${pf.tono}</div>
+    <div class="sub" style="margin-top:9px;color:var(--af-dorado)">📅 Su semana de entreno (cambia con cada elemento):</div>
+    <div style="display:flex;margin-top:3px">${sem}</div>`;
 }
 function simEscenario(tipo){
   if(tipo==='no'){$('sim-escena').innerHTML=`<div class="sub" style="color:var(--af-texto);line-height:1.5"><b>🚫 Hoy no entrena.</b><br>La app no castiga: «Hoy descansas, ${CONFIG.paciente}. Un día libre también cuida. Mañana, 5 minutos y seguimos — tu racha te espera.»</div>`;return;}
