@@ -1,0 +1,38 @@
+name: Deploy a GitHub Pages
+
+# Publica el repo como web estática y, de paso, ENCIENDE Pages automáticamente
+# (enablement: true) — así no hace falta tocar Settings → Pages a mano.
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repo
+        uses: actions/checkout@v4
+      - name: Configurar (y encender) Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Empaquetar el sitio (todo el repo, para conservar las rutas relativas)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Publicar en Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
