@@ -109,6 +109,10 @@
 
     <!-- HOME -->
     <div class="scr on" id="home">
+      <div id="creador-badge" style="display:none;background:linear-gradient(135deg,rgba(244,196,48,.18),rgba(46,204,143,.12));border:1px solid rgba(244,196,48,.5);border-radius:12px;padding:9px 12px;margin-bottom:10px">
+        <div style="font-weight:800;color:var(--af-dorado);font-size:13px">🎛 MODO CREADOR — estás probando, no es la vista del cliente</div>
+        <div class="sub" style="font-size:11px;margin-top:2px">Abajo tienes: 🎛 Cambiar elemento · ⏭ Simular día · ↺ Reiniciar. Toca <b>🎛 Cambiar elemento</b> para ver los 15 perfiles.</div>
+      </div>
       <div class="stage">
         <div class="ava-wrap" onclick="verGuardian()" style="cursor:pointer"><div class="ava-halo"></div><div id="ava-svg"></div></div>
         <div class="chip"><i></i><span id="chip-fase">Fase 1 · Huevo · Nivel 1</span></div>
@@ -2742,12 +2746,21 @@ function enviarResumen(){
 }
 // Arranque con red de seguridad: ningún fallo deja la pantalla en blanco
 try{
+  const _debug = location.search.indexOf('debug=1')>=0;
+  // VISTA CREADOR (?debug=1): si aún no hay Guardián, entra directo con un perfil DEMO
+  // (sin pasar por el alta) para poder probar todo y cambiar de elemento al instante.
+  if(_debug && !S.perfil){
+    S.elemento = S.elemento||'agua';
+    S.aud = S.aud||62; S.audInicial = (S.audInicial!=null?S.audInicial:S.aud);
+    S.perfil = {nombre:'Demo', zona:'bienestar general', centro:null};
+    S.tutorialVisto = true; save();
+  }
   if(S.perfil){CONFIG.paciente=S.perfil.nombre;CONFIG.zona=S.perfil.zona;}
   pintar();
   if(!S.perfil){S.onbPaso=S.onbPaso||0;S.onb=S.onb||{};ir('alta');pintarOnb();}
   if(S.perfil && !S.tutorialVisto) mostrarBienvenida();
   // Modo demo (?debug=1): muestra herramientas de simulación. Pacientes reales NO las ven.
-  if(location.search.indexOf('debug=1')>=0){['dbg-dia','dbg-perfil','dbg-reset'].forEach(id=>{var e=$(id);if(e)e.style.display='block';});}
+  if(_debug){['dbg-dia','dbg-perfil','dbg-reset','creador-badge'].forEach(id=>{var e=$(id);if(e)e.style.display='block';});}
 }catch(err){
   document.querySelector('.content').innerHTML='<div style="padding:40px 20px;text-align:center"><div style="font-size:40px">💚</div><div class="h1" style="margin-top:10px">Algo se atascó</div><div class="sub" style="margin-top:8px">Pulsa para reiniciar tu sesión (tu progreso en la nube no se pierde).</div><button class="cta" onclick="localStorage.removeItem(\''+K+'\');location.reload()">Reiniciar</button></div>';
 }
