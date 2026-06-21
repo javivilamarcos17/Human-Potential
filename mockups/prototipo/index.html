@@ -1360,13 +1360,13 @@ function demoAlert(feature) {
     background:rgba(8,17,30,.75);backdrop-filter:blur(6px);
     animation:fadein .2s ease;
   `;
-  ov.innerHTML = \`
+  ov.innerHTML = `
     <div style="background:#1A2E4A;border:1px solid rgba(255,255,255,.1);
                 border-radius:24px;padding:28px 32px;max-width:300px;text-align:center;
                 box-shadow:0 24px 64px rgba(0,0,0,.5);">
       <div style="font-size:32px;margin-bottom:12px;">🚀</div>
       <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:18px;
-                  color:#fff;margin-bottom:8px;">\${feature}</div>
+                  color:#fff;margin-bottom:8px;">${feature}</div>
       <div style="font-size:13px;color:#8A9BB0;line-height:1.55;margin-bottom:20px;">
         Esta función estará disponible en el MVP.<br>Estamos construyéndolo ahora mismo.
       </div>
@@ -1376,7 +1376,7 @@ function demoAlert(feature) {
         Entendido
       </button>
     </div>
-  \`;
+  `;
   document.body.appendChild(ov);
   ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
 }
